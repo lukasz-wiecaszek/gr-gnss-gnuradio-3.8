@@ -18,42 +18,42 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_CA_CODE_GENERATOR_IMPL_H
-#define INCLUDED_GNSS_CA_CODE_GENERATOR_IMPL_H
+#ifndef INCLUDED_GNSS_RESAMPLER_IMPL_H
+#define INCLUDED_GNSS_RESAMPLER_IMPL_H
 
-#include <memory>
+#include <gnss/resampler.h>
 
-#include <gnss/ca_code_generator.h>
-#include "gnss_parameters.h"
-#include "ca_code.h"
-
-#define IVLEN0 0
+#define IVLEN0 1
 #define OVLEN0 1
 
 namespace gr {
   namespace gnss {
 
-    template<typename T>
-    class ca_code_generator_impl : public ca_code_generator<T>
+    template<typename ITYPE0, typename OTYPE0>
+    class resampler_impl : public resampler
     {
     private:
-      const int d_n_samples;
-      std::vector<T> d_code_sampled;
-      int d_n;
+      const double d_fs_in;
+      const double d_fs_out;
+      const uint32_t d_phase_step;
+      uint32_t d_phase;
+      uint32_t d_lphase;
 
     public:
-      ca_code_generator_impl(unsigned svid, double sampling_freq);
-      ~ca_code_generator_impl();
+      resampler_impl(double fs_in, double fs_out);
+      ~resampler_impl();
 
-      int work(
-              int noutput_items,
-              gr_vector_const_void_star &input_items,
-              gr_vector_void_star &output_items
-      );
+      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+
+      int general_work(int noutput_items,
+           gr_vector_int &ninput_items,
+           gr_vector_const_void_star &input_items,
+           gr_vector_void_star &output_items);
+
     };
 
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_CA_CODE_GENERATOR_IMPL_H */
+#endif /* INCLUDED_GNSS_RESAMPLER_IMPL_H */
 

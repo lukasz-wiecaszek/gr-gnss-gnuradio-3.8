@@ -19,5 +19,6 @@
 # Boston, MA 02110-1301, USA.
 install(FILES
     gnss_acquisition.block.yml
-    gnss_ca_code_generator.block.yml DESTINATION share/gnuradio/grc/blocks
+    gnss_ca_code_generator.block.yml
+    gnss_resampler.block.yml DESTINATION share/gnuradio/grc/blocks
 )

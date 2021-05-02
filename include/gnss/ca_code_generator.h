@@ -52,6 +52,8 @@ namespace gr {
     using ca_code_generator_b = ca_code_generator<int8_t>;
     using ca_code_generator_s = ca_code_generator<int16_t>;
     using ca_code_generator_i = ca_code_generator<int32_t>;
+    using ca_code_generator_f = ca_code_generator<float>;
+    using ca_code_generator_c = ca_code_generator<gr_complex>;
 
   } // namespace gnss
 } // namespace gr

@@ -38,8 +38,8 @@ namespace gr {
     template<typename ITYPE0, typename OTYPE0>
     acquisition_impl<ITYPE0, OTYPE0>::acquisition_impl()
       : gr::sync_block("acquisition",
-                       gr::io_signature::make(1, 1, sizeof(gr_complex)),
-                       gr::io_signature::make(1, 1, sizeof(gr_complex)))
+                       gr::io_signature::make(1, 1, sizeof(ITYPE0)),
+                       gr::io_signature::make(1, 1, sizeof(OTYPE0)))
     {
     }
 

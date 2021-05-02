@@ -1,10 +1,10 @@
-id: gnss_ca_code_generator
-label: ca_code_generator
+id: gnss_resampler
+label: resampler
 category: '[gnss]'
 
 templates:
   imports: import gnss
-  make: gnss.ca_code_generator_${type.suffix}(${svid}, ${sampling_freq})
+  make: gnss.resampler(${fs_in}, ${fs_out})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
@@ -12,20 +12,13 @@ templates:
 #     * label (label shown in the GUI)
 #     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
 parameters:
-- id: type
-  label: Output Type
-  dtype: enum
-  options: [byte, short, int, float, complex]
-  option_attributes:
-    suffix: [b, s, i, f, c]
-  hide: part
-- id: svid
-  label: SVID
-  dtype: int
-- id: sampling_freq
-  label: Sample Rate
+- id: fs_in
+  label: Input Sample Rate
   dtype: real
-  default: '1023000'
+
+- id: fs_out
+  label: Output Sample Rate
+  dtype: real
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:
@@ -35,11 +28,13 @@ parameters:
 #      * vlen (optional - data stream vector length. Default is 1)
 #      * optional (optional - set to 1 for optional inputs. Default is 0)
 inputs:
-- optional: true
+- label: in
+  dtype: complex
+  vlen: 1
 
 outputs:
 - label: out
-  dtype: ${type}
+  dtype: complex
   vlen: 1
 
 #  'file_format' specifies the version of the GRC yml format used in the file

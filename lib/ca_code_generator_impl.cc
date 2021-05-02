@@ -23,7 +23,7 @@
 #endif
 
 #include <memory>
-//#include <cmath>
+#include <cmath>
 
 #include <gnuradio/io_signature.h>
 #include "ca_code_generator_impl.h"
@@ -33,6 +33,8 @@
 namespace gr {
   namespace gnss {
 
+    using gps_ca_code = ca_code<int, GPS_CA_CODE_LENGTH>;
+
     template<typename T>
     typename ca_code_generator<T>::sptr
     ca_code_generator<T>::make(unsigned svid, double sampling_freq)
@@ -41,18 +43,39 @@ namespace gr {
         (new ca_code_generator_impl<T>(svid, sampling_freq));
     }
 
-
     template<typename T>
     ca_code_generator_impl<T>::ca_code_generator_impl(unsigned svid, double sampling_freq)
       : gr::sync_block("ca_code_generator",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, sizeof(T))),
-        d_sampling_freq{sampling_freq},
-        d_code{ca_code<T, GPS_CA_CODE_LENGTH>::get(svid)},
+        d_n_samples{static_cast<decltype(d_n_samples)>(ceil(sampling_freq / GPS_CA_CODE_RATE))},
+        d_code_sampled(d_n_samples),
         d_n{0}
     {
-      if (d_code == nullptr)
-        throw std::runtime_error("invalid space vehicle id");
+      const std::shared_ptr<gps_ca_code> code = gps_ca_code::get(svid);
+      if (code == nullptr)
+        throw std::out_of_range("invalid space vehicle id");
+
+      for (int i = 0; i < d_n_samples; ++i)
+        d_code_sampled[i] = (*code)[((i + .5f) * GPS_CA_CODE_LENGTH) / d_n_samples] ? +1 : -1;
+    }
+
+    template<>
+    ca_code_generator_impl<gr_complex>::ca_code_generator_impl(unsigned svid, double sampling_freq)
+      : gr::sync_block("ca_code_generator",
+                       gr::io_signature::make(0, 0, 0),
+                       gr::io_signature::make(1, 1, sizeof(gr_complex))),
+        d_n_samples{static_cast<decltype(d_n_samples)>(ceil(sampling_freq / GPS_CA_CODE_RATE))},
+        d_code_sampled(d_n_samples),
+        d_n{0}
+    {
+      const std::shared_ptr<gps_ca_code> code = gps_ca_code::get(svid);
+      if (code == nullptr)
+        throw std::out_of_range("invalid space vehicle id");
+
+      for (int i = 0; i < d_n_samples; ++i)
+        d_code_sampled[i] = (*code)[(i * GPS_CA_CODE_LENGTH) / d_n_samples] ?
+          gr_complex{+1.0f, 0.0f} : gr_complex{-1.0f, 0.0f};
     }
 
     template<typename T>
@@ -69,9 +92,9 @@ namespace gr {
       T* optr0 = (T*) output_items[0];
 
       for (int i = 0; i < noutput_items; ++i, ++d_n)
-        optr0[i] = (*d_code)[d_n];
+        optr0[i] = d_code_sampled[d_n % d_n_samples];
 
-      d_n %= GPS_CA_CODE_LENGTH;
+      d_n %= d_n_samples;
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
@@ -80,6 +103,8 @@ namespace gr {
     template class ca_code_generator<std::int8_t>;
     template class ca_code_generator<std::int16_t>;
     template class ca_code_generator<std::int32_t>;
+    template class ca_code_generator<float>;
+    template class ca_code_generator<gr_complex>;
 
   } /* namespace gnss */
 } /* namespace gr */
