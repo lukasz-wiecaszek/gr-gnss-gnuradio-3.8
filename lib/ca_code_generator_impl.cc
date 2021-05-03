@@ -27,6 +27,7 @@
 
 #include <gnuradio/io_signature.h>
 #include <gnuradio/fft/fft.h>
+#include <volk/volk.h>
 
 #include "ca_code_generator_impl.h"
 #include "gnss_parameters.h"
@@ -39,17 +40,18 @@ namespace gr {
 
     template<typename T>
     typename ca_code_generator<T>::sptr
-    ca_code_generator<T>::make(unsigned svid, double sampling_freq, ca_code_domain_e domain)
+    ca_code_generator<T>::make(size_t vlen, unsigned svid, double sampling_freq, ca_code_domain_e domain)
     {
       return gnuradio::get_initial_sptr
-        (new ca_code_generator_impl<T>(svid, sampling_freq, domain));
+        (new ca_code_generator_impl<T>(vlen, svid, sampling_freq, domain));
     }
 
     template<typename T>
-    ca_code_generator_impl<T>::ca_code_generator_impl(unsigned svid, double sampling_freq, ca_code_domain_e domain)
+    ca_code_generator_impl<T>::ca_code_generator_impl(size_t vlen, unsigned svid, double sampling_freq, ca_code_domain_e domain)
       : gr::sync_block("ca_code_generator",
                        gr::io_signature::make(0, 0, 0),
-                       gr::io_signature::make(1, 1, sizeof(T))),
+                       gr::io_signature::make(1, 1, sizeof(T) * vlen)),
+        d_vlen{vlen},
         d_n_samples{static_cast<decltype(d_n_samples)>(ceil(sampling_freq / GPS_CA_CODE_RATE))},
         d_code_sampled(d_n_samples),
         d_n{0}
@@ -61,15 +63,18 @@ namespace gr {
       if (code == nullptr)
         throw std::out_of_range("invalid space vehicle id");
 
+      printf("samples per ca code: %d\n", d_n_samples);
+
       for (int i = 0; i < d_n_samples; ++i)
         d_code_sampled[i] = (*code)[((i + .5f) * GPS_CA_CODE_LENGTH) / d_n_samples] ? +1 : -1;
     }
 
     template<>
-    ca_code_generator_impl<gr_complex>::ca_code_generator_impl(unsigned svid, double sampling_freq, ca_code_domain_e domain)
+    ca_code_generator_impl<gr_complex>::ca_code_generator_impl(size_t vlen,unsigned svid, double sampling_freq, ca_code_domain_e domain)
       : gr::sync_block("ca_code_generator",
                        gr::io_signature::make(0, 0, 0),
-                       gr::io_signature::make(1, 1, sizeof(gr_complex))),
+                       gr::io_signature::make(1, 1, sizeof(gr_complex) * vlen)),
+        d_vlen{vlen},
         d_n_samples{static_cast<decltype(d_n_samples)>(ceil(sampling_freq / GPS_CA_CODE_RATE))},
         d_code_sampled(d_n_samples),
         d_n{0}
@@ -78,16 +83,22 @@ namespace gr {
       if (code == nullptr)
         throw std::out_of_range("invalid space vehicle id");
 
+      printf("samples per ca code: %d\n", d_n_samples);
+
       for (int i = 0; i < d_n_samples; ++i)
         d_code_sampled[i] = (*code)[(i * GPS_CA_CODE_LENGTH) / d_n_samples] ?
           gr_complex{+1.0f, 0.0f} : gr_complex{-1.0f, 0.0f};
 
-      if (domain == CA_CODE_DOMAIN_FREQUENCY) {
+      if ((domain == CA_CODE_DOMAIN_FREQUENCY) || (domain == CA_CODE_DOMAIN_FREQUENCY_CONJUGATE)) {
         auto fft = std::make_unique<gr::fft::fft_complex>(d_code_sampled.size(), true);
 
         memcpy(fft->get_inbuf(), d_code_sampled.data(), d_code_sampled.size() * sizeof(gr_complex));
         fft->execute();
-        memcpy(d_code_sampled.data(), fft->get_outbuf(), d_code_sampled.size() * sizeof(gr_complex));
+
+        if (domain == CA_CODE_DOMAIN_FREQUENCY_CONJUGATE)
+          volk_32fc_conjugate_32fc(d_code_sampled.data(), fft->get_outbuf(), d_code_sampled.size());
+        else
+          memcpy(d_code_sampled.data(), fft->get_outbuf(), d_code_sampled.size() * sizeof(gr_complex));
       }
     }
 
@@ -104,7 +115,7 @@ namespace gr {
     {
       T* optr0 = (T*) output_items[0];
 
-      for (int i = 0; i < noutput_items; ++i, ++d_n)
+      for (int i = 0; i < (d_vlen * noutput_items); ++i, ++d_n)
         optr0[i] = d_code_sampled[d_n % d_n_samples];
 
       d_n %= d_n_samples;

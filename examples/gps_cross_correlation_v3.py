@@ -134,7 +134,7 @@ class gps_cross_correlation_v3(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.gnss_ca_code_generator_1 = gnss.ca_code_generator_c(20, samp_rate, gnss.CA_CODE_DOMAIN_FREQUENCY)
+        self.gnss_ca_code_generator_1 = gnss.ca_code_generator_c(1, 20, samp_rate, gnss.CA_CODE_DOMAIN_FREQUENCY)
         self.fft_vxx_0_0_0 = fft.fft_vcc(vector_length, False, window.rectangular(vector_length), False, 1)
         self.fft_vxx_0 = fft.fft_vcc(vector_length, True, window.rectangular(vector_length), False, 1)
         self._delay_range = Range(0, 2000, 1, 0, 200)

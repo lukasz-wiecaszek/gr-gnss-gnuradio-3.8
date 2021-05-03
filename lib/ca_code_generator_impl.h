@@ -37,12 +37,13 @@ namespace gr {
     class ca_code_generator_impl : public ca_code_generator<T>
     {
     private:
+      const size_t d_vlen;
       const int d_n_samples;
       std::vector<T> d_code_sampled;
       int d_n;
 
     public:
-      ca_code_generator_impl(unsigned svid, double sampling_freq, ca_code_domain_e domain);
+      ca_code_generator_impl(size_t vlen, unsigned svid, double sampling_freq, ca_code_domain_e domain);
       ~ca_code_generator_impl();
 
       int work(

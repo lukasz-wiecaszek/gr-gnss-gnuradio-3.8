@@ -26,7 +26,8 @@ namespace gr {
 
     typedef enum {
         CA_CODE_DOMAIN_TIME,
-        CA_CODE_DOMAIN_FREQUENCY
+        CA_CODE_DOMAIN_FREQUENCY,
+        CA_CODE_DOMAIN_FREQUENCY_CONJUGATE,
     } ca_code_domain_e;
 
   } // namespace gnss
