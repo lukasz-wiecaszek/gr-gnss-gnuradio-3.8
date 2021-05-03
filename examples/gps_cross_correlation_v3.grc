@@ -10,7 +10,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: gps_cross_correlation_v2
+    id: gps_cross_correlation_v3
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -21,7 +21,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: gps_cross_correlation_v2
+    title: gps_cross_correlation_v3
     window_size: ''
   states:
     bus_sink: false
@@ -134,25 +134,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [549, 498]
-    rotation: 0
-    state: true
-- name: blocks_delay_0
-  id: blocks_delay
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    delay: delay
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_ports: '1'
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [693, 266]
     rotation: 0
     state: true
 - name: blocks_file_source_0
@@ -360,27 +341,6 @@ blocks:
     coordinate: [1111, 50]
     rotation: 0
     state: true
-- name: fft_vxx_0_0
-  id: fft_vxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    fft_size: vector_length
-    forward: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    nthreads: '1'
-    shift: 'False'
-    type: complex
-    window: window.rectangular(vector_length)
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1108, 235]
-    rotation: 0
-    state: true
 - name: fft_vxx_0_0_0
   id: fft_vxx
   parameters:
@@ -408,7 +368,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    domain: gnss.CA_CODE_DOMAIN_TIME
+    domain: gnss.CA_CODE_DOMAIN_FREQUENCY
     maxoutbuf: '0'
     minoutbuf: '0'
     sampling_freq: samp_rate
@@ -418,7 +378,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [241, 250]
+    coordinate: [236, 258]
     rotation: 0
     state: true
 - name: gps_acquisition_0
@@ -537,20 +497,18 @@ blocks:
 connections:
 - [analog_sig_source_x_0, '0', blocks_throttle_0_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', blocks_vector_to_stream_0_0, '0']
-- [blocks_delay_0, '0', blocks_stream_to_vector_0_0, '0']
 - [blocks_file_source_0, '0', blocks_interleaved_short_to_complex_0, '0']
 - [blocks_interleaved_short_to_complex_0, '0', blocks_throttle_0, '0']
 - [blocks_multiply_conjugate_cc_0, '0', fft_vxx_0_0_0, '0']
 - [blocks_multiply_xx_0, '0', blocks_stream_to_vector_0, '0']
 - [blocks_stream_to_vector_0, '0', fft_vxx_0, '0']
-- [blocks_stream_to_vector_0_0, '0', fft_vxx_0_0, '0']
+- [blocks_stream_to_vector_0_0, '0', blocks_multiply_conjugate_cc_0, '1']
 - [blocks_throttle_0, '0', blocks_multiply_xx_0, '0']
 - [blocks_throttle_0, '0', gps_acquisition_0, '0']
 - [blocks_throttle_0_0, '0', blocks_multiply_xx_0, '1']
-- [blocks_throttle_0_0_0, '0', blocks_delay_0, '0']
+- [blocks_throttle_0_0_0, '0', blocks_stream_to_vector_0_0, '0']
 - [blocks_vector_to_stream_0_0, '0', qtgui_time_sink_x_0, '0']
 - [fft_vxx_0, '0', blocks_multiply_conjugate_cc_0, '0']
-- [fft_vxx_0_0, '0', blocks_multiply_conjugate_cc_0, '1']
 - [fft_vxx_0_0_0, '0', blocks_complex_to_mag_squared_0, '0']
 - [gnss_ca_code_generator_1, '0', blocks_throttle_0_0_0, '0']
 

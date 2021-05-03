@@ -22,6 +22,7 @@
 #define INCLUDED_GNSS_CA_CODE_GENERATOR_H
 
 #include <gnss/api.h>
+#include <gnss/ca_code_domain.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
@@ -46,7 +47,7 @@ namespace gr {
        * class. gnss::ca_code_generator::make is the public interface for
        * creating new instances.
        */
-      static sptr make(unsigned svid, double sampling_freq);
+      static sptr make(unsigned svid, double sampling_freq, ca_code_domain_e domain = CA_CODE_DOMAIN_TIME);
     };
 
     using ca_code_generator_b = ca_code_generator<int8_t>;

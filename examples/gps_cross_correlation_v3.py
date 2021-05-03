@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: gps_cross_correlation_v2
+# Title: gps_cross_correlation_v3
 # GNU Radio version: 3.8.1.0
 
 from distutils.version import StrictVersion
@@ -40,12 +40,12 @@ import gnss
 
 from gnuradio import qtgui
 
-class gps_cross_correlation_v2(gr.top_block, Qt.QWidget):
+class gps_cross_correlation_v3(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "gps_cross_correlation_v2")
+        gr.top_block.__init__(self, "gps_cross_correlation_v3")
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("gps_cross_correlation_v2")
+        self.setWindowTitle("gps_cross_correlation_v3")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -63,7 +63,7 @@ class gps_cross_correlation_v2(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "gps_cross_correlation_v2")
+        self.settings = Qt.QSettings("GNU Radio", "gps_cross_correlation_v3")
 
         try:
             if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
@@ -87,9 +87,6 @@ class gps_cross_correlation_v2(gr.top_block, Qt.QWidget):
         self._delta_f_range = Range(-20000, +20000, 250, -8500, 200)
         self._delta_f_win = RangeWidget(self._delta_f_range, self.set_delta_f, 'delta_f', "counter_slider", float)
         self.top_grid_layout.addWidget(self._delta_f_win)
-        self._delay_range = Range(0, 2000, 1, 0, 200)
-        self._delay_win = RangeWidget(self._delay_range, self.set_delay, 'delay', "counter_slider", int)
-        self.top_grid_layout.addWidget(self._delay_win)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
             2000, #size
             samp_rate, #samp_rate
@@ -137,10 +134,12 @@ class gps_cross_correlation_v2(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.gnss_ca_code_generator_1 = gnss.ca_code_generator_c(20, samp_rate, gnss.CA_CODE_DOMAIN_TIME)
+        self.gnss_ca_code_generator_1 = gnss.ca_code_generator_c(20, samp_rate, gnss.CA_CODE_DOMAIN_FREQUENCY)
         self.fft_vxx_0_0_0 = fft.fft_vcc(vector_length, False, window.rectangular(vector_length), False, 1)
-        self.fft_vxx_0_0 = fft.fft_vcc(vector_length, True, window.rectangular(vector_length), False, 1)
         self.fft_vxx_0 = fft.fft_vcc(vector_length, True, window.rectangular(vector_length), False, 1)
+        self._delay_range = Range(0, 2000, 1, 0, 200)
+        self._delay_win = RangeWidget(self._delay_range, self.set_delay, 'delay', "counter_slider", int)
+        self.top_grid_layout.addWidget(self._delay_win)
         self.blocks_vector_to_stream_0_0 = blocks.vector_to_stream(gr.sizeof_float*1, vector_length)
         self.blocks_throttle_0_0_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_throttle_0_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
@@ -152,7 +151,6 @@ class gps_cross_correlation_v2(gr.top_block, Qt.QWidget):
         self.blocks_interleaved_short_to_complex_0 = blocks.interleaved_short_to_complex(False, False)
         self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnuradio/gr-gps/examples/signal.dat', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
-        self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, delay)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(vector_length)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, delta_f, 1, 0, 0)
 
@@ -163,25 +161,23 @@ class gps_cross_correlation_v2(gr.top_block, Qt.QWidget):
         ##################################################
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_throttle_0_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_vector_to_stream_0_0, 0))
-        self.connect((self.blocks_delay_0, 0), (self.blocks_stream_to_vector_0_0, 0))
         self.connect((self.blocks_file_source_0, 0), (self.blocks_interleaved_short_to_complex_0, 0))
         self.connect((self.blocks_interleaved_short_to_complex_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.blocks_multiply_conjugate_cc_0, 0), (self.fft_vxx_0_0_0, 0))
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_stream_to_vector_0, 0))
         self.connect((self.blocks_stream_to_vector_0, 0), (self.fft_vxx_0, 0))
-        self.connect((self.blocks_stream_to_vector_0_0, 0), (self.fft_vxx_0_0, 0))
+        self.connect((self.blocks_stream_to_vector_0_0, 0), (self.blocks_multiply_conjugate_cc_0, 1))
         self.connect((self.blocks_throttle_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.blocks_throttle_0_0, 0), (self.blocks_multiply_xx_0, 1))
-        self.connect((self.blocks_throttle_0_0_0, 0), (self.blocks_delay_0, 0))
+        self.connect((self.blocks_throttle_0_0_0, 0), (self.blocks_stream_to_vector_0_0, 0))
         self.connect((self.blocks_vector_to_stream_0_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.fft_vxx_0, 0), (self.blocks_multiply_conjugate_cc_0, 0))
-        self.connect((self.fft_vxx_0_0, 0), (self.blocks_multiply_conjugate_cc_0, 1))
         self.connect((self.fft_vxx_0_0_0, 0), (self.blocks_complex_to_mag_squared_0, 0))
         self.connect((self.gnss_ca_code_generator_1, 0), (self.blocks_throttle_0_0_0, 0))
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "gps_cross_correlation_v2")
+        self.settings = Qt.QSettings("GNU Radio", "gps_cross_correlation_v3")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
@@ -214,13 +210,12 @@ class gps_cross_correlation_v2(gr.top_block, Qt.QWidget):
 
     def set_delay(self, delay):
         self.delay = delay
-        self.blocks_delay_0.set_dly(self.delay)
 
 
 
 
 
-def main(top_block_cls=gps_cross_correlation_v2, options=None):
+def main(top_block_cls=gps_cross_correlation_v3, options=None):
 
     if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
         style = gr.prefs().get_string('qtgui', 'style', 'raster')

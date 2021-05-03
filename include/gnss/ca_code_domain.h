@@ -18,42 +18,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_CA_CODE_GENERATOR_IMPL_H
-#define INCLUDED_GNSS_CA_CODE_GENERATOR_IMPL_H
-
-#include <memory>
-
-#include <gnss/ca_code_generator.h>
-#include "gnss_parameters.h"
-#include "ca_code.h"
-
-#define IVLEN0 0
-#define OVLEN0 1
+#ifndef INCLUDED_GNSS_CA_CODE_DOMAIN_H
+#define INCLUDED_GNSS_CA_CODE_DOMAIN_H
 
 namespace gr {
   namespace gnss {
 
-    template<typename T>
-    class ca_code_generator_impl : public ca_code_generator<T>
-    {
-    private:
-      const int d_n_samples;
-      std::vector<T> d_code_sampled;
-      int d_n;
-
-    public:
-      ca_code_generator_impl(unsigned svid, double sampling_freq, ca_code_domain_e domain);
-      ~ca_code_generator_impl();
-
-      int work(
-              int noutput_items,
-              gr_vector_const_void_star &input_items,
-              gr_vector_void_star &output_items
-      );
-    };
+    typedef enum {
+        CA_CODE_DOMAIN_TIME,
+        CA_CODE_DOMAIN_FREQUENCY
+    } ca_code_domain_e;
 
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_CA_CODE_GENERATOR_IMPL_H */
+#endif /* INCLUDED_GNSS_CA_CODE_DOMAIN_H */
 

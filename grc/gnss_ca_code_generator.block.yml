@@ -4,7 +4,7 @@ category: '[gnss]'
 
 templates:
   imports: import gnss
-  make: gnss.ca_code_generator_${type.suffix}(${svid}, ${sampling_freq})
+  make: gnss.ca_code_generator_${type.suffix}(${svid}, ${sampling_freq}, ${domain})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
@@ -26,6 +26,12 @@ parameters:
   label: Sample Rate
   dtype: real
   default: '1023000'
+- id: domain
+  label: Domain
+  dtype: enum
+  options: [gnss.CA_CODE_DOMAIN_TIME, gnss.CA_CODE_DOMAIN_FREQUENCY]
+  option_labels: [time, frequency]
+  default: gnss.CA_CODE_DOMAIN_TIME
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:

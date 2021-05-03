@@ -24,6 +24,7 @@
 install(FILES
     api.h
     acquisition.h
+    ca_code_domain.h
     ca_code_generator.h
     resampler.h DESTINATION include/gnss
 )

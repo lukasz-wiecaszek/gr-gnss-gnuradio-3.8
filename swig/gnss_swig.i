@@ -9,12 +9,15 @@
 
 %{
 #include "gnss/acquisition.h"
+#include "gnss/ca_code_domain.h"
 #include "gnss/ca_code_generator.h"
 #include "gnss/resampler.h"
 %}
 
 %include "gnss/acquisition.h"
 GR_SWIG_BLOCK_MAGIC2(gnss, acquisition);
+
+%include "gnss/ca_code_domain.h"
 
 %include "gnss/ca_code_generator.h"
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, ca_code_generator_b, ca_code_generator<std::int8_t>);
