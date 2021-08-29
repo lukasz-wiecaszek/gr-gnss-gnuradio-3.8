@@ -23,8 +23,10 @@
 ########################################################################
 install(FILES
     api.h
-    acquisition.h
+    navigation_system.h
+    acquisition_and_tracking.h
     ca_code_domain.h
     ca_code_generator.h
-    resampler.h DESTINATION include/gnss
+    resampler.h
+        DESTINATION include/gnss
 )

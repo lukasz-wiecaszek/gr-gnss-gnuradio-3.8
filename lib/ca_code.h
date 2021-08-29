@@ -24,7 +24,7 @@
 #include <array>
 #include <memory>
 #include "gnss_parameters.h"
-#include "code_phase_assigments.h"
+#include "ca_code_phase_assigments.h"
 #include "prbs.h"
 
 namespace gr {
@@ -46,9 +46,8 @@ namespace gr {
       {
         int delay = N - code_phase_assigments[svid].delay;
 
-        for (int i = 0; i < N; ++i) {
+        for (int i = 0; i < N; ++i)
           d_code[i] = G1[i] ^ G2[(i + delay) % N];
-        }
       }
 
     public:

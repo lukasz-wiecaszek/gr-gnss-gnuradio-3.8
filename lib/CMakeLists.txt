@@ -23,7 +23,7 @@
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
 list(APPEND gnss_sources
-    acquisition_impl.cc
+    acquisition_and_tracking_impl.cc
     ca_code_generator_impl.cc
     resampler_impl.cc )
 

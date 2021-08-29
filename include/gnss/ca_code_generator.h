@@ -47,7 +47,7 @@ namespace gr {
        * class. gnss::ca_code_generator::make is the public interface for
        * creating new instances.
        */
-      static sptr make(size_t vlen, unsigned svid, double sampling_freq, ca_code_domain_e domain = CA_CODE_DOMAIN_TIME);
+      static sptr make(size_t vlen, double sampling_freq, unsigned svid, ca_code_domain_e domain = CA_CODE_DOMAIN_TIME);
     };
 
     using ca_code_generator_b = ca_code_generator<int8_t>;

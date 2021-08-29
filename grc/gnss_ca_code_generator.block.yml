@@ -4,7 +4,7 @@ category: '[gnss]'
 
 templates:
   imports: import gnss
-  make: gnss.ca_code_generator_${type.suffix}(${vlen}, ${svid}, ${sampling_freq}, ${domain})
+  make: gnss.ca_code_generator_${type.suffix}(${vlen}, ${sampling_freq}, ${svid}, ${domain})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
@@ -23,13 +23,13 @@ parameters:
   option_attributes:
     suffix: [b, s, i, f, c]
   hide: part
-- id: svid
-  label: SVID
-  dtype: int
 - id: sampling_freq
   label: Sample Rate
   dtype: real
   default: '1023000'
+- id: svid
+  label: SVID
+  dtype: int
 - id: domain
   label: Domain
   dtype: enum

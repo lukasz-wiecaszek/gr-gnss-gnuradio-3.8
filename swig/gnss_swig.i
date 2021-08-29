@@ -8,14 +8,17 @@
 %include "gnss_swig_doc.i"
 
 %{
-#include "gnss/acquisition.h"
+#include "gnss/navigation_system.h"
+#include "gnss/acquisition_and_tracking.h"
 #include "gnss/ca_code_domain.h"
 #include "gnss/ca_code_generator.h"
 #include "gnss/resampler.h"
 %}
 
-%include "gnss/acquisition.h"
-GR_SWIG_BLOCK_MAGIC2(gnss, acquisition);
+%include "gnss/navigation_system.h"
+
+%include "gnss/acquisition_and_tracking.h"
+GR_SWIG_BLOCK_MAGIC2(gnss, acquisition_and_tracking);
 
 %include "gnss/ca_code_domain.h"
 

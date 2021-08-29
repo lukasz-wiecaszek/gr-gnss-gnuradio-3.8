@@ -1,17 +1,34 @@
-id: gnss_acquisition
-label: acquisition
+id: gnss_acquisition_and_tracking
+label: acquisition_and_tracking
 category: '[gnss]'
 
 templates:
   imports: import gnss
-  make: gnss.acquisition()
+  make: |-
+    gnss.acquisition_and_tracking(${sampling_freq})
+    self.${id}.set_acq_params(${navigation_system}, ${identifier})
+  callbacks:
+  - self.${id}.set_acq_params(${navigation_system}, ${identifier})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
 #     * id (makes the value accessible as \$keyname, e.g. in the make entry)
 #     * label (label shown in the GUI)
 #     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
-# parameters:
+parameters:
+- id: sampling_freq
+  label: Sample Rate
+  dtype: real
+
+- id: navigation_system
+  label: Navigation System
+  dtype: enum
+  options: [gnss.NAVIGATION_SYSTEM_GPS, gnss.NAVIGATION_SYSTEM_GALILEO, gnss.NAVIGATION_SYSTEM_GLONASS]
+  option_labels: [GPS, GALILEO, GLONASS]
+
+- id: identifier
+  label: Id (e.g. gps svid)
+  dtype: int
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:

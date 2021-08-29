@@ -18,11 +18,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_ACQUISITION_H
-#define INCLUDED_GNSS_ACQUISITION_H
+#ifndef INCLUDED_GNSS_ACQUISITION_AND_TRACKING_H
+#define INCLUDED_GNSS_ACQUISITION_AND_TRACKING_H
 
 #include <gnss/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnss/navigation_system.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace gnss {
@@ -32,24 +33,28 @@ namespace gr {
      * \ingroup gnss
      *
      */
-    class GNSS_API acquisition : virtual public gr::sync_block
+    class GNSS_API acquisition_and_tracking : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<acquisition> sptr;
+      typedef boost::shared_ptr<acquisition_and_tracking> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of gnss::acquisition.
+       * \brief Return a shared_ptr to a new instance of gnss::acquisition_and_tracking.
        *
-       * To avoid accidental use of raw pointers, gnss::acquisition's
+       * To avoid accidental use of raw pointers, gnss::acquisition_and_tracking's
        * constructor is in a private implementation
-       * class. gnss::acquisition::make is the public interface for
+       * class. gnss::acquisition_and_tracking::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(double sampling_freq);
+
+      virtual void set_acq_params(navigation_system_e system, int id) = 0;
+      virtual void get_acq_params(navigation_system_e& system, int& id) const = 0;
+
     };
 
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_ACQUISITION_H */
+#endif /* INCLUDED_GNSS_ACQUISITION_AND_TRACKING_H */
 

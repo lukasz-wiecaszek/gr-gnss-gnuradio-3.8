@@ -38,16 +38,19 @@ namespace gr {
 
     using gps_ca_code = ca_code<int, GPS_CA_CODE_LENGTH>;
 
+    /*===========================================================================*\
+    * public function definitions
+    \*===========================================================================*/
     template<typename T>
     typename ca_code_generator<T>::sptr
-    ca_code_generator<T>::make(size_t vlen, unsigned svid, double sampling_freq, ca_code_domain_e domain)
+    ca_code_generator<T>::make(size_t vlen, double sampling_freq, unsigned svid, ca_code_domain_e domain)
     {
       return gnuradio::get_initial_sptr
-        (new ca_code_generator_impl<T>(vlen, svid, sampling_freq, domain));
+        (new ca_code_generator_impl<T>(vlen, sampling_freq, svid, domain));
     }
 
     template<typename T>
-    ca_code_generator_impl<T>::ca_code_generator_impl(size_t vlen, unsigned svid, double sampling_freq, ca_code_domain_e domain)
+    ca_code_generator_impl<T>::ca_code_generator_impl(size_t vlen, double sampling_freq, unsigned svid, ca_code_domain_e domain)
       : gr::sync_block("ca_code_generator",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, sizeof(T) * vlen)),
@@ -66,11 +69,11 @@ namespace gr {
       printf("samples per ca code: %d\n", d_n_samples);
 
       for (int i = 0; i < d_n_samples; ++i)
-        d_code_sampled[i] = (*code)[((i + .5f) * GPS_CA_CODE_LENGTH) / d_n_samples] ? +1 : -1;
+        d_code_sampled[i] = (*code)[(i * GPS_CA_CODE_LENGTH) / d_n_samples] ? +1 : -1;
     }
 
     template<>
-    ca_code_generator_impl<gr_complex>::ca_code_generator_impl(size_t vlen,unsigned svid, double sampling_freq, ca_code_domain_e domain)
+    ca_code_generator_impl<gr_complex>::ca_code_generator_impl(size_t vlen, double sampling_freq, unsigned svid, ca_code_domain_e domain)
       : gr::sync_block("ca_code_generator",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, sizeof(gr_complex) * vlen)),
@@ -123,6 +126,14 @@ namespace gr {
       // Tell runtime system how many output items we produced.
       return noutput_items;
     }
+
+    /*===========================================================================*\
+    * protected function definitions
+    \*===========================================================================*/
+
+    /*===========================================================================*\
+    * private function definitions
+    \*===========================================================================*/
 
     template class ca_code_generator<std::int8_t>;
     template class ca_code_generator<std::int16_t>;

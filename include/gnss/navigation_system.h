@@ -18,35 +18,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_ACQUISITION_IMPL_H
-#define INCLUDED_GNSS_ACQUISITION_IMPL_H
-
-#include <gnss/acquisition.h>
-
-#define IVLEN0 1
-#define OVLEN0 1
+#ifndef INCLUDED_GNSS_NAVIGATION_SYSTEM_H
+#define INCLUDED_GNSS_NAVIGATION_SYSTEM_H
 
 namespace gr {
   namespace gnss {
 
-    template<typename ITYPE0, typename OTYPE0>
-    class acquisition_impl : public acquisition
-    {
-    private:
-
-    public:
-      acquisition_impl();
-      ~acquisition_impl();
-
-      int work(
-              int noutput_items,
-              gr_vector_const_void_star &input_items,
-              gr_vector_void_star &output_items
-      );
-    };
+    typedef enum {
+        NAVIGATION_SYSTEM_UNDEFINED,
+        NAVIGATION_SYSTEM_GPS,
+        NAVIGATION_SYSTEM_GALILEO,
+        NAVIGATION_SYSTEM_GLONASS,
+    } navigation_system_e;
 
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_ACQUISITION_IMPL_H */
+#endif /* INCLUDED_GNSS_NAVIGATION_SYSTEM_H */
 

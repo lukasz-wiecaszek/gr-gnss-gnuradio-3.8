@@ -18,7 +18,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 install(FILES
-    gnss_acquisition.block.yml
+    gnss_acquisition_and_tracking.block.yml
     gnss_ca_code_generator.block.yml
     gnss_resampler.block.yml DESTINATION share/gnuradio/grc/blocks
 )
