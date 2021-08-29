@@ -1,5 +1,5 @@
 title:
-  - gr-gnss (The GPS OOT Module)
+  - gr-gnss (The GNSS OOT Module)
 brief:
   - My attempt to build GPS (or more generally Global Navigation Satelite Systems)
   receiver with a little help of gnuradio.
