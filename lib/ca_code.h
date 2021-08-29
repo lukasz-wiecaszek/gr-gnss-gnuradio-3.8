@@ -44,7 +44,7 @@ namespace gr {
     private:
       ca_code(uint32_t svid)
       {
-        int delay = N - code_phase_assigments[svid].delay;
+        int delay = N - ca_code_phase_assigments[svid].delay;
 
         for (int i = 0; i < N; ++i)
           d_code[i] = G1[i] ^ G2[(i + delay) % N];
@@ -57,7 +57,7 @@ namespace gr {
           from_this(uint32_t svid) : ca_code(svid) {}
         }; // please, have mercy
 
-        if (svid < std::size(code_phase_assigments)) {
+        if (svid < std::size(ca_code_phase_assigments)) {
           return std::make_shared<from_this>(svid);
         }
         else

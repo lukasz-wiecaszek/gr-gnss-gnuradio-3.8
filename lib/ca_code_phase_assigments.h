@@ -34,7 +34,7 @@ namespace gr {
   };
 
   // IS-GPS-200 - Table 3-Ia - Code Phase Assigments
-  constexpr ca_code_phase_ids code_phase_assigments[] =
+  constexpr ca_code_phase_ids ca_code_phase_assigments[] =
   {
     { 0,  0,   0},
     { 1,  1,   5},
