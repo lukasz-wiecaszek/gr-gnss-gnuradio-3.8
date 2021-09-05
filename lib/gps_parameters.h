@@ -27,25 +27,25 @@
 namespace gr {
   namespace gnss {
 
-  constexpr uint32_t GPS_F0 = 10230000;
-  constexpr uint32_t GPS_L1_MULTIPLIER = 154;
-  constexpr uint32_t GPS_L2_MULTIPLIER = 120;
+    constexpr uint32_t GPS_F0 = 10230000;
+    constexpr uint32_t GPS_L1_MULTIPLIER = 154;
+    constexpr uint32_t GPS_L2_MULTIPLIER = 120;
 
-  // IS-GPS-200 - Chapter 3.3.1.1 Frequency Plan
-  // The nominal carrier frequencies shall be 1575.42 MHz,
-  // and 1227.6 MHz for L1 and L2, respectively.
-  constexpr uint32_t GPS_L1_FREQ_HZ = GPS_L1_MULTIPLIER * GPS_F0;
-  constexpr uint32_t GPS_L2_FREQ_HZ = GPS_L2_MULTIPLIER * GPS_F0;
+    // IS-GPS-200 - Chapter 3.3.1.1 Frequency Plan
+    // The nominal carrier frequencies shall be 1575.42 MHz,
+    // and 1227.6 MHz for L1 and L2, respectively.
+    constexpr uint32_t GPS_L1_FREQ_HZ = GPS_L1_MULTIPLIER * GPS_F0;
+    constexpr uint32_t GPS_L2_FREQ_HZ = GPS_L2_MULTIPLIER * GPS_F0;
 
-  constexpr uint32_t GPS_CA_CODE_LENGTH = 1023;
-  constexpr uint32_t GPS_CA_CODE_RATE = 1000; // codes per second
-  constexpr uint32_t GPS_CA_CODE_CHIP_RATE = GPS_CA_CODE_LENGTH * GPS_CA_CODE_RATE; // chips per second
+    constexpr uint32_t GPS_CA_CODE_LENGTH = 1023;
+    constexpr uint32_t GPS_CA_CODE_RATE = 1000; // codes per second
+    constexpr uint32_t GPS_CA_CODE_CHIP_RATE = GPS_CA_CODE_LENGTH * GPS_CA_CODE_RATE; // chips per second
 
-  constexpr uint32_t GPS_CA_NAV_MESSAGE_SYMBOLS_PER_BIT = 20;
+    constexpr uint32_t GPS_CA_NAV_MESSAGE_SYMBOLS_PER_BIT = 20;
 
-  // IS-GPS-200 - Chapter 20.3.2 Message Structure.
-  // IS-GPS-200 - Chapter 20.3.3 Message Content.
-  constexpr std::bitset<8> GPS_CA_TLM_PREAMBLE = 0b10001011;
+    // IS-GPS-200 - Chapter 20.3.2 Message Structure.
+    // IS-GPS-200 - Chapter 20.3.3 Message Content.
+    constexpr std::bitset<8> GPS_CA_TLM_PREAMBLE = 0b10001011;
 
   } // namespace gnss
 } // namespace gr
