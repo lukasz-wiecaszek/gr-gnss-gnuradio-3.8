@@ -31,6 +31,7 @@
 #include "acquisition_and_tracking_impl.h"
 #include "gnss_parameters.h"
 #include "ca_code.h"
+#include "pll_discriminators.h"
 
 namespace {
 
@@ -290,8 +291,8 @@ namespace gr {
       double dll_discriminator = ((ABS_E + ABS_L) == 0.0) ? 0.0 : (1.0 - correlation_shift) * (ABS_E - ABS_L) / (ABS_E + ABS_L);
       double dll_discriminator_filtered = d_dll_loop_filter[dll_discriminator];
 
-      double pll_discriminator = (P.imag() == 0 ? 0.0 : std::atan(P.real() / P.imag())) / GR_M_TWOPI;
-      double pll_discriminator_filtered = d_pll_loop_filter[pll_discriminator];
+      double pll_discriminator = pll_discriminator_two_quadrant_arctangent(P);
+      double pll_discriminator_filtered = d_pll_loop_filter[pll_discriminator / GR_M_TWOPI];
 
       d_freq = pll_discriminator_filtered;
 
