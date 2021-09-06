@@ -31,6 +31,7 @@
 #include "acquisition_and_tracking_impl.h"
 #include "gnss_parameters.h"
 #include "ca_code.h"
+#include "dll_discriminators.h"
 #include "pll_discriminators.h"
 
 namespace {
@@ -285,11 +286,9 @@ namespace gr {
       gr_complex E = correlations[0];
       gr_complex P = correlations[1];
       gr_complex L = correlations[2];
-      double ABS_E = std::abs(E);
-      double ABS_L = std::abs(L);
 
-      double dll_discriminator = ((ABS_E + ABS_L) == 0.0) ? 0.0 : (1.0 - correlation_shift) * (ABS_E - ABS_L) / (ABS_E + ABS_L);
-      double dll_discriminator_filtered = d_dll_loop_filter[dll_discriminator];
+      double dll_discriminator = dll_discriminator_noncoherent_e_minus_l_power(E, L);
+      double dll_discriminator_filtered = d_dll_loop_filter[(1.0 - correlation_shift) * dll_discriminator];
 
       double pll_discriminator = pll_discriminator_two_quadrant_arctangent(P);
       double pll_discriminator_filtered = d_pll_loop_filter[pll_discriminator / GR_M_TWOPI];
