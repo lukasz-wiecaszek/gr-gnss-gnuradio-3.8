@@ -13,6 +13,7 @@
 #include "gnss/ca_code_domain.h"
 #include "gnss/ca_code_generator.h"
 #include "gnss/resampler.h"
+#include "gnss/ca_sybmols_to_nav_bits.h"
 %}
 
 %include "gnss/navigation_system.h"
@@ -31,3 +32,5 @@ GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, ca_code_generator_c, ca_code_generator<gr_comple
 
 %include "gnss/resampler.h"
 GR_SWIG_BLOCK_MAGIC2(gnss, resampler);
+%include "gnss/ca_sybmols_to_nav_bits.h"
+GR_SWIG_BLOCK_MAGIC2(gnss, ca_sybmols_to_nav_bits);

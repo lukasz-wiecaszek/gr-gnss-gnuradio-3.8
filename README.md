@@ -5,7 +5,7 @@ receiver with a little help of gnuradio.
 The best way (at least to me) to learn a new technology is to try to build a project
 making use of that technology.
 This is the main reason and motivation why this project was created.
-At this stage of development only acquisition and tracking block is prepeared.
+At this stage of development only acquisition and tracking block is prepared.
 If interested, please see especially gps_cross_correlation_v5.grc
 where you will be able to spot navigation message bits on the GUI Time Sink.
 

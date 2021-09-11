@@ -28,5 +28,5 @@ install(FILES
     ca_code_domain.h
     ca_code_generator.h
     resampler.h
-        DESTINATION include/gnss
+    ca_sybmols_to_nav_bits.h DESTINATION include/gnss
 )

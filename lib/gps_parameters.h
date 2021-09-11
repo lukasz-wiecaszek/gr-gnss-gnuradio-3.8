@@ -41,11 +41,11 @@ namespace gr {
     constexpr uint32_t GPS_CA_CODE_RATE = 1000; // codes per second
     constexpr uint32_t GPS_CA_CODE_CHIP_RATE = GPS_CA_CODE_LENGTH * GPS_CA_CODE_RATE; // chips per second
 
-    constexpr uint32_t GPS_CA_NAV_MESSAGE_SYMBOLS_PER_BIT = 20;
+    constexpr uint32_t GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT = 20;
 
     // IS-GPS-200 - Chapter 20.3.2 Message Structure.
     // IS-GPS-200 - Chapter 20.3.3 Message Content.
-    constexpr std::bitset<8> GPS_CA_TLM_PREAMBLE = 0b10001011;
+    constexpr std::bitset<8> GPS_CA_TLM_PREAMBLE_BITS = 0b11010001;
 
   } // namespace gnss
 } // namespace gr
