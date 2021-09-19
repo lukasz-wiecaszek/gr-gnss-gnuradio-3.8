@@ -140,7 +140,7 @@ blocks:
     alias: ''
     append: 'False'
     comment: ''
-    file: subframes.txt
+    file: subframes.raw
     type: byte
     unbuffered: 'False'
     vlen: '1'
@@ -148,7 +148,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1213, 386]
+    coordinate: [1362, 336]
     rotation: 0
     state: true
 - name: blocks_file_source_0
@@ -294,6 +294,24 @@ blocks:
     coordinate: [870, 271]
     rotation: 0
     state: true
+- name: blocks_stream_to_vector_1
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '300'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1005, 405]
+    rotation: 0
+    state: true
 - name: blocks_throttle_0
   id: blocks_throttle
   parameters:
@@ -329,7 +347,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1006, 394]
+    coordinate: [1002, 343]
     rotation: 0
     state: true
 - name: blocks_vector_to_stream_0_0
@@ -464,6 +482,20 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [755, 405]
+    rotation: 0
+    state: true
+- name: gnss_nav_message_sink_0
+  id: gnss_nav_message_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    filename: subframes.txt
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1216, 401]
     rotation: 0
     state: true
 - name: gps_acquisition_0
@@ -752,6 +784,7 @@ connections:
 - [blocks_short_to_float_0, '0', qtgui_number_sink_0, '0']
 - [blocks_stream_to_vector_0, '0', fft_vxx_0, '0']
 - [blocks_stream_to_vector_0_0, '0', fft_vxx_0_0, '0']
+- [blocks_stream_to_vector_1, '0', gnss_nav_message_sink_0, '0']
 - [blocks_throttle_0, '0', blocks_multiply_xx_0, '0']
 - [blocks_throttle_0, '0', gnss_acquisition_and_tracking_0, '0']
 - [blocks_throttle_0, '0', gps_acquisition_0, '0']
@@ -763,6 +796,7 @@ connections:
 - [gnss_acquisition_and_tracking_0, '0', gnss_ca_sybmols_to_nav_bits_0, '0']
 - [gnss_acquisition_and_tracking_0, '0', qtgui_time_sink_x_0_0_0, '0']
 - [gnss_ca_code_generator_1, '0', blocks_stream_to_vector_0_0, '0']
+- [gnss_ca_sybmols_to_nav_bits_0, '0', blocks_stream_to_vector_1, '0']
 - [gnss_ca_sybmols_to_nav_bits_0, '0', blocks_unpacked_to_packed_xx_0, '0']
 
 metadata:

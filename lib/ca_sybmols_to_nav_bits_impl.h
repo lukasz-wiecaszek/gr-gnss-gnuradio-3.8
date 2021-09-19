@@ -81,6 +81,19 @@ namespace gr {
         return std::abs(n) == d_preamble_sybmols.size();
       }
 
+      int get_bit(const gr_complex* symbols)
+      {
+        int n = 0;
+
+        for (int i = 0; i < GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT; ++i)
+          symbols[i].imag() > 0 ? n++ : n--;
+
+        if (std::abs(n) < d_thershold)
+          return -1;
+
+        return d_polarity * n > 0 ? 1 : 0;
+      }
+
       state_e d_state;
       int d_polarity;
       int d_thershold;

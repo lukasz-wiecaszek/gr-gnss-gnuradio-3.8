@@ -26,7 +26,9 @@ list(APPEND gnss_sources
     acquisition_and_tracking_impl.cc
     ca_code_generator_impl.cc
     resampler_impl.cc
-    ca_sybmols_to_nav_bits_impl.cc)
+    ca_sybmols_to_nav_bits_impl.cc
+    nav_message_sink_impl.cc
+    )
 
 set(gnss_sources "${gnss_sources}" PARENT_SCOPE)
 if(NOT gnss_sources)

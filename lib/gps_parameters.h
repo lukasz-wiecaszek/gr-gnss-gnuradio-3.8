@@ -45,6 +45,11 @@ namespace gr {
 
     // IS-GPS-200 - Chapter 20.3.2 Message Structure.
     // IS-GPS-200 - Chapter 20.3.3 Message Content.
+    constexpr int GPS_NAV_MESSAGE_BITS_PER_WORD = 30;
+    constexpr int GPS_NAV_MESSAGE_WORDS_PER_SUBFRAME = 10;
+    constexpr int GPS_NAV_MESSAGE_BITS_PER_SUBFRAME =
+      GPS_NAV_MESSAGE_BITS_PER_WORD * GPS_NAV_MESSAGE_WORDS_PER_SUBFRAME;
+
     constexpr std::bitset<8> GPS_CA_TLM_PREAMBLE_BITS = 0b11010001;
 
   } // namespace gnss

@@ -145,20 +145,15 @@ namespace gr {
       OTYPE0* optr0 = (OTYPE0*) output_items[0];
       int nproduced = 0;
       int nconsumed = 0;
-      int n;
+      int bit_value;
 
       while (nproduced < noutput_items) {
-        n = 0;
-
-        for (int i = 0; i < GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT; ++i)
-          iptr0[nconsumed + i].imag() > 0 ? n++ : n--;
-
-        if (std::abs(n) < d_thershold) {
+        if ((bit_value = get_bit(iptr0 + nconsumed)) == -1) {
           d_state = state_e::unlocked;
           break;
         }
 
-        optr0[nproduced] = d_polarity * n > 0 ? 1 : 0;
+        optr0[nproduced] = bit_value;
 
         nproduced++;
         nconsumed += GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT;

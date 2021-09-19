@@ -29,6 +29,7 @@ try:
     # this might fail if the module is python-only
     from .gnss_swig import *
 except ImportError:
+    print(e)
     pass
 
 # import any pure python here

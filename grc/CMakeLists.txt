@@ -22,6 +22,6 @@ install(FILES
     gnss_ca_code_generator.block.yml
     gnss_resampler.block.yml
     gnss_ca_sybmols_to_nav_bits.block.yml
-    DESTINATION
-      share/gnuradio/grc/blocks
+    gnss_nav_message_sink.block.yml
+    DESTINATION share/gnuradio/grc/blocks
 )
