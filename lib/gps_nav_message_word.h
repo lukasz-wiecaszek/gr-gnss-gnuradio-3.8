@@ -41,14 +41,21 @@ namespace gr {
         *vptr = values + word.size();
       }
 
-      bool flag(int pos) const
+      template<std::size_t BIT>
+      bool flag() const
       {
-        return word[word.size() - pos];
+        return word[word.size() - BIT];
       }
 
-      unsigned long field(int from, int to) const
+      template<std::size_t BIT, std::size_t BITS>
+      unsigned long field() const
       {
-        return (word.to_ulong() >> (word.size() - to)) & ((1UL << (to - from + 1)) - 1);
+        return (word.to_ulong() >> (word.size() - (BIT + BITS - 1))) & ((1UL << BITS) - 1);
+      }
+
+      std::string to_string() const
+      {
+        return word.to_string();
       }
 
     private:

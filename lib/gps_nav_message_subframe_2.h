@@ -22,7 +22,6 @@
 #define INCLUDED_GNSS_GPS_NAV_MESSAGE_SUBFRAME_2_H
 
 #include <string>
-#include <sstream>
 #include "gps_nav_message_subframe_header.h"
 
 namespace gr {
@@ -30,13 +29,28 @@ namespace gr {
 
     struct gps_nav_message_subframe_2 : public virtual gps_nav_message_subframe_header
     {
+      uint8_t IODE()           const { return field1unsigned<61, 8>();           }
+      int16_t C_RS()           const { return field1signed<69, 16>();            }
+      int16_t DELTA_N()        const { return field1signed<91, 16>();            }
+      int32_t M_0()            const { return field2signed<107, 8, 121, 24>();   }
+      int16_t C_UC()           const { return field1signed<151, 16>();           }
+      uint32_t e()             const { return field2unsigned<167, 8, 181, 24>(); }
+      int16_t C_US()           const { return field1signed<211, 16>();           }
+      uint32_t SQRT_A()        const { return field2unsigned<227, 8, 241, 24>(); }
+      uint16_t t_oe()          const { return field1unsigned<271, 16>();         }
+      bool fit_interval_flag() const { return flag<287>();                       }
+      uint8_t AODO()           const { return field1unsigned<288, 5>();          }
+
       std::string to_string() const
       {
-        std::ostringstream stream;
+        char strbuf[256];
 
-        stream << gps_nav_message_subframe_header::to_string();
+        snprintf(strbuf, sizeof(strbuf),
+          "%s | IODE: %u, C_RS: %d, DELTA_N: %d, M_0: %d, C_UC: %d, e: %u, C_US: %d, SQRT_A: %u, t_oe: %u, AODO: %u",
+            gps_nav_message_subframe_header::to_string().c_str(),
+              IODE(), C_RS(), DELTA_N(), M_0(), C_UC(), e(), C_US(), SQRT_A(), t_oe(), AODO());
 
-        return stream.str();
+        return std::string(strbuf);
       }
 
       operator std::string () const

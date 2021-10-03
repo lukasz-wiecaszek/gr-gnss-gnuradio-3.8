@@ -23,7 +23,6 @@
 
 #include <array>
 #include <string>
-#include <sstream>
 #include "gps_nav_message_word.h"
 
 namespace gr {
@@ -32,23 +31,23 @@ namespace gr {
     class gps_nav_message_subframe_header
     {
     public:
-      int tlm_message()            const { return words[0].field(9, 22); }
-      bool integrity_status_flag() const { return words[0].flag(23); }
+      unsigned tlm_message()       const { return field1unsigned<9, 14>();  }
+      bool integrity_status_flag() const { return flag<23>();               }
 
-      int tow_count_message()      const { return words[1].field(1, 17); }
-      bool alert_flag()            const { return words[1].flag(18); }
-      bool anti_spoof_flag()       const { return words[1].flag(19); }
-      int subframe_id()            const { return words[1].field(20, 22); }
+      unsigned tow_count_message() const { return field1unsigned<31, 17>(); }
+      bool alert_flag()            const { return flag<48>();               }
+      bool anti_spoof_flag()       const { return flag<49>();               }
+      unsigned subframe_id()       const { return field1unsigned<50, 3>();  }
 
       std::string to_string() const
       {
-        std::ostringstream stream;
+        char strbuf[256];
 
-        stream << "subframe id: " << std::dec << subframe_id();
-        stream << ", ";
-        stream << "tow: " << std::dec << tow_count_message();
+        snprintf(strbuf, sizeof(strbuf),
+          "subframe id: %d, tow: %d",
+            subframe_id(), tow_count_message());
 
-        return stream.str();
+        return std::string(strbuf);
       }
 
       operator std::string () const
@@ -57,6 +56,65 @@ namespace gr {
       }
 
     protected:
+      template<std::size_t BIT>
+      bool flag() const
+      {
+        const gps_nav_message_word& word = words[(BIT - 1) / GPS_NAV_MESSAGE_BITS_PER_WORD];
+        return word.flag<((BIT - 1) % GPS_NAV_MESSAGE_BITS_PER_WORD) + 1>();
+      }
+
+      template<std::size_t BIT1, std::size_t BITS1>
+      unsigned long field1unsigned() const
+      {
+        const gps_nav_message_word& word1 = words[(BIT1 - 1) / GPS_NAV_MESSAGE_BITS_PER_WORD];
+        unsigned long field1 = word1.field<((BIT1 - 1) % GPS_NAV_MESSAGE_BITS_PER_WORD) + 1, BITS1>();
+        unsigned long retval = field1;
+
+        return retval;
+      }
+
+      template<std::size_t BIT1, std::size_t BITS1>
+      long field1signed() const
+      {
+        const gps_nav_message_word& word1 = words[(BIT1 - 1) / GPS_NAV_MESSAGE_BITS_PER_WORD];
+        unsigned long field1 = word1.field<((BIT1 - 1) % GPS_NAV_MESSAGE_BITS_PER_WORD) + 1, BITS1>();
+        long retval = field1;
+
+        if (retval & (1UL << (BITS1 - 1))) // MSB is set, thus it is a negative value
+          retval = -(1UL << (BITS1 - 1)) + (retval & ~(1UL << (BITS1 - 1)));
+
+        return retval;
+      }
+
+      template<std::size_t BIT1, std::size_t BITS1, std::size_t BIT2, std::size_t BITS2>
+      unsigned long field2unsigned() const
+      {
+        const gps_nav_message_word& word1 = words[(BIT1 - 1) / GPS_NAV_MESSAGE_BITS_PER_WORD];
+        const gps_nav_message_word& word2 = words[(BIT2 - 1) / GPS_NAV_MESSAGE_BITS_PER_WORD];
+
+        unsigned long field1 = word1.field<((BIT1 - 1) % GPS_NAV_MESSAGE_BITS_PER_WORD) + 1, BITS1>();
+        unsigned long field2 = word2.field<((BIT2 - 1) % GPS_NAV_MESSAGE_BITS_PER_WORD) + 1, BITS2>();
+        unsigned long retval = field1 << BITS2 | field2;
+
+        return retval;
+      }
+
+      template<std::size_t BIT1, std::size_t BITS1, std::size_t BIT2, std::size_t BITS2>
+      unsigned long field2signed() const
+      {
+        const gps_nav_message_word& word1 = words[(BIT1 - 1) / GPS_NAV_MESSAGE_BITS_PER_WORD];
+        const gps_nav_message_word& word2 = words[(BIT2 - 1) / GPS_NAV_MESSAGE_BITS_PER_WORD];
+
+        unsigned long field1 = word1.field<((BIT1 - 1) % GPS_NAV_MESSAGE_BITS_PER_WORD) + 1, BITS1>();
+        unsigned long field2 = word2.field<((BIT2 - 1) % GPS_NAV_MESSAGE_BITS_PER_WORD) + 1, BITS2>();
+        long retval = field1 << BITS2 | field2;
+
+        if (retval & (1UL << (BITS1 + BITS2 - 1))) // MSB is set, thus it is a negative value
+          retval = -(1UL << (BITS1 + BITS2 - 1)) + (retval & ~(1UL << (BITS1 + BITS2 - 1)));
+
+        return retval;
+      }
+
       std::array<gps_nav_message_word, GPS_NAV_MESSAGE_WORDS_PER_SUBFRAME> words;
     };
 

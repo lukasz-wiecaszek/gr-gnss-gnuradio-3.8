@@ -23,6 +23,7 @@
 
 #include <gnss/nav_message_sink.h>
 #include <stdio.h>
+#include "ephemeris.h"
 
 #define IVLEN0 300
 
@@ -44,6 +45,7 @@ namespace gr {
 
     private:
       FILE* d_fp;
+      ephemeris d_ephemeris;
     };
 
   } // namespace gnss

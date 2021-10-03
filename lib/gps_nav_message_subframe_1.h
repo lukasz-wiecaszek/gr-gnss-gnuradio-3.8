@@ -22,7 +22,6 @@
 #define INCLUDED_GNSS_GPS_NAV_MESSAGE_SUBFRAME_1_H
 
 #include <string>
-#include <sstream>
 #include "gps_nav_message_subframe_header.h"
 
 namespace gr {
@@ -30,17 +29,18 @@ namespace gr {
 
     struct gps_nav_message_subframe_1 : public virtual gps_nav_message_subframe_header
     {
-      int week_number() const { return words[2].field(1, 11); }
+      uint16_t week_number() const { return field1unsigned<61, 10>(); }
 
       std::string to_string() const
       {
-        std::ostringstream stream;
+        char strbuf[256];
 
-        stream << gps_nav_message_subframe_header::to_string();
-        stream << ", ";
-        stream << "week_number: " << std::dec << week_number();
+        snprintf(strbuf, sizeof(strbuf),
+          "%s | week_number: %u",
+            gps_nav_message_subframe_header::to_string().c_str(),
+              week_number());
 
-        return stream.str();
+        return std::string(strbuf);
       }
 
       operator std::string () const

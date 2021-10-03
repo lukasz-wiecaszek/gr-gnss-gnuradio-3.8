@@ -22,7 +22,6 @@
 #define INCLUDED_GNSS_GPS_NAV_MESSAGE_SUBFRAME_5_H
 
 #include <string>
-#include <sstream>
 #include "gps_nav_message_subframe_header.h"
 
 namespace gr {

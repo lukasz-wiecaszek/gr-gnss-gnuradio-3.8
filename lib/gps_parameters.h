@@ -31,26 +31,51 @@ namespace gr {
     constexpr uint32_t GPS_L1_MULTIPLIER = 154;
     constexpr uint32_t GPS_L2_MULTIPLIER = 120;
 
-    // IS-GPS-200 - Chapter 3.3.1.1 Frequency Plan
+    // IS-GPS-200L - Chapter 3.3.1.1 Frequency Plan
     // The nominal carrier frequencies shall be 1575.42 MHz,
     // and 1227.6 MHz for L1 and L2, respectively.
     constexpr uint32_t GPS_L1_FREQ_HZ = GPS_L1_MULTIPLIER * GPS_F0;
     constexpr uint32_t GPS_L2_FREQ_HZ = GPS_L2_MULTIPLIER * GPS_F0;
 
-    constexpr uint32_t GPS_CA_CODE_LENGTH = 1023;
-    constexpr uint32_t GPS_CA_CODE_RATE = 1000; // codes per second
-    constexpr uint32_t GPS_CA_CODE_CHIP_RATE = GPS_CA_CODE_LENGTH * GPS_CA_CODE_RATE; // chips per second
+    constexpr int GPS_CA_CODE_LENGTH = 1023;
+    constexpr int GPS_CA_CODE_RATE = 1000; // codes per second
+    constexpr int GPS_CA_CODE_CHIP_RATE = GPS_CA_CODE_LENGTH * GPS_CA_CODE_RATE; // chips per second
 
-    constexpr uint32_t GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT = 20;
+    constexpr int GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT = 20;
 
-    // IS-GPS-200 - Chapter 20.3.2 Message Structure.
-    // IS-GPS-200 - Chapter 20.3.3 Message Content.
+    // IS-GPS-200L - Chapter 20.3.2 Message Structure.
+    // IS-GPS-200L - Chapter 20.3.3 Message Content.
     constexpr int GPS_NAV_MESSAGE_BITS_PER_WORD = 30;
     constexpr int GPS_NAV_MESSAGE_WORDS_PER_SUBFRAME = 10;
     constexpr int GPS_NAV_MESSAGE_BITS_PER_SUBFRAME =
       GPS_NAV_MESSAGE_BITS_PER_WORD * GPS_NAV_MESSAGE_WORDS_PER_SUBFRAME;
 
     constexpr std::bitset<8> GPS_CA_TLM_PREAMBLE_BITS = 0b11010001;
+
+    constexpr double GPS_SCALE_FACTOR_C_U = (1.0 / (1LL << 29));
+    constexpr double GPS_SCALE_FACTOR_C_I = (1.0 / (1LL << 29));
+    constexpr double GPS_SCALE_FACTOR_C_R = (1.0 / (1LL << 5));
+
+    constexpr int GPS_SCALE_FACTOR_T_OE = (1 << 4);
+
+    constexpr double GPS_SCALE_FACTOR_E          = (1.0 / (1LL << 33));
+    constexpr double GPS_SCALE_FACTOR_SQRT_A     = (1.0 / (1LL << 19));
+    constexpr double GPS_SCALE_FACTOR_M_0        = (1.0 / (1LL << 31));
+    constexpr double GPS_SCALE_FACTOR_DELTA_N    = (1.0 / (1LL << 43));
+    constexpr double GPS_SCALE_FACTOR_OMEGA_0    = (1.0 / (1LL << 31));
+    constexpr double GPS_SCALE_FACTOR_I_0        = (1.0 / (1LL << 31));
+    constexpr double GPS_SCALE_FACTOR_OMEGA      = (1.0 / (1LL << 31));
+    constexpr double GPS_SCALE_FACTOR_D_OMEGA_DT = (1.0 / (1LL << 43));
+    constexpr double GPS_SCALE_FACTOR_IDOT       = (1.0 / (1LL << 43));
+
+    // WGS 84 value of the Earth's gravitational constant times the mass of the Earth for GPS user [m^3/s^2]
+    constexpr double GPS_MI = 3.986005e14;
+
+    // WGS 84 value of the Earth's rotation rate for GPS user [rad/s]
+    constexpr double GPS_dOMEGA_dt_EARTH = 7.2921151467e-5;
+
+    // Number of seconds in GPS week
+    constexpr int GPS_SECONDS_PER_WEEK = 60 * 60 * 24 * 7;
 
   } // namespace gnss
 } // namespace gr

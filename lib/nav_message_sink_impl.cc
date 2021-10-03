@@ -44,7 +44,8 @@ namespace gr {
       : gr::sync_block("nav_message_sink",
                        gr::io_signature::make(1, 1, sizeof(ITYPE0) * IVLEN0),
                        gr::io_signature::make(0, 0, 0)),
-        d_fp{NULL}
+        d_fp{NULL},
+        d_ephemeris{}
     {
       d_fp = fopen(filename, "w");
       if (d_fp == NULL) {
@@ -77,6 +78,70 @@ namespace gr {
 
         fprintf(stdout, "%s\n", str.c_str());
         fprintf(d_fp, "%s\n", str.c_str());
+
+        if (!d_ephemeris.is_valid)
+        {
+          if (subframe.subframe_id() == 2)
+          {
+            gps_nav_message_subframe_2 subframe_2 = subframe;
+            int IODE = d_ephemeris.IODE[0];
+
+            if ((IODE == -1) || (IODE != subframe_2.IODE()))
+            {
+              d_ephemeris.IODE[0]               = subframe_2.IODE();
+              d_ephemeris.correction_terms.C_RS = subframe_2.C_RS()       * GPS_SCALE_FACTOR_C_R;
+              d_ephemeris.delta_n               = subframe_2.DELTA_N()    * GPS_SCALE_FACTOR_DELTA_N;
+              d_ephemeris.M_0                   = subframe_2.M_0()        * GPS_SCALE_FACTOR_M_0;
+              d_ephemeris.correction_terms.C_UC = subframe_2.C_UC()       * GPS_SCALE_FACTOR_C_U;
+              d_ephemeris.e                     = subframe_2.e()          * GPS_SCALE_FACTOR_E;
+              d_ephemeris.correction_terms.C_US = subframe_2.C_US()       * GPS_SCALE_FACTOR_C_U;
+              d_ephemeris.sqrt_a                = subframe_2.SQRT_A()     * GPS_SCALE_FACTOR_SQRT_A;
+              d_ephemeris.t_oe                  = subframe_2.t_oe()       * GPS_SCALE_FACTOR_T_OE;
+            }
+          }
+
+          if (subframe.subframe_id() == 3)
+          {
+            gps_nav_message_subframe_3 subframe_3 = subframe;
+            int IODE = d_ephemeris.IODE[1];
+
+            if ((IODE == -1) || (IODE != subframe_3.IODE()))
+            {
+              d_ephemeris.IODE[1]               = subframe_3.IODE();
+              d_ephemeris.correction_terms.C_IC = subframe_3.C_IC()       * GPS_SCALE_FACTOR_C_I;
+              d_ephemeris.OMEGA_0               = subframe_3.OMEGA_0()    * GPS_SCALE_FACTOR_OMEGA_0;
+              d_ephemeris.correction_terms.C_IS = subframe_3.C_IS()       * GPS_SCALE_FACTOR_C_I;
+              d_ephemeris.i_0                   = subframe_3.i_0()        * GPS_SCALE_FACTOR_I_0;
+              d_ephemeris.correction_terms.C_RC = subframe_3.C_RC()       * GPS_SCALE_FACTOR_C_R;
+              d_ephemeris.omega                 = subframe_3.omega()      * GPS_SCALE_FACTOR_OMEGA;
+              d_ephemeris.dOMEGA_dt             = subframe_3.dOMEGA_dt()  * GPS_SCALE_FACTOR_D_OMEGA_DT;
+              d_ephemeris.di_dt                 = subframe_3.di_dt()      * GPS_SCALE_FACTOR_IDOT;
+            }
+          }
+
+          if ((d_ephemeris.IODE[0] != -1) && (d_ephemeris.IODE[0] == d_ephemeris.IODE[1]))
+          {
+            d_ephemeris.is_valid = true;
+            fprintf(stdout, "%s\n", d_ephemeris.to_string().c_str());
+
+            unsigned t = subframe.tow_count_message() * 6;
+            vector position;
+            vector velocity;
+            vector acceleration;
+
+            d_ephemeris.get_vectors(t, &position, &velocity, &acceleration);
+            fprintf(stdout, "position: %s, velocity: %s, acceleration: %s\n",
+              position.to_string().c_str(), velocity.to_string().c_str(), acceleration.to_string().c_str());
+
+            d_ephemeris.get_vectors(t + 1, &position, &velocity, &acceleration);
+            fprintf(stdout, "position: %s, velocity: %s, acceleration: %s\n",
+              position.to_string().c_str(), velocity.to_string().c_str(), acceleration.to_string().c_str());
+
+            d_ephemeris.get_vectors(t + 2, &position, &velocity, &acceleration);
+            fprintf(stdout, "position: %s, velocity: %s, acceleration: %s\n",
+              position.to_string().c_str(), velocity.to_string().c_str(), acceleration.to_string().c_str());
+          }
+        }
 
         nproduced++;
       }

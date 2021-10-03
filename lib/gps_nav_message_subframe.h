@@ -43,6 +43,9 @@ namespace gr {
       {
         for (auto&& element : words)
           element.init(vptr);
+
+        //for (std::size_t i = 0; i < words.size(); ++i)
+        //  printf("[%zu]: '%s'\n", i, words[i].to_string().c_str());
       }
 
       std::string to_string() const

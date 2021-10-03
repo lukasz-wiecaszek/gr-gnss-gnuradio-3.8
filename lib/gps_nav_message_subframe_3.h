@@ -22,7 +22,6 @@
 #define INCLUDED_GNSS_GPS_NAV_MESSAGE_SUBFRAME_3_H
 
 #include <string>
-#include <sstream>
 #include "gps_nav_message_subframe_header.h"
 
 namespace gr {
@@ -30,13 +29,26 @@ namespace gr {
 
     struct gps_nav_message_subframe_3 : public virtual gps_nav_message_subframe_header
     {
+      int16_t C_IC()       const { return field1signed<61, 16>();          }
+      int32_t OMEGA_0()    const { return field2signed<77, 8, 91, 24>();   }
+      int16_t C_IS()       const { return field1signed<121, 16>();         }
+      int32_t i_0()        const { return field2signed<137, 8, 151, 24>(); }
+      int16_t C_RC()       const { return field1signed<181, 16>();         }
+      int32_t omega()      const { return field2signed<197, 8, 211, 24>(); }
+      int32_t dOMEGA_dt()  const { return field1signed<241, 24>();         }
+      uint8_t IODE()       const { return field1unsigned<271, 8>();        }
+      int16_t di_dt()      const { return field1signed<279, 14>();         }
+
       std::string to_string() const
       {
-        std::ostringstream stream;
+        char strbuf[256];
 
-        stream << gps_nav_message_subframe_header::to_string();
+        snprintf(strbuf, sizeof(strbuf),
+          "%s | C_IC: %d, OMEGA_0: %d, C_IS: %d, i_0: %d, C_RC: %d, omega: %d, dOMEGA_dt: %d, IODE: %u, di_dt: %d",
+            gps_nav_message_subframe_header::to_string().c_str(),
+              C_IC(), OMEGA_0(), C_IS(), i_0(), C_RC(), omega(), dOMEGA_dt(), IODE(), di_dt());
 
-        return stream.str();
+        return std::string(strbuf);
       }
 
       operator std::string () const
