@@ -31,12 +31,16 @@ namespace gr {
     {
     public:
       template<typename T>
-      void init(const T** vptr)
+      void init(const T** vptr, T D30)
       {
         const T* values = *vptr;
 
-        for (std::size_t i = 0; i < word.size(); ++i)
-          word.set(word.size() - 1 - i, !!values[i]);
+        if (D30 == 0)
+          for (std::size_t i = 0; i < word.size(); ++i)
+            word.set(word.size() - 1 - i, !!values[i]);
+        else
+          for (std::size_t i = 0; i < word.size(); ++i)
+            word.set(word.size() - 1 - i, !values[i]);
 
         *vptr = values + word.size();
       }

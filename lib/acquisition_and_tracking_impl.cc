@@ -304,7 +304,7 @@ namespace gr {
       if (d_code_offset > GPS_CA_CODE_LENGTH)
         d_code_offset -= GPS_CA_CODE_LENGTH;
 
-      *optr0 = correlations[1];
+      *optr0 = P;
 
       // Tell runtime system how many input items we consumed on
       // each input stream.

@@ -41,8 +41,9 @@ namespace gr {
       template<typename T>
       void init(const T** vptr)
       {
-        for (auto&& element : words)
-          element.init(vptr);
+        T D30 = 0;
+        for (std::size_t i = 0; i < words.size(); D30 = *(*vptr - 1), ++i)
+          words[i].init(vptr, D30);
 
         //for (std::size_t i = 0; i < words.size(); ++i)
         //  printf("[%zu]: '%s'\n", i, words[i].to_string().c_str());

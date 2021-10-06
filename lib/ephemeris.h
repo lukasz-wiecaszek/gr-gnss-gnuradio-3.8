@@ -77,13 +77,13 @@ namespace gr {
       int t_oe;          // Ephemeris data reference time of week [s] (IS-GPS-200L 20.3.4.5 "Reference Times")
       double e;          // Eccentricity [dimensionless]
       double sqrt_a;     // Square Root of the Semi-Major Axis [m^1/2]
-      double M_0;        // Mean Anomaly at Reference Time [semi-circles]
-      double delta_n;    // Mean Motion Difference From Computed Value [semi-circles/s]
-      double OMEGA_0;    // Longitude of Ascending Node of Orbit Plane at Weekly Epoch [semi-circles]
-      double i_0;        // Inclination Angle at Reference Time [semi-circles]
-      double omega;      // Argument of Perigee [semi-cicles]
-      double dOMEGA_dt;  // Rate of Right Ascension [semi-circles/s]
-      double di_dt;      // Rate of Inclination Angle [semi-circles/s]
+      double M_0;        // Mean Anomaly at Reference Time [rad]
+      double delta_n;    // Mean Motion Difference From Computed Value [rad/s]
+      double OMEGA_0;    // Longitude of Ascending Node of Orbit Plane at Weekly Epoch [rad]
+      double i_0;        // Inclination Angle at Reference Time [rad]
+      double omega;      // Argument of Perigee [rad]
+      double dOMEGA_dt;  // Rate of Right Ascension [rad/s]
+      double di_dt;      // Rate of Inclination Angle [rad/s]
 
       ephemeris_correction_terms correction_terms;
 
@@ -114,7 +114,7 @@ namespace gr {
       double get_E(double M)
       {
         double E[2] = {M, M}; // initial condition
-#if 1
+#if 0
         for (double dE = INFINITY; std::fabs(dE) > 1e-12; E[0] = E[1]) {
           double delta = (M - E[0] + e * std::sin(E[0])) / (1 - e * std::cos(E[0]));
           E[1] = E[0] + delta;
@@ -131,7 +131,7 @@ namespace gr {
 
       double get_ni(double E)
       {
-#if 1
+#if 0
         double y = std::sqrt(1.0 - e * e) * std::sin(E);
         double x = std::cos(E) - e;
         return std::atan2(y, x);
@@ -143,14 +143,14 @@ namespace gr {
       void get_vectors(double t, vector* position, vector* velocity, vector* acceleration)
       {
         double a = sqrt_a * sqrt_a; // semi-major axis [m]
-        double n0 = std::sqrt(GPS_MI / (a * a * a)); // computed mean motion [((m^3/s^2)/m^3)^1/2] = [semi-circles/s]
-        double n = n0 + delta_n; // corrected mean motion [semi-circles/s]
+        double n0 = std::sqrt(GPS_MI / (a * a * a)); // computed mean motion [((m^3/s^2)/m^3)^1/2] = [rad/s]
+        double n = n0 + delta_n; // corrected mean motion [rad/s]
         double tk = get_tk(t); // time difference relative to ephemeris reference epoch [s]
-        double M = (M_0 + n * tk) * M_PI; // mean anomaly [rad] (that one changes linearly with time)
+        double M = M_0 + n * tk; // mean anomaly [rad] (that one changes linearly with time)
         double E = get_E(M); // eccentric anomaly [rad]
         double ni = get_ni(E); // true anomaly [rad]
 
-        double phi = ni + omega * M_PI; // argument of latitude [rad]
+        double phi = ni + omega; // argument of latitude [rad]
         double cos_2phi = std::cos(2 * phi);
         double sin_2phi = std::sin(2 * phi);
 
@@ -163,11 +163,8 @@ namespace gr {
 
         double u = phi + delta_u; // corrected argument of latitude [rad]
         double r = a * (1.0 - e * cos(E)) + delta_r; // corrected radius [m]
-        double i = (i_0 + di_dt * tk) * M_PI + delta_i; // corrected inclination [rad]
+        double i = i_0 + di_dt * tk + delta_i; // corrected inclination [rad]
         double o = OMEGA_0 + (dOMEGA_dt - GPS_dOMEGA_dt_EARTH) * tk - GPS_dOMEGA_dt_EARTH * t_oe; // corrected longitude of ascending node
-
-        //printf("E: %e, ni: %e, latitude: %e, radius: %e, inclination: %e, longitude: %e\n",
-        //  E, ni, u, r, i, o);
 
         if (position) {
           // satellite position in Earth Fixed Earth Centered (EFEC) coordinates
@@ -199,13 +196,13 @@ namespace gr {
           "IODE: %d/%d, t_oe: %d [s]\n"
           "\te:          %+e [dimensionless]\n"
           "\tsqrt_a:     %+e [m^1/2]\n"
-          "\tM_0:        %+e [semi-circles]\n"
-          "\tdelta_n:    %+e [semi-circles/s]\n"
-          "\tOMEGA_0:    %+e [semi-circles]\n"
-          "\ti_0:        %+e [semi-circles]\n"
-          "\tomega:      %+e [semi-circles]\n"
-          "\tdOMEGA_dt:  %+e [semi-circles/s]\n"
-          "\tdi_dt:      %+e [semi-circles/s]\n"
+          "\tM_0:        %+e [rad]\n"
+          "\tdelta_n:    %+e [rad/s]\n"
+          "\tOMEGA_0:    %+e [rad]\n"
+          "\ti_0:        %+e [rad]\n"
+          "\tomega:      %+e [rad]\n"
+          "\tdOMEGA_dt:  %+e [rad/s]\n"
+          "\tdi_dt:      %+e [rad/s]\n"
           "%s\n",
             IODE[0], IODE[1], t_oe, e, sqrt_a, M_0, delta_n, OMEGA_0, i_0, omega, dOMEGA_dt, di_dt,
             correction_terms.to_string().c_str());

@@ -90,8 +90,8 @@ namespace gr {
             {
               d_ephemeris.IODE[0]               = subframe_2.IODE();
               d_ephemeris.correction_terms.C_RS = subframe_2.C_RS()       * GPS_SCALE_FACTOR_C_R;
-              d_ephemeris.delta_n               = subframe_2.DELTA_N()    * GPS_SCALE_FACTOR_DELTA_N;
-              d_ephemeris.M_0                   = subframe_2.M_0()        * GPS_SCALE_FACTOR_M_0;
+              d_ephemeris.delta_n               = subframe_2.DELTA_N()    * GPS_SCALE_FACTOR_DELTA_N * M_PI;
+              d_ephemeris.M_0                   = subframe_2.M_0()        * GPS_SCALE_FACTOR_M_0 * M_PI;
               d_ephemeris.correction_terms.C_UC = subframe_2.C_UC()       * GPS_SCALE_FACTOR_C_U;
               d_ephemeris.e                     = subframe_2.e()          * GPS_SCALE_FACTOR_E;
               d_ephemeris.correction_terms.C_US = subframe_2.C_US()       * GPS_SCALE_FACTOR_C_U;
@@ -109,13 +109,13 @@ namespace gr {
             {
               d_ephemeris.IODE[1]               = subframe_3.IODE();
               d_ephemeris.correction_terms.C_IC = subframe_3.C_IC()       * GPS_SCALE_FACTOR_C_I;
-              d_ephemeris.OMEGA_0               = subframe_3.OMEGA_0()    * GPS_SCALE_FACTOR_OMEGA_0;
+              d_ephemeris.OMEGA_0               = subframe_3.OMEGA_0()    * GPS_SCALE_FACTOR_OMEGA_0 * M_PI;
               d_ephemeris.correction_terms.C_IS = subframe_3.C_IS()       * GPS_SCALE_FACTOR_C_I;
-              d_ephemeris.i_0                   = subframe_3.i_0()        * GPS_SCALE_FACTOR_I_0;
+              d_ephemeris.i_0                   = subframe_3.i_0()        * GPS_SCALE_FACTOR_I_0 * M_PI;
               d_ephemeris.correction_terms.C_RC = subframe_3.C_RC()       * GPS_SCALE_FACTOR_C_R;
-              d_ephemeris.omega                 = subframe_3.omega()      * GPS_SCALE_FACTOR_OMEGA;
-              d_ephemeris.dOMEGA_dt             = subframe_3.dOMEGA_dt()  * GPS_SCALE_FACTOR_D_OMEGA_DT;
-              d_ephemeris.di_dt                 = subframe_3.di_dt()      * GPS_SCALE_FACTOR_IDOT;
+              d_ephemeris.omega                 = subframe_3.omega()      * GPS_SCALE_FACTOR_OMEGA * M_PI;
+              d_ephemeris.dOMEGA_dt             = subframe_3.dOMEGA_dt()  * GPS_SCALE_FACTOR_D_OMEGA_DT * M_PI;
+              d_ephemeris.di_dt                 = subframe_3.di_dt()      * GPS_SCALE_FACTOR_IDOT * M_PI;
             }
           }
 
