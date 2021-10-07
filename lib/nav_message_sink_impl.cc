@@ -115,7 +115,7 @@ namespace gr {
               d_ephemeris.correction_terms.C_RC = subframe_3.C_RC()       * GPS_SCALE_FACTOR_C_R;
               d_ephemeris.omega                 = subframe_3.omega()      * GPS_SCALE_FACTOR_OMEGA * M_PI;
               d_ephemeris.dOMEGA_dt             = subframe_3.dOMEGA_dt()  * GPS_SCALE_FACTOR_D_OMEGA_DT * M_PI;
-              d_ephemeris.di_dt                 = subframe_3.di_dt()      * GPS_SCALE_FACTOR_IDOT * M_PI;
+              d_ephemeris.dI_dt                 = subframe_3.dI_dt()      * GPS_SCALE_FACTOR_IDOT * M_PI;
             }
           }
 
@@ -123,6 +123,7 @@ namespace gr {
           {
             d_ephemeris.is_valid = true;
             fprintf(stdout, "%s\n", d_ephemeris.to_string().c_str());
+            fprintf(d_fp, "%s\n", d_ephemeris.to_string().c_str());
 
             unsigned t = subframe.tow_count_message() * 6;
             vector position;

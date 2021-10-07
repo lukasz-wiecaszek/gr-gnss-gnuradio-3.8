@@ -37,16 +37,16 @@ namespace gr {
       int32_t omega()      const { return field2signed<197, 8, 211, 24>(); }
       int32_t dOMEGA_dt()  const { return field1signed<241, 24>();         }
       uint8_t IODE()       const { return field1unsigned<271, 8>();        }
-      int16_t di_dt()      const { return field1signed<279, 14>();         }
+      int16_t dI_dt()      const { return field1signed<279, 14>();         }
 
       std::string to_string() const
       {
         char strbuf[256];
 
         snprintf(strbuf, sizeof(strbuf),
-          "%s | C_IC: %d, OMEGA_0: %d, C_IS: %d, i_0: %d, C_RC: %d, omega: %d, dOMEGA_dt: %d, IODE: %u, di_dt: %d",
+          "%s | C_IC: %d, OMEGA_0: %d, C_IS: %d, i_0: %d, C_RC: %d, omega: %d, dOMEGA_dt: %d, IODE: %u, dI_dt: %d",
             gps_nav_message_subframe_header::to_string().c_str(),
-              C_IC(), OMEGA_0(), C_IS(), i_0(), C_RC(), omega(), dOMEGA_dt(), IODE(), di_dt());
+              C_IC(), OMEGA_0(), C_IS(), i_0(), C_RC(), omega(), dOMEGA_dt(), IODE(), dI_dt());
 
         return std::string(strbuf);
       }
