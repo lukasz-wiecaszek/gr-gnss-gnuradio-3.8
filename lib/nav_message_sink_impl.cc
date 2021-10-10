@@ -131,16 +131,22 @@ namespace gr {
             vector acceleration;
 
             d_ephemeris.get_vectors(t, &position, &velocity, &acceleration);
-            fprintf(stdout, "position: %s, velocity: %s, acceleration: %s\n",
-              position.to_string().c_str(), velocity.to_string().c_str(), acceleration.to_string().c_str());
+            fprintf(stdout, "position: %s [%e], velocity: %s [%e], acceleration: %s [%e]\n",
+              position.to_string().c_str(), abs(position),
+              velocity.to_string().c_str(), abs(velocity),
+              acceleration.to_string().c_str(), abs(acceleration));
 
             d_ephemeris.get_vectors(t + 1, &position, &velocity, &acceleration);
-            fprintf(stdout, "position: %s, velocity: %s, acceleration: %s\n",
-              position.to_string().c_str(), velocity.to_string().c_str(), acceleration.to_string().c_str());
+            fprintf(stdout, "position: %s [%e], velocity: %s [%e], acceleration: %s [%e]\n",
+              position.to_string().c_str(), abs(position),
+              velocity.to_string().c_str(), abs(velocity),
+              acceleration.to_string().c_str(), abs(acceleration));
 
             d_ephemeris.get_vectors(t + 2, &position, &velocity, &acceleration);
-            fprintf(stdout, "position: %s, velocity: %s, acceleration: %s\n",
-              position.to_string().c_str(), velocity.to_string().c_str(), acceleration.to_string().c_str());
+            fprintf(stdout, "position: %s [%e], velocity: %s [%e], acceleration: %s [%e]\n",
+              position.to_string().c_str(), abs(position),
+              velocity.to_string().c_str(), abs(velocity),
+              acceleration.to_string().c_str(), abs(acceleration));
           }
         }
 

@@ -74,6 +74,12 @@ namespace gr {
     // WGS 84 value of the Earth's rotation rate for GPS user [rad/s]
     constexpr double GPS_dOMEGA_dt_EARTH = 7.2921151467e-5;
 
+    // WGS 84 Earth Equatorial Radius
+    constexpr double GPS_RE = 6378137.0;
+
+    // Oblate Earth Gravity Coefficient
+    constexpr double GPS_J2 = 0.0010826262;
+
     // Number of seconds in GPS week
     constexpr int GPS_SECONDS_PER_WEEK = 60 * 60 * 24 * 7;
 

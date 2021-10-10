@@ -209,8 +209,27 @@ namespace gr {
           *velocity = {dx_dt, dy_dt, dz_dt};
         }
 
-        if (acceleration) {
+        if (position && velocity && acceleration) {
           // satellite acceleration in Earth Fixed Earth Centered (EFEC) coordinates
+          double r2 = r * r;
+          double F = -(3.0 / 2.0) * GPS_J2 * (GPS_MI / r2) * (GPS_RE / r) * (GPS_RE / r); // Oblate Earth acceleration Factor
+
+          double x = position->get<0>();
+          double y = position->get<1>();
+          double z = position->get<2>();
+
+          double vx = velocity->get<0>();
+          double vy = velocity->get<1>();
+
+          double x_r = x / r;
+          double y_r = y / r;
+          double z_r = z / r;
+
+          double d2x_dt2 = -GPS_MI * x_r / r2 + F * (1.0 - 5.0 * z_r * z_r) * x_r + 2.0 * vy * GPS_dOMEGA_dt_EARTH + x * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH;
+          double d2y_dt2 = -GPS_MI * y_r / r2 + F * (1.0 - 5.0 * z_r * z_r) * y_r - 2.0 * vx * GPS_dOMEGA_dt_EARTH + y * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH;
+          double d2z_dt2 = -GPS_MI * z_r / r2 + F * (3.0 - 5.0 * z_r * z_r) * z_r;
+
+          *acceleration = {d2x_dt2, d2y_dt2, d2z_dt2};
         }
       }
 

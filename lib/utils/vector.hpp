@@ -26,6 +26,7 @@
  * system header files
 \*===========================================================================*/
 #include <cstddef>
+#include <cmath>
 #include <array>
 #include <string>
 #include <sstream>
@@ -58,6 +59,12 @@ public:
         m_array{{std::forward<U>(args)...}}
     {
         static_assert(sizeof...(U) == N, "Invalid dimension of constructor");
+    }
+
+    template<std::size_t I>
+    const T& get()
+    {
+        return std::get<I>(m_array);
     }
 
     std::string to_string() const
@@ -107,6 +114,9 @@ public:
     friend vector<T1, N1> operator + (const vector<T1, N1>& v1, const vector<T1, N1>& v2);
 
     template<typename T1, std::size_t N1>
+    friend T1 operator * (const vector<T1, N1>& v1, const vector<T1, N1>& v2);
+
+    template<typename T1, std::size_t N1>
     friend vector<T1, N1> operator * (const T1& s, const vector<T1, N1>& v);
 
     template<typename T1, std::size_t N1>
@@ -136,6 +146,17 @@ inline vector<T1, N1> operator + (const vector<T1, N1>& v1, const vector<T1, N1>
 }
 
 template<typename T1, std::size_t N1>
+inline T1 operator * (const vector<T1, N1>& v1, const vector<T1, N1>& v2)
+{
+    T1 retval = 0;
+
+    for (std::size_t i = 0; i < N1; ++i)
+        retval += v1.m_array[i] * v2.m_array[i];
+
+    return retval;
+}
+
+template<typename T1, std::size_t N1>
 inline vector<T1, N1> operator * (const T1& s, const vector<T1, N1>& v)
 {
     vector<T1, N1> retval;
@@ -155,6 +176,18 @@ inline vector<T1, N1> operator * (const vector<T1, N1>& v, const T1& s)
         retval.m_array[i] = v.m_array[i] * s;
 
     return retval;
+}
+
+template<typename T1, std::size_t N1>
+inline T1 norm(const vector<T1, N1>& v)
+{
+    return v * v;
+}
+
+template<typename T1, std::size_t N1>
+inline T1 abs(const vector<T1, N1>& v)
+{
+    return std::sqrt(norm(v));
 }
 
 } /* end of namespace lts */
