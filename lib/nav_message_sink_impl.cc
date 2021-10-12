@@ -25,6 +25,7 @@
 #include <gnuradio/io_signature.h>
 #include "nav_message_sink_impl.h"
 #include "gps_nav_message_subframe.h"
+#include "verlet_integration.h"
 
 #include <string>
 #include <sstream>
@@ -125,28 +126,41 @@ namespace gr {
             fprintf(stdout, "%s\n", d_ephemeris.to_string().c_str());
             fprintf(d_fp, "%s\n", d_ephemeris.to_string().c_str());
 
-            unsigned t = subframe.tow_count_message() * 6;
+            double t = subframe.tow_count_message() * 6;
+            double dt = 1.0; // 1 second
             vector position;
             vector velocity;
             vector acceleration;
 
             d_ephemeris.get_vectors(t, &position, &velocity, &acceleration);
-            fprintf(stdout, "position: %s [%e], velocity: %s [%e], acceleration: %s [%e]\n",
+            fprintf(stdout, "r: %s [%e], v: %s [%e], a: %s [%e]\n",
               position.to_string().c_str(), abs(position),
               velocity.to_string().c_str(), abs(velocity),
               acceleration.to_string().c_str(), abs(acceleration));
 
-            d_ephemeris.get_vectors(t + 1, &position, &velocity, &acceleration);
-            fprintf(stdout, "position: %s [%e], velocity: %s [%e], acceleration: %s [%e]\n",
-              position.to_string().c_str(), abs(position),
-              velocity.to_string().c_str(), abs(velocity),
-              acceleration.to_string().c_str(), abs(acceleration));
+            vector r = position;
+            vector v = velocity;
+            vector a = acceleration;
 
-            d_ephemeris.get_vectors(t + 2, &position, &velocity, &acceleration);
-            fprintf(stdout, "position: %s [%e], velocity: %s [%e], acceleration: %s [%e]\n",
-              position.to_string().c_str(), abs(position),
-              velocity.to_string().c_str(), abs(velocity),
-              acceleration.to_string().c_str(), abs(acceleration));
+            const std::size_t niterations = 60 * 60;
+            for (std::size_t i = 0; i < niterations; i++) {
+              t += dt;
+              d_ephemeris.get_vectors(t, &position, &velocity, &acceleration);
+              fprintf(d_fp, "r: %s [%e], v: %s [%e], a: %s [%e]\n",
+                position.to_string().c_str(), abs(position),
+                velocity.to_string().c_str(), abs(velocity),
+                acceleration.to_string().c_str(), abs(acceleration));
+            }
+
+            fprintf(d_fp, "\n");
+
+            for (std::size_t i = 0; i < niterations; i++) {
+              verlet_integration::get_vectors(dt, r, v, a);
+              fprintf(d_fp, "r: %s [%e], v: %s [%e], a: %s [%e]\n",
+                r.to_string().c_str(), abs(r),
+                v.to_string().c_str(), abs(v),
+                a.to_string().c_str(), abs(a));
+            }
           }
         }
 

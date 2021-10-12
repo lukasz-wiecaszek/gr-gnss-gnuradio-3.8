@@ -179,7 +179,7 @@ namespace gr {
           double y = x_prime * std::sin(o) + r_prime * std::cos(o);
           double z = y_prime * std::sin(i);
 
-          *position = {x, y, z};
+          *position = vector{x, y, z};
         }
 
         if (velocity) {
@@ -206,7 +206,7 @@ namespace gr {
           double dy_dt = dx_dt_prime * std::sin(o) + x_prime * do_dt * std::cos(o) + dr_dt_prime * cos(o) - r_prime * do_dt * std::sin(o);
           double dz_dt = dy_dt_prime * std::sin(i) + y_prime * di_dt * std::cos(i);
 
-          *velocity = {dx_dt, dy_dt, dz_dt};
+          *velocity = vector{dx_dt, dy_dt, dz_dt};
         }
 
         if (position && velocity && acceleration) {
@@ -225,11 +225,12 @@ namespace gr {
           double y_r = y / r;
           double z_r = z / r;
 
-          double d2x_dt2 = -GPS_MI * x_r / r2 + F * (1.0 - 5.0 * z_r * z_r) * x_r + 2.0 * vy * GPS_dOMEGA_dt_EARTH + x * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH;
-          double d2y_dt2 = -GPS_MI * y_r / r2 + F * (1.0 - 5.0 * z_r * z_r) * y_r - 2.0 * vx * GPS_dOMEGA_dt_EARTH + y * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH;
-          double d2z_dt2 = -GPS_MI * z_r / r2 + F * (3.0 - 5.0 * z_r * z_r) * z_r;
+          double theta = 5.0 * z_r * z_r;
+          double d2x_dt2 = -GPS_MI * x_r / r2 + F * (1.0 - theta) * x_r + 2.0 * vy * GPS_dOMEGA_dt_EARTH + x * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH;
+          double d2y_dt2 = -GPS_MI * y_r / r2 + F * (1.0 - theta) * y_r - 2.0 * vx * GPS_dOMEGA_dt_EARTH + y * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH;
+          double d2z_dt2 = -GPS_MI * z_r / r2 + F * (3.0 - theta) * z_r;
 
-          *acceleration = {d2x_dt2, d2y_dt2, d2z_dt2};
+          *acceleration = vector{d2x_dt2, d2y_dt2, d2z_dt2};
         }
       }
 

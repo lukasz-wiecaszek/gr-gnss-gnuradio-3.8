@@ -49,13 +49,13 @@ template<typename T, std::size_t N>
 class vector
 {
 public:
-    vector() :
+    explicit vector() :
         m_array{}
     {
     }
 
     template<typename... U>
-    vector(U&&... args) :
+    explicit vector(U&&... args) :
         m_array{{std::forward<U>(args)...}}
     {
         static_assert(sizeof...(U) == N, "Invalid dimension of constructor");
@@ -110,6 +110,13 @@ public:
         return *this;
     }
 
+    vector& operator /= (const T& s)
+    {
+        for (std::size_t i = 0; i < N; ++i)
+            m_array[i] /= s;
+        return *this;
+    }
+
     template<typename T1, std::size_t N1>
     friend vector<T1, N1> operator + (const vector<T1, N1>& v1, const vector<T1, N1>& v2);
 
@@ -121,6 +128,9 @@ public:
 
     template<typename T1, std::size_t N1>
     friend vector<T1, N1> operator * (const vector<T1, N1>& v, const T1& s);
+
+    template<typename T1, std::size_t N1>
+    friend vector<T1, N1> operator / (const vector<T1, N1>& v, const T1& s);
 
 private:
     std::array<T, N> m_array;
@@ -174,6 +184,17 @@ inline vector<T1, N1> operator * (const vector<T1, N1>& v, const T1& s)
 
     for (std::size_t i = 0; i < N1; ++i)
         retval.m_array[i] = v.m_array[i] * s;
+
+    return retval;
+}
+
+template<typename T1, std::size_t N1>
+inline vector<T1, N1> operator / (const vector<T1, N1>& v, const T1& s)
+{
+    vector<T1, N1> retval;
+
+    for (std::size_t i = 0; i < N1; ++i)
+        retval.m_array[i] = v.m_array[i] / s;
 
     return retval;
 }
