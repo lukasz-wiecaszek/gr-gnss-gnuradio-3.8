@@ -49,6 +49,8 @@ namespace gr {
         d_thershold{GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT - 3 /* we accept 3 errors */},
         d_preamble_sybmols{}
     {
+      set_tag_propagation_policy(TPP_DONT);
+
       set_relative_rate(1, GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT);
       set_output_multiple(GPS_CA_TLM_PREAMBLE_BITS.size());
 
@@ -147,12 +149,16 @@ namespace gr {
       int nconsumed = 0;
       int bit_value;
 
+      std::vector<tag_t> tags;
+      get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0], pmt::mp("rx_time"));
+
       while (nproduced < noutput_items) {
         if ((bit_value = get_bit(iptr0 + nconsumed)) == -1) {
           d_state = state_e::unlocked;
           break;
         }
 
+        add_item_tag(0, tags[nconsumed]);
         optr0[nproduced] = bit_value;
 
         nproduced++;
