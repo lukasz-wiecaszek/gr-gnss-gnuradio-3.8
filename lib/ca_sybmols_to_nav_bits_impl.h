@@ -97,6 +97,7 @@ namespace gr {
       state_e d_state;
       int d_polarity;
       int d_thershold;
+      int d_subframe_bit;
       std::bitset<GPS_CA_TLM_PREAMBLE_BITS.size() * GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT> d_preamble_sybmols;
     };
 

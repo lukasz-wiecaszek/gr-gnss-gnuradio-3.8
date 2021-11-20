@@ -47,6 +47,7 @@ namespace gr {
         d_state{state_e::unlocked},
         d_polarity{0},
         d_thershold{GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT - 3 /* we accept 3 errors */},
+        d_subframe_bit{-1},
         d_preamble_sybmols{}
     {
       set_tag_propagation_policy(TPP_DONT);
@@ -124,8 +125,10 @@ namespace gr {
       while ((i < noutput_items) && !is_preamble_detected(iptr0 + i))
         i++;
 
-      if (i < noutput_items)
+      if (i < noutput_items) {
         d_state = state_e::locked;
+        d_subframe_bit = 0;
+      }
 
       // Tell runtime system how many input items we consumed on
       // each input stream.
@@ -153,16 +156,30 @@ namespace gr {
       get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0], pmt::mp("rx_time"));
 
       while (nproduced < noutput_items) {
+        if (d_subframe_bit == 0) {
+          if (!is_preamble_detected(iptr0 + nconsumed)) {
+            d_state = state_e::unlocked;
+            break;
+          }
+        }
+
         if ((bit_value = get_bit(iptr0 + nconsumed)) == -1) {
           d_state = state_e::unlocked;
           break;
         }
 
         add_item_tag(0, tags[nconsumed]);
+        add_item_tag(0, nitems_written(0), pmt::mp("subframe_bit"), pmt::mp(d_subframe_bit), alias_pmt());
         optr0[nproduced] = bit_value;
 
         nproduced++;
         nconsumed += GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT;
+
+        d_subframe_bit++;
+        if (d_subframe_bit == GPS_NAV_MESSAGE_BITS_PER_SUBFRAME) {
+          d_subframe_bit = 0;
+          break;
+        }
       }
 
       // Tell runtime system how many input items we consumed on
