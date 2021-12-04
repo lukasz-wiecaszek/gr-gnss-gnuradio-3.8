@@ -27,8 +27,8 @@
 
 #include "gnss_parameters.h"
 
-#define IVLEN0 1
-#define OVLEN0 1
+#define IVLEN 1
+#define OVLEN 1
 
 #define STATES    \
   STATE(unlocked) \
@@ -37,7 +37,7 @@
 namespace gr {
   namespace gnss {
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     class ca_sybmols_to_nav_bits_impl : public ca_sybmols_to_nav_bits
     {
     public:

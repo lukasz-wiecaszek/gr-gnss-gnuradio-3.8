@@ -18,38 +18,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_NAV_MESSAGE_SINK_IMPL_H
-#define INCLUDED_GNSS_NAV_MESSAGE_SINK_IMPL_H
+#ifndef INCLUDED_GNSS_NAV_MESSAGE_DECODER_H
+#define INCLUDED_GNSS_NAV_MESSAGE_DECODER_H
 
-#include <gnss/nav_message_sink.h>
-#include <stdio.h>
-#include "ephemeris.h"
-
-#define IVLEN0 300
+#include <gnss/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace gnss {
 
-    template<typename ITYPE0>
-    class nav_message_sink_impl : public nav_message_sink
+    /*!
+     * \brief <+description of block+>
+     * \ingroup gnss
+     *
+     */
+    class GNSS_API nav_message_decoder : virtual public gr::sync_block
     {
-    public:
-      nav_message_sink_impl(const char* filename);
-      ~nav_message_sink_impl();
+     public:
+      typedef boost::shared_ptr<nav_message_decoder> sptr;
 
-      int work(
-              int noutput_items,
-              gr_vector_const_void_star &input_items,
-              gr_vector_void_star &output_items
-      );
-
-    private:
-      FILE* d_fp;
-      ephemeris d_ephemeris;
+      /*!
+       * \brief Return a shared_ptr to a new instance of gnss::nav_message_decoder.
+       *
+       * To avoid accidental use of raw pointers, gnss::nav_message_decoder's
+       * constructor is in a private implementation
+       * class. gnss::nav_message_decoder::make is the public interface for
+       * creating new instances.
+       */
+      static sptr make(const char* filename);
     };
 
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_NAV_MESSAGE_SINK_IMPL_H */
+#endif /* INCLUDED_GNSS_NAV_MESSAGE_DECODER_H */
 

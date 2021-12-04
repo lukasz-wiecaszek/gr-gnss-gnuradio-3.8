@@ -18,10 +18,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_RESAMPLER_IMPL_H
-#define INCLUDED_GNSS_RESAMPLER_IMPL_H
+#ifndef INCLUDED_GNSS_PSEUDORANGES_DECODER_IMPL_H
+#define INCLUDED_GNSS_PSEUDORANGES_DECODER_IMPL_H
 
-#include <gnss/resampler.h>
+#include <gnss/pseudoranges_decoder.h>
 
 #define IVLEN 1
 #define OVLEN 1
@@ -30,18 +30,11 @@ namespace gr {
   namespace gnss {
 
     template<typename ITYPE, typename OTYPE>
-    class resampler_impl : public resampler
+    class pseudoranges_decoder_impl : public pseudoranges_decoder
     {
-    private:
-      const double d_fs_in;
-      const double d_fs_out;
-      const uint32_t d_phase_step;
-      uint32_t d_phase;
-      uint32_t d_lphase;
-
     public:
-      resampler_impl(double fs_in, double fs_out);
-      ~resampler_impl();
+      pseudoranges_decoder_impl();
+      ~pseudoranges_decoder_impl();
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
@@ -50,10 +43,12 @@ namespace gr {
            gr_vector_const_void_star &input_items,
            gr_vector_void_star &output_items);
 
+    private:
+      // Nothing to declare in this block.
     };
 
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_RESAMPLER_IMPL_H */
+#endif /* INCLUDED_GNSS_PSEUDORANGES_DECODER_IMPL_H */
 

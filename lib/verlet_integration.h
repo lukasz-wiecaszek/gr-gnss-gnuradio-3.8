@@ -22,12 +22,10 @@
 #define INCLUDED_GNSS_VERLET_INTEGRATION_H
 
 #include "gnss_parameters.h"
-#include "vector.hpp"
+#include "vector3d.h"
 
 namespace gr {
   namespace gnss {
-
-    using vector = lts::vector<double, 3>;
 
     struct verlet_integration
     {

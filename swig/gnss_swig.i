@@ -14,7 +14,8 @@
 #include "gnss/ca_code_generator.h"
 #include "gnss/resampler.h"
 #include "gnss/ca_sybmols_to_nav_bits.h"
-#include "gnss/nav_message_sink.h"
+#include "gnss/nav_message_decoder.h"
+#include "gnss/pseudoranges_decoder.h"
 %}
 
 %include "gnss/navigation_system.h"
@@ -35,6 +36,10 @@ GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, ca_code_generator_c, ca_code_generator<gr_comple
 GR_SWIG_BLOCK_MAGIC2(gnss, resampler);
 %include "gnss/ca_sybmols_to_nav_bits.h"
 GR_SWIG_BLOCK_MAGIC2(gnss, ca_sybmols_to_nav_bits);
-%include "gnss/nav_message_sink.h"
-GR_SWIG_BLOCK_MAGIC2(gnss, nav_message_sink);
 
+
+%include "gnss/nav_message_decoder.h"
+GR_SWIG_BLOCK_MAGIC2(gnss, nav_message_decoder);
+
+%include "gnss/pseudoranges_decoder.h"
+GR_SWIG_BLOCK_MAGIC2(gnss, pseudoranges_decoder);

@@ -39,11 +39,11 @@ namespace gr {
         (new ca_sybmols_to_nav_bits_impl<gr_complex, uint8_t>());
     }
 
-    template<typename ITYPE0, typename OTYPE0>
-    ca_sybmols_to_nav_bits_impl<ITYPE0, OTYPE0>::ca_sybmols_to_nav_bits_impl()
+    template<typename ITYPE, typename OTYPE>
+    ca_sybmols_to_nav_bits_impl<ITYPE, OTYPE>::ca_sybmols_to_nav_bits_impl()
       : gr::block("ca_sybmols_to_nav_bits",
-                  gr::io_signature::make(1, 1, sizeof(ITYPE0)),
-                  gr::io_signature::make(1, 1, sizeof(OTYPE0))),
+                  gr::io_signature::make(1, 1, sizeof(ITYPE) * IVLEN),
+                  gr::io_signature::make(1, 1, sizeof(OTYPE) * OVLEN)),
         d_state{state_e::unlocked},
         d_polarity{0},
         d_thershold{GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT - 3 /* we accept 3 errors */},
@@ -59,14 +59,14 @@ namespace gr {
         d_preamble_sybmols.set(i, GPS_CA_TLM_PREAMBLE_BITS[i / GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT]);
     }
 
-    template<typename ITYPE0, typename OTYPE0>
-    ca_sybmols_to_nav_bits_impl<ITYPE0, OTYPE0>::~ca_sybmols_to_nav_bits_impl()
+    template<typename ITYPE, typename OTYPE>
+    ca_sybmols_to_nav_bits_impl<ITYPE, OTYPE>::~ca_sybmols_to_nav_bits_impl()
     {
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     void
-    ca_sybmols_to_nav_bits_impl<ITYPE0, OTYPE0>::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+    ca_sybmols_to_nav_bits_impl<ITYPE, OTYPE>::forecast(int noutput_items, gr_vector_int &ninput_items_required)
     {
       int nrequired = noutput_items * GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT;
 
@@ -74,9 +74,9 @@ namespace gr {
         element = nrequired;
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     int
-    ca_sybmols_to_nav_bits_impl<ITYPE0, OTYPE0>::general_work(
+    ca_sybmols_to_nav_bits_impl<ITYPE, OTYPE>::general_work(
       int noutput_items,
       gr_vector_int &ninput_items,
       gr_vector_const_void_star &input_items,
@@ -110,16 +110,16 @@ namespace gr {
     /*===========================================================================*\
     * private function definitions
     \*===========================================================================*/
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     int
-    ca_sybmols_to_nav_bits_impl<ITYPE0, OTYPE0>::state_handler_unlocked(
+    ca_sybmols_to_nav_bits_impl<ITYPE, OTYPE>::state_handler_unlocked(
       int noutput_items,
       gr_vector_int &ninput_items,
       gr_vector_const_void_star &input_items,
       gr_vector_void_star &output_items)
     {
-      const ITYPE0* iptr0 = (const ITYPE0*) input_items[0];
-      OTYPE0* optr0 = (OTYPE0*) output_items[0];
+      const ITYPE* iptr0 = (const ITYPE*) input_items[0];
+      OTYPE* optr0 = (OTYPE*) output_items[0];
       int i = 0;
 
       while ((i < noutput_items) && !is_preamble_detected(iptr0 + i))
@@ -138,16 +138,16 @@ namespace gr {
       return 0;
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     int
-    ca_sybmols_to_nav_bits_impl<ITYPE0, OTYPE0>::state_handler_locked(
+    ca_sybmols_to_nav_bits_impl<ITYPE, OTYPE>::state_handler_locked(
       int noutput_items,
       gr_vector_int &ninput_items,
       gr_vector_const_void_star &input_items,
       gr_vector_void_star &output_items)
     {
-      const ITYPE0* iptr0 = (const ITYPE0*) input_items[0];
-      OTYPE0* optr0 = (OTYPE0*) output_items[0];
+      const ITYPE* iptr0 = (const ITYPE*) input_items[0];
+      OTYPE* optr0 = (OTYPE*) output_items[0];
       int nproduced = 0;
       int nconsumed = 0;
       int bit_value;
@@ -168,8 +168,8 @@ namespace gr {
           break;
         }
 
-        add_item_tag(0, tags[nconsumed]);
-        add_item_tag(0, nitems_written(0), pmt::mp("subframe_bit"), pmt::mp(d_subframe_bit), alias_pmt());
+        add_item_tag(0, nitems_written(0) + nproduced, tags[nconsumed].key, tags[nconsumed].value, alias_pmt());
+        add_item_tag(0, nitems_written(0) + nproduced, pmt::mp("subframe_bit"), pmt::mp(d_subframe_bit), alias_pmt());
         optr0[nproduced] = bit_value;
 
         nproduced++;

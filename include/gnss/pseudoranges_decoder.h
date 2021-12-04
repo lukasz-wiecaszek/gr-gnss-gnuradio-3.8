@@ -18,42 +18,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_RESAMPLER_IMPL_H
-#define INCLUDED_GNSS_RESAMPLER_IMPL_H
+#ifndef INCLUDED_GNSS_PSEUDORANGES_DECODER_H
+#define INCLUDED_GNSS_PSEUDORANGES_DECODER_H
 
-#include <gnss/resampler.h>
-
-#define IVLEN 1
-#define OVLEN 1
+#include <gnss/api.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace gnss {
 
-    template<typename ITYPE, typename OTYPE>
-    class resampler_impl : public resampler
+    /*!
+     * \brief <+description of block+>
+     * \ingroup gnss
+     *
+     */
+    class GNSS_API pseudoranges_decoder : virtual public gr::block
     {
-    private:
-      const double d_fs_in;
-      const double d_fs_out;
-      const uint32_t d_phase_step;
-      uint32_t d_phase;
-      uint32_t d_lphase;
+     public:
+      typedef boost::shared_ptr<pseudoranges_decoder> sptr;
 
-    public:
-      resampler_impl(double fs_in, double fs_out);
-      ~resampler_impl();
-
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-
-      int general_work(int noutput_items,
-           gr_vector_int &ninput_items,
-           gr_vector_const_void_star &input_items,
-           gr_vector_void_star &output_items);
-
+      /*!
+       * \brief Return a shared_ptr to a new instance of gnss::pseudoranges_decoder.
+       *
+       * To avoid accidental use of raw pointers, gnss::pseudoranges_decoder's
+       * constructor is in a private implementation
+       * class. gnss::pseudoranges_decoder::make is the public interface for
+       * creating new instances.
+       */
+      static sptr make();
     };
 
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_RESAMPLER_IMPL_H */
+#endif /* INCLUDED_GNSS_PSEUDORANGES_DECODER_H */
 

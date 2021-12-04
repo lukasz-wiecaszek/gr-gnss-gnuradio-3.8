@@ -18,38 +18,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_NAV_MESSAGE_SINK_H
-#define INCLUDED_GNSS_NAV_MESSAGE_SINK_H
+#ifndef INCLUDED_GNSS_VECTOR3D_H
+#define INCLUDED_GNSS_VECTOR3D_H
 
-#include <gnss/api.h>
-#include <gnuradio/sync_block.h>
+#include <vector.hpp>
 
 namespace gr {
   namespace gnss {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup gnss
-     *
-     */
-    class GNSS_API nav_message_sink : virtual public gr::sync_block
-    {
-     public:
-      typedef boost::shared_ptr<nav_message_sink> sptr;
-
-      /*!
-       * \brief Return a shared_ptr to a new instance of gnss::nav_message_sink.
-       *
-       * To avoid accidental use of raw pointers, gnss::nav_message_sink's
-       * constructor is in a private implementation
-       * class. gnss::nav_message_sink::make is the public interface for
-       * creating new instances.
-       */
-      static sptr make(const char* filename);
-    };
+    using vector = lts::vector<double, 3>;
 
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_NAV_MESSAGE_SINK_H */
+#endif /* INCLUDED_GNSS_VECTOR3D_H */
 

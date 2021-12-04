@@ -26,12 +26,10 @@
 #include <string>
 
 #include "gnss_parameters.h"
-#include "vector.hpp"
+#include "vector3d.h"
 
 namespace gr {
   namespace gnss {
-
-    using vector = lts::vector<double, 3>;
 
     struct ephemeris_correction_terms
     {
@@ -92,7 +90,7 @@ namespace gr {
       // account for beginning or end of week crossovers.
       // That is, if tk is greater than 302400 seconds, subtract 604800 seconds from tk.
       // If tk is less than -302400 seconds, add 604800 seconds to tk.
-      double get_tk(double t)
+      double get_tk(double t) const
       {
         double tk = t - t_oe;
 
@@ -111,7 +109,7 @@ namespace gr {
 
       // We know that M = E - e * sin(E), but now having got M
       // we need to figure out (calculate) E.
-      double get_E(double M)
+      double get_E(double M) const
       {
         double E[2] = {M, M}; // initial condition
 #if 0
@@ -129,7 +127,7 @@ namespace gr {
         return E[1];
       }
 
-      double get_ni(double E)
+      double get_ni(double E) const
       {
 #if 0
         double y = std::sqrt(1.0 - e * e) * std::sin(E);
@@ -140,7 +138,7 @@ namespace gr {
 #endif
       }
 
-      void get_vectors(double t, vector* position, vector* velocity, vector* acceleration)
+      void get_vectors(double t, vector* position, vector* velocity, vector* acceleration) const
       {
         double a = sqrt_a * sqrt_a; // semi-major axis [m]
         double n0 = std::sqrt(GPS_MI / (a * a * a)); // computed mean motion [((m^3/s^2)/m^3)^1/2] = [rad/s]

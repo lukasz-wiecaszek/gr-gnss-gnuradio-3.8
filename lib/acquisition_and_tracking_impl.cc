@@ -53,11 +53,11 @@ namespace gr {
         (new acquisition_and_tracking_impl<gr_complex, gr_complex>(sampling_freq));
     }
 
-    template<typename ITYPE0, typename OTYPE0>
-    acquisition_and_tracking_impl<ITYPE0, OTYPE0>::acquisition_and_tracking_impl(double sampling_freq)
+    template<typename ITYPE, typename OTYPE>
+    acquisition_and_tracking_impl<ITYPE, OTYPE>::acquisition_and_tracking_impl(double sampling_freq)
       : gr::block("acquisition_and_tracking",
-                  gr::io_signature::make(1, 1, sizeof(ITYPE0)),
-                  gr::io_signature::make(1, 1, sizeof(OTYPE0))),
+                  gr::io_signature::make(1, 1, sizeof(ITYPE) * IVLEN),
+                  gr::io_signature::make(1, 1, sizeof(OTYPE) * OVLEN)),
         d_sampling_freq{sampling_freq},
         d_spreading_code_samples{static_cast<decltype(d_spreading_code_samples)>(ceil(d_sampling_freq / GPS_CA_CODE_RATE))},
         d_state{state_e::ACQUISITION},
@@ -77,17 +77,16 @@ namespace gr {
         d_pll_loop_filter{1.0 / GPS_CA_CODE_RATE, 40.0}
     {
       set_relative_rate(1, d_spreading_code_samples);
-      printf("%s: d_spreading_code_samples: %d\n", __func__, d_spreading_code_samples);
     }
 
-    template<typename ITYPE0, typename OTYPE0>
-    acquisition_and_tracking_impl<ITYPE0, OTYPE0>::~acquisition_and_tracking_impl()
+    template<typename ITYPE, typename OTYPE>
+    acquisition_and_tracking_impl<ITYPE, OTYPE>::~acquisition_and_tracking_impl()
     {
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     void
-    acquisition_and_tracking_impl<ITYPE0, OTYPE0>::set_acq_params(navigation_system_e system, int id)
+    acquisition_and_tracking_impl<ITYPE, OTYPE>::set_acq_params(navigation_system_e system, int id)
     {
       gr::thread::scoped_lock lock(d_setlock);
 
@@ -98,17 +97,17 @@ namespace gr {
       d_max_magnitude_stats.reset();
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     void
-    acquisition_and_tracking_impl<ITYPE0, OTYPE0>::get_acq_params(navigation_system_e& system, int& id) const
+    acquisition_and_tracking_impl<ITYPE, OTYPE>::get_acq_params(navigation_system_e& system, int& id) const
     {
       system = d_navigation_system;
       id = d_id;
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     void
-    acquisition_and_tracking_impl<ITYPE0, OTYPE0>::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+    acquisition_and_tracking_impl<ITYPE, OTYPE>::forecast(int noutput_items, gr_vector_int &ninput_items_required)
     {
       // 1 output item requires d_spreading_code_samples (integration period)
       int nrequired = noutput_items * d_spreading_code_samples;
@@ -117,9 +116,9 @@ namespace gr {
         element = nrequired;
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     int
-    acquisition_and_tracking_impl<ITYPE0, OTYPE0>::general_work(int noutput_items,
+    acquisition_and_tracking_impl<ITYPE, OTYPE>::general_work(int noutput_items,
         gr_vector_int &ninput_items,
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items)
@@ -155,9 +154,9 @@ namespace gr {
     /*===========================================================================*\
     * private function definitions
     \*===========================================================================*/
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     void
-    acquisition_and_tracking_impl<ITYPE0, OTYPE0>::init_spreading_code()
+    acquisition_and_tracking_impl<ITYPE, OTYPE>::init_spreading_code()
     {
       const std::shared_ptr<gps_ca_code> code = gps_ca_code::get(d_id);
       if (code == nullptr)
@@ -173,15 +172,15 @@ namespace gr {
       volk_32fc_conjugate_32fc(d_spreading_code.data(), d_ffft->get_outbuf(), d_spreading_code_samples);
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     int
-    acquisition_and_tracking_impl<ITYPE0, OTYPE0>::work_acquisition(int noutput_items,
+    acquisition_and_tracking_impl<ITYPE, OTYPE>::work_acquisition(int noutput_items,
         gr_vector_int &ninput_items,
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items)
     {
-      const ITYPE0* iptr0 = (const ITYPE0*) input_items[0];
-      OTYPE0* optr0 = (OTYPE0*) output_items[0];
+      const ITYPE* iptr0 = (const ITYPE*) input_items[0];
+      OTYPE* optr0 = (OTYPE*) output_items[0];
 
       if (ninput_items[0] < d_spreading_code_samples)
         return 0;
@@ -231,15 +230,15 @@ namespace gr {
       return 0;
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     int
-    acquisition_and_tracking_impl<ITYPE0, OTYPE0>::work_tracking(int noutput_items,
+    acquisition_and_tracking_impl<ITYPE, OTYPE>::work_tracking(int noutput_items,
         gr_vector_int &ninput_items,
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items)
     {
-      const ITYPE0* iptr0 = (const ITYPE0*) input_items[0];
-      OTYPE0* optr0 = (OTYPE0*) output_items[0];
+      const ITYPE* iptr0 = (const ITYPE*) input_items[0];
+      OTYPE* optr0 = (OTYPE*) output_items[0];
       int freq_index = d_max_magnitude_stats.d_freq_index;
 
       if (ninput_items[0] < d_spreading_code_samples)

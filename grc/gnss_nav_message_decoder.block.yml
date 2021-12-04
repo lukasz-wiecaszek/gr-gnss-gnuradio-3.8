@@ -1,10 +1,10 @@
-id: gnss_nav_message_sink
-label: nav_message_sink
+id: gnss_nav_message_decoder
+label: nav_message_decoder
 category: '[gnss]'
 
 templates:
   imports: import gnss
-  make: gnss.nav_message_sink(${filename})
+  make: gnss.nav_message_decoder(${filename})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
@@ -26,7 +26,12 @@ parameters:
 inputs:
 - label: in
   dtype: byte
-  vlen:  300
+  vlen: 1
+
+outputs:
+- label: out
+  dtype: float
+  vlen: 6
 
 #  'file_format' specifies the version of the GRC yml format used in the file
 #  and should usually not be changed.

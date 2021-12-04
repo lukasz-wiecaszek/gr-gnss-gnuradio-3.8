@@ -97,7 +97,7 @@ class gps_cross_correlation_v6(gr.top_block, Qt.QWidget):
 
         self.qtgui_time_sink_x_0_0_0.set_y_label('Amplitude', "")
 
-        self.qtgui_time_sink_x_0_0_0.enable_tags(True)
+        self.qtgui_time_sink_x_0_0_0.enable_tags(False)
         self.qtgui_time_sink_x_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
         self.qtgui_time_sink_x_0_0_0.enable_autoscale(True)
         self.qtgui_time_sink_x_0_0_0.enable_grid(False)
@@ -215,7 +215,7 @@ class gps_cross_correlation_v6(gr.top_block, Qt.QWidget):
         self.qtgui_number_sink_0.enable_autoscale(False)
         self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_number_sink_0_win)
-        self.gnss_nav_message_sink_0 = gnss.nav_message_sink('subframes.txt')
+        self.gnss_nav_message_decoder_0 = gnss.nav_message_decoder('subframes.raw')
         self.gnss_ca_sybmols_to_nav_bits_0 = gnss.ca_sybmols_to_nav_bits()
         self.gnss_ca_code_generator_1 = gnss.ca_code_generator_c(1, samp_rate, 20, gnss.CA_CODE_DOMAIN_TIME)
         self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate)
@@ -226,10 +226,10 @@ class gps_cross_correlation_v6(gr.top_block, Qt.QWidget):
         self.blocks_vector_to_stream_0_0 = blocks.vector_to_stream(gr.sizeof_float*1, vector_length)
         self.blocks_unpacked_to_packed_xx_0 = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
-        self.blocks_stream_to_vector_1 = blocks.stream_to_vector(gr.sizeof_char*1, 300)
         self.blocks_stream_to_vector_0_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, vector_length)
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, vector_length)
         self.blocks_short_to_float_0 = blocks.short_to_float(1, 1)
+        self.blocks_null_sink_0_0_0 = blocks.null_sink(gr.sizeof_float*6)
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_short*1)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.blocks_multiply_conjugate_cc_0 = blocks.multiply_conjugate_cc(vector_length)
@@ -259,7 +259,6 @@ class gps_cross_correlation_v6(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_short_to_float_0, 0), (self.qtgui_number_sink_0, 0))
         self.connect((self.blocks_stream_to_vector_0, 0), (self.fft_vxx_0, 0))
         self.connect((self.blocks_stream_to_vector_0_0, 0), (self.fft_vxx_0_0, 0))
-        self.connect((self.blocks_stream_to_vector_1, 0), (self.gnss_nav_message_sink_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0, 0))
         self.connect((self.blocks_unpacked_to_packed_xx_0, 0), (self.blocks_file_sink_0, 0))
@@ -270,8 +269,9 @@ class gps_cross_correlation_v6(gr.top_block, Qt.QWidget):
         self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.gnss_ca_sybmols_to_nav_bits_0, 0))
         self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
         self.connect((self.gnss_ca_code_generator_1, 0), (self.blocks_stream_to_vector_0_0, 0))
-        self.connect((self.gnss_ca_sybmols_to_nav_bits_0, 0), (self.blocks_stream_to_vector_1, 0))
         self.connect((self.gnss_ca_sybmols_to_nav_bits_0, 0), (self.blocks_unpacked_to_packed_xx_0, 0))
+        self.connect((self.gnss_ca_sybmols_to_nav_bits_0, 0), (self.gnss_nav_message_decoder_0, 0))
+        self.connect((self.gnss_nav_message_decoder_0, 0), (self.blocks_null_sink_0_0_0, 0))
 
 
     def closeEvent(self, event):

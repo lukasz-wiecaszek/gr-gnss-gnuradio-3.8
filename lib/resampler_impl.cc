@@ -37,11 +37,11 @@ namespace gr {
         (new resampler_impl<gr_complex, gr_complex>(fs_in, fs_out));
     }
 
-    template<typename ITYPE0, typename OTYPE0>
-    resampler_impl<ITYPE0, OTYPE0>::resampler_impl(double fs_in, double fs_out)
+    template<typename ITYPE, typename OTYPE>
+    resampler_impl<ITYPE, OTYPE>::resampler_impl(double fs_in, double fs_out)
       : gr::block("resampler",
-                  gr::io_signature::make(1, 1, sizeof(ITYPE0)),
-                  gr::io_signature::make(1, 1, sizeof(OTYPE0))),
+                  gr::io_signature::make(1, 1, sizeof(ITYPE) * IVLEN),
+                  gr::io_signature::make(1, 1, sizeof(OTYPE) * OVLEN)),
         d_fs_in{fs_in},
         d_fs_out{fs_out},
         d_phase_step{d_fs_out < d_fs_in ?
@@ -53,14 +53,14 @@ namespace gr {
       set_relative_rate(d_fs_out / d_fs_in);
     }
 
-    template<typename ITYPE0, typename OTYPE0>
-    resampler_impl<ITYPE0, OTYPE0>::~resampler_impl()
+    template<typename ITYPE, typename OTYPE>
+    resampler_impl<ITYPE, OTYPE>::~resampler_impl()
     {
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     void
-    resampler_impl<ITYPE0, OTYPE0>::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+    resampler_impl<ITYPE, OTYPE>::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
       int nrequired = noutput_items * d_fs_in / d_fs_out;
 
@@ -68,15 +68,15 @@ namespace gr {
         element = nrequired;
     }
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     int
-    resampler_impl<ITYPE0, OTYPE0>::general_work (int noutput_items,
+    resampler_impl<ITYPE, OTYPE>::general_work (int noutput_items,
                        gr_vector_int &ninput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const ITYPE0* iptr0 = (const ITYPE0*) input_items[0];
-      OTYPE0* optr0 = (OTYPE0*) output_items[0];
+      const ITYPE* iptr0 = (const ITYPE*) input_items[0];
+      OTYPE* optr0 = (OTYPE*) output_items[0];
       int nproduced = 0;
       int nconsumed = 0;
 

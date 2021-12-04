@@ -18,24 +18,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_CA_CODE_GENERATOR_IMPL_H
-#define INCLUDED_GNSS_CA_CODE_GENERATOR_IMPL_H
+#ifndef INCLUDED_GNSS_NAV_MESSAGE_DECODER_IMPL_H
+#define INCLUDED_GNSS_NAV_MESSAGE_DECODER_IMPL_H
 
-#include <memory>
+#include <gnss/nav_message_decoder.h>
+#include <stdio.h>
+#include <string>
+#include <array>
 
-#include <gnss/ca_code_generator.h>
-#include "gnss_parameters.h"
-#include "ca_code.h"
+#include "gps_nav_message_subframe.h"
+#include "ephemeris.h"
+
+#define IVLEN 1
+#define OVLEN 1
 
 namespace gr {
   namespace gnss {
 
-    template<typename T>
-    class ca_code_generator_impl : public ca_code_generator<T>
+    template<typename ITYPE, typename OTYPE>
+    class nav_message_decoder_impl : public nav_message_decoder
     {
     public:
-      ca_code_generator_impl(size_t vlen, double sampling_freq, unsigned svid, ca_code_domain_e domain);
-      ~ca_code_generator_impl();
+      nav_message_decoder_impl(const char* filename);
+      ~nav_message_decoder_impl();
 
       int work(
               int noutput_items,
@@ -44,14 +49,20 @@ namespace gr {
       );
 
     private:
-      const size_t d_vlen;
-      const int d_n_samples;
-      std::vector<T> d_code_sampled;
-      int d_n;
+      void init_ephemeris(ephemeris& e, const gps_nav_message_subframe_2& subframe_2);
+      void init_ephemeris(ephemeris& e, const gps_nav_message_subframe_3& subframe_3);
+      void process_subframe(const gps_nav_message_subframe& subframe);
+
+      FILE* d_fp;
+      std::array<uint8_t, GPS_NAV_MESSAGE_BITS_PER_SUBFRAME> d_subframe_data;
+      int d_subframe_data_cnt;
+      gps_nav_message_subframe d_subframe;
+      ephemeris d_ephemeris[2];
+      int d_current_ephemeris_idx;
     };
 
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_CA_CODE_GENERATOR_IMPL_H */
+#endif /* INCLUDED_GNSS_NAV_MESSAGE_DECODER_IMPL_H */
 

@@ -31,8 +31,8 @@
 #include "dll_loop_filter.h"
 #include "pll_loop_filter.h"
 
-#define IVLEN0 1
-#define OVLEN0 1
+#define IVLEN 1
+#define OVLEN 1
 
 namespace gr {
   namespace gnss {
@@ -44,7 +44,7 @@ namespace gr {
     constexpr double correlation_shift = 0.25;
     constexpr double correlation_shifts[correlation_taps] = {-correlation_shift, 0, +correlation_shift};
 
-    template<typename ITYPE0, typename OTYPE0>
+    template<typename ITYPE, typename OTYPE>
     class acquisition_and_tracking_impl : public acquisition_and_tracking
     {
     public:

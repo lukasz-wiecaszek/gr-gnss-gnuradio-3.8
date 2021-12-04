@@ -29,6 +29,6 @@ install(FILES
     ca_code_generator.h
     resampler.h
     ca_sybmols_to_nav_bits.h
-    nav_message_sink.h
-    DESTINATION include/gnss
+    nav_message_decoder.h
+    pseudoranges_decoder.h DESTINATION include/gnss
 )
