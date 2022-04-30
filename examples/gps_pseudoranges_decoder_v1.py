@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: gps_cross_correlation_v7
+# Title: gps_pseudoranges_decoder_v1
 # GNU Radio version: 3.8.1.0
 
 from distutils.version import StrictVersion
@@ -36,12 +36,12 @@ import gnss
 
 from gnuradio import qtgui
 
-class gps_cross_correlation_v7(gr.top_block, Qt.QWidget):
+class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "gps_cross_correlation_v7")
+        gr.top_block.__init__(self, "gps_pseudoranges_decoder_v1")
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("gps_cross_correlation_v7")
+        self.setWindowTitle("gps_pseudoranges_decoder_v1")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -59,7 +59,7 @@ class gps_cross_correlation_v7(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "gps_cross_correlation_v7")
+        self.settings = Qt.QSettings("GNU Radio", "gps_pseudoranges_decoder_v1")
 
         try:
             if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
@@ -278,10 +278,22 @@ class gps_cross_correlation_v7(gr.top_block, Qt.QWidget):
         self._qtgui_time_sink_x_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_win)
         self.gnss_pseudoranges_decoder_0 = gnss.pseudoranges_decoder()
-        self.gnss_nav_message_decoder_0_0_0_0 = gnss.nav_message_decoder('subframes_prn_32.dat')
-        self.gnss_nav_message_decoder_0_0_0 = gnss.nav_message_decoder('subframes_prn_20.dat')
-        self.gnss_nav_message_decoder_0_0 = gnss.nav_message_decoder('subframes_prn_11.dat')
-        self.gnss_nav_message_decoder_0 = gnss.nav_message_decoder('subframes_prn_1.dat')
+        self.gnss_pseudoranges_decoder_0.set_acq_params(0, gnss.NAVIGATION_SYSTEM_GPS, 1)
+        self.gnss_pseudoranges_decoder_0.set_acq_params(1, gnss.NAVIGATION_SYSTEM_GPS, 11)
+        self.gnss_pseudoranges_decoder_0.set_acq_params(2, gnss.NAVIGATION_SYSTEM_GPS, 20)
+        self.gnss_pseudoranges_decoder_0.set_acq_params(3, gnss.NAVIGATION_SYSTEM_GPS, 32)
+        self.gnss_pseudoranges_decoder_0.set_acq_params(4, gnss.NAVIGATION_SYSTEM_UNDEFINED, -1)
+        self.gnss_pseudoranges_decoder_0.set_acq_params(5, gnss.NAVIGATION_SYSTEM_UNDEFINED, -1)
+        self.gnss_pseudoranges_decoder_0.set_acq_params(6, gnss.NAVIGATION_SYSTEM_UNDEFINED, -1)
+        self.gnss_pseudoranges_decoder_0.set_acq_params(7, gnss.NAVIGATION_SYSTEM_UNDEFINED, -1)
+        self.gnss_nav_message_decoder_0_0_0_0 = gnss.nav_message_decoder()
+        self.gnss_nav_message_decoder_0_0_0_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 32)
+        self.gnss_nav_message_decoder_0_0_0 = gnss.nav_message_decoder()
+        self.gnss_nav_message_decoder_0_0_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 20)
+        self.gnss_nav_message_decoder_0_0 = gnss.nav_message_decoder()
+        self.gnss_nav_message_decoder_0_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 11)
+        self.gnss_nav_message_decoder_0 = gnss.nav_message_decoder()
+        self.gnss_nav_message_decoder_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 1)
         self.gnss_ca_sybmols_to_nav_bits_0_0_0_0 = gnss.ca_sybmols_to_nav_bits()
         self.gnss_ca_sybmols_to_nav_bits_0_0_0 = gnss.ca_sybmols_to_nav_bits()
         self.gnss_ca_sybmols_to_nav_bits_0_0 = gnss.ca_sybmols_to_nav_bits()
@@ -305,6 +317,14 @@ class gps_cross_correlation_v7(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
+        self.msg_connect((self.gnss_nav_message_decoder_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
+        self.msg_connect((self.gnss_nav_message_decoder_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.connect((self.blocks_file_source_0, 0), (self.blocks_interleaved_short_to_complex_0, 0))
         self.connect((self.blocks_interleaved_short_to_complex_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0, 0))
@@ -331,7 +351,7 @@ class gps_cross_correlation_v7(gr.top_block, Qt.QWidget):
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "gps_cross_correlation_v7")
+        self.settings = Qt.QSettings("GNU Radio", "gps_pseudoranges_decoder_v1")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
@@ -350,7 +370,7 @@ class gps_cross_correlation_v7(gr.top_block, Qt.QWidget):
 
 
 
-def main(top_block_cls=gps_cross_correlation_v7, options=None):
+def main(top_block_cls=gps_pseudoranges_decoder_v1, options=None):
 
     if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
         style = gr.prefs().get_string('qtgui', 'style', 'raster')

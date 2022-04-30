@@ -24,6 +24,7 @@
 
 #include <gnuradio/io_signature.h>
 
+#include "tags.h"
 #include "ca_sybmols_to_nav_bits_impl.h"
 
 namespace gr {
@@ -46,17 +47,17 @@ namespace gr {
                   gr::io_signature::make(1, 1, sizeof(OTYPE) * OVLEN)),
         d_state{state_e::unlocked},
         d_polarity{0},
-        d_thershold{GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT - 3 /* we accept 3 errors */},
+        d_thershold{GPS_CA_CODES_PER_NAV_MESSAGE_BIT - 3 /* we accept 3 errors */},
         d_subframe_bit{-1},
         d_preamble_sybmols{}
     {
       set_tag_propagation_policy(TPP_DONT);
 
-      set_relative_rate(1, GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT);
+      set_relative_rate(1, GPS_CA_CODES_PER_NAV_MESSAGE_BIT);
       set_output_multiple(GPS_CA_TLM_PREAMBLE_BITS.size());
 
       for (std::size_t i = 0; i < d_preamble_sybmols.size(); ++i)
-        d_preamble_sybmols.set(i, GPS_CA_TLM_PREAMBLE_BITS[i / GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT]);
+        d_preamble_sybmols.set(i, GPS_CA_TLM_PREAMBLE_BITS[i / GPS_CA_CODES_PER_NAV_MESSAGE_BIT]);
     }
 
     template<typename ITYPE, typename OTYPE>
@@ -68,7 +69,7 @@ namespace gr {
     void
     ca_sybmols_to_nav_bits_impl<ITYPE, OTYPE>::forecast(int noutput_items, gr_vector_int &ninput_items_required)
     {
-      int nrequired = noutput_items * GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT;
+      int nrequired = noutput_items * GPS_CA_CODES_PER_NAV_MESSAGE_BIT;
 
       for (auto&& element : ninput_items_required)
         element = nrequired;
@@ -153,7 +154,7 @@ namespace gr {
       int bit_value;
 
       std::vector<tag_t> tags;
-      get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0], pmt::mp("rx_time"));
+      get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0], pmt::mp(TAG_RX_TIME));
 
       while (nproduced < noutput_items) {
         if (d_subframe_bit == 0) {
@@ -169,11 +170,11 @@ namespace gr {
         }
 
         add_item_tag(0, nitems_written(0) + nproduced, tags[nconsumed].key, tags[nconsumed].value, alias_pmt());
-        add_item_tag(0, nitems_written(0) + nproduced, pmt::mp("subframe_bit"), pmt::mp(d_subframe_bit), alias_pmt());
+        add_item_tag(0, nitems_written(0) + nproduced, pmt::mp(TAG_SUBFRAME_BIT), pmt::mp(d_subframe_bit), alias_pmt());
         optr0[nproduced] = bit_value;
 
         nproduced++;
-        nconsumed += GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT;
+        nconsumed += GPS_CA_CODES_PER_NAV_MESSAGE_BIT;
 
         d_subframe_bit++;
         if (d_subframe_bit == GPS_NAV_MESSAGE_BITS_PER_SUBFRAME) {

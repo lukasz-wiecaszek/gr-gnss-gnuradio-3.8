@@ -7,8 +7,9 @@ templates:
   make: |-
     gnss.acquisition_and_tracking(${sampling_freq})
     self.${id}.set_acq_params(${navigation_system}, ${identifier})
-  callbacks:
-  - self.${id}.set_acq_params(${navigation_system}, ${identifier})
+
+callbacks:
+- self.${id}.set_acq_params(${navigation_system}, ${identifier})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
@@ -23,12 +24,14 @@ parameters:
 - id: navigation_system
   label: Navigation System
   dtype: enum
-  options: [gnss.NAVIGATION_SYSTEM_GPS, gnss.NAVIGATION_SYSTEM_GALILEO, gnss.NAVIGATION_SYSTEM_GLONASS]
-  option_labels: [GPS, GALILEO, GLONASS]
+  options: [gnss.NAVIGATION_SYSTEM_UNDEFINED, gnss.NAVIGATION_SYSTEM_GPS, gnss.NAVIGATION_SYSTEM_GALILEO, gnss.NAVIGATION_SYSTEM_GLONASS]
+  option_labels: [UNDEFINED, GPS, GALILEO, GLONASS]
+  default: gnss.NAVIGATION_SYSTEM_UNDEFINED
 
 - id: identifier
   label: Id (e.g. gps svid)
   dtype: int
+  default: -1
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:

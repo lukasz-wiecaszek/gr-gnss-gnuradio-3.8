@@ -29,29 +29,29 @@ namespace gr {
 
     struct verlet_integration
     {
-      static void get_vectors(double dt, vector& r, vector &v, vector& a)
+      static void get_vectors(double dt, vector3d& r, vector3d &v, vector3d& a)
       {
-        vector a0 = a;
+        vector3d a0 = a;
 
         // new position at t + dt
         r = r + v * dt + 0.5 * a * dt * dt;
 
-        double r_magnitude = lts::abs(r);
-        double x = r.get<0>();
-        double y = r.get<1>();
-        double z = r.get<2>();
+        double r_magnitude = abs(r);
+        double x = r.get({0}, {});
+        double y = r.get({1}, {});
+        double z = r.get({2}, {});
         double x_r = x / r_magnitude;
         double y_r = y / r_magnitude;
         double z_r = z / r_magnitude;
-        double vx = v.get<0>();
-        double vy = v.get<1>();
+        double vx = v.get({0}, {});
+        double vy = v.get({1}, {});
         double theta = 5.0 * z_r * z_r;
 
         double F = -(3.0 / 2.0) * GPS_J2 * (GPS_MI / (r_magnitude * r_magnitude)) * (GPS_RE / r_magnitude) * (GPS_RE / r_magnitude); // Oblate Earth acceleration Factor
-        vector f = vector{F * (1.0 - theta) * x_r, F * (1.0 - theta) * y_r, F * (3.0 - theta) * z_r}; // Oblate Earth acceleration correction
-        vector o = vector{+2.0 * vy * GPS_dOMEGA_dt_EARTH + x * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH,
-                          -2.0 * vx * GPS_dOMEGA_dt_EARTH + y * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH,
-                          0.0};
+        vector3d f = vector3d{F * (1.0 - theta) * x_r, F * (1.0 - theta) * y_r, F * (3.0 - theta) * z_r}; // Oblate Earth acceleration correction
+        vector3d o = vector3d{+2.0 * vy * GPS_dOMEGA_dt_EARTH + x * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH,
+                              -2.0 * vx * GPS_dOMEGA_dt_EARTH + y * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH,
+                               0.0};
 
         // new acceleration at t + dt
         a = -GPS_MI * r / (r_magnitude * r_magnitude * r_magnitude) + f + o;

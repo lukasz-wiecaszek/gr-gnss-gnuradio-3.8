@@ -18,20 +18,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_GNSS_PARAMETERS_H
-#define INCLUDED_GNSS_GNSS_PARAMETERS_H
+#ifndef INCLUDED_GNSS_PORTS_H
+#define INCLUDED_GNSS_PORTS_H
 
-#include "gps_parameters.h"
-#include "wgs84_parameters.h"
+#include <pmt/pmt.h>
+
+#define PORT_CLOCK      "clock"
+#define PORT_EPHEMERIS  "ephemeris"
 
 namespace gr {
   namespace gnss {
 
-    // Speed of Light
-    constexpr double C = 299792458.0; // meters per second
-
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_GNSS_PARAMETERS_H */
+#endif /* INCLUDED_GNSS_PORTS_H */
 

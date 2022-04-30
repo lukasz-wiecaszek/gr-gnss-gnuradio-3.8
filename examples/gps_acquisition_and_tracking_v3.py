@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: gps_cross_correlation_v4
+# Title: gps_acquisition_and_tracking_v3
 # GNU Radio version: 3.8.1.0
 
 from distutils.version import StrictVersion
@@ -40,12 +40,12 @@ import gnss
 
 from gnuradio import qtgui
 
-class gps_cross_correlation_v4(gr.top_block, Qt.QWidget):
+class gps_acquisition_and_tracking_v3(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "gps_cross_correlation_v4")
+        gr.top_block.__init__(self, "gps_acquisition_and_tracking_v3")
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("gps_cross_correlation_v4")
+        self.setWindowTitle("gps_acquisition_and_tracking_v3")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -63,7 +63,7 @@ class gps_cross_correlation_v4(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "gps_cross_correlation_v4")
+        self.settings = Qt.QSettings("GNU Radio", "gps_acquisition_and_tracking_v3")
 
         try:
             if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
@@ -134,7 +134,7 @@ class gps_cross_correlation_v4(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.gnss_ca_code_generator_0 = gnss.ca_code_generator_c(vector_length, 20, samp_rate, gnss.CA_CODE_DOMAIN_FREQUENCY_CONJUGATE)
+        self.gnss_ca_code_generator_0 = gnss.ca_code_generator_c(vector_length, samp_rate, 20, gnss.CA_CODE_DOMAIN_FREQUENCY_CONJUGATE)
         self.fft_vxx_0_0_0 = fft.fft_vcc(vector_length, False, window.rectangular(vector_length), False, 1)
         self.fft_vxx_0 = fft.fft_vcc(vector_length, True, window.rectangular(vector_length), False, 1)
         self._delay_range = Range(0, 2000, 1, 0, 200)
@@ -175,7 +175,7 @@ class gps_cross_correlation_v4(gr.top_block, Qt.QWidget):
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "gps_cross_correlation_v4")
+        self.settings = Qt.QSettings("GNU Radio", "gps_acquisition_and_tracking_v3")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
@@ -214,7 +214,7 @@ class gps_cross_correlation_v4(gr.top_block, Qt.QWidget):
 
 
 
-def main(top_block_cls=gps_cross_correlation_v4, options=None):
+def main(top_block_cls=gps_acquisition_and_tracking_v3, options=None):
 
     if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
         style = gr.prefs().get_string('qtgui', 'style', 'raster')

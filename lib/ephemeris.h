@@ -33,6 +33,30 @@ namespace gr {
 
     struct ephemeris_correction_terms
     {
+      ephemeris_correction_terms() noexcept
+      {
+      }
+
+      ephemeris_correction_terms(const ephemeris_correction_terms& other) noexcept
+      {
+        *this = other;
+      };
+
+      ephemeris_correction_terms& operator = (const ephemeris_correction_terms& other) noexcept
+      {
+        if (this != &other) {
+          C_RC = other.C_RC;
+          C_RS = other.C_RS;
+          C_UC = other.C_UC;
+          C_US = other.C_US;
+          C_IC = other.C_IC;
+          C_IS = other.C_IS;
+        }
+
+        return *this;
+      };
+
+
       double C_RC; // Amplitude of the Cosine Harmonic Correction Term to the Orbit Radius [m]
       double C_RS; // Amplitude of the Sine Harmonic Correction Term to the Orbit Radius [m]
       double C_UC; // Amplitude of the Cosine Harmonic Correction Term to the Argument of Latitude [rad]
@@ -64,13 +88,40 @@ namespace gr {
 
     struct ephemeris
     {
-      ephemeris() :
-        is_valid{false},
+      ephemeris() noexcept :
+        svid{-1},
         IODE{-1, -1}
       {
       }
 
-      bool is_valid;
+      ephemeris(const ephemeris& other) noexcept
+      {
+        *this = other;
+      };
+
+      ephemeris& operator = (const ephemeris& other) noexcept
+      {
+        if (this != &other) {
+          svid             = other.svid;
+          IODE[0]          = other.IODE[0];
+          IODE[1]          = other.IODE[1];
+          t_oe             = other.t_oe;
+          e                = other.e;
+          sqrt_a           = other.sqrt_a;
+          M_0              = other.M_0;
+          delta_n          = other.delta_n;
+          OMEGA_0          = other.OMEGA_0;
+          i_0              = other.i_0;
+          omega            = other.omega;
+          dOMEGA_dt        = other.dOMEGA_dt;
+          dI_dt            = other.dI_dt;
+          correction_terms = other.correction_terms;
+        }
+
+        return *this;
+      };
+
+      int svid;
       int IODE[2];       // Issue of Data - Ephemeris
       int t_oe;          // Ephemeris data reference time of week [s] (IS-GPS-200L 20.3.4.5 "Reference Times")
       double e;          // Eccentricity [dimensionless]
@@ -121,7 +172,7 @@ namespace gr {
 #else
         for (double dE = INFINITY; std::fabs(dE) > 1e-12; E[0] = E[1]) {
           E[1] = M + e * std::sin(E[1]);
-          dE = fmod(E[1] - E[0], 2 * M_PI);
+          dE = std::fmod(E[1] - E[0], 2 * M_PI);
         }
 #endif
         return E[1];
@@ -138,10 +189,10 @@ namespace gr {
 #endif
       }
 
-      void get_vectors(double t, vector* position, vector* velocity, vector* acceleration) const
+      void get_vectors(double t, vector3d* position, vector3d* velocity, vector3d* acceleration) const
       {
         double a = sqrt_a * sqrt_a; // semi-major axis [m]
-        double n0 = std::sqrt(GPS_MI / (a * a * a)); // computed mean motion [((m^3/s^2)/m^3)^1/2] = [rad/s]
+        double n0 = std::sqrt(WGS84_GM_FOR_GPS / (a * a * a)); // computed mean motion [((m^3/s^2)/m^3)^1/2] = [rad/s]
         double n = n0 + delta_n; // corrected mean motion [rad/s]
         double tk = get_tk(t); // time difference relative to ephemeris reference epoch [s]
         double M = M_0 + n * tk; // mean anomaly [rad] (that one changes linearly with time)
@@ -152,7 +203,7 @@ namespace gr {
         double cos_2phi = std::cos(2 * phi);
         double sin_2phi = std::sin(2 * phi);
 
-        double do_dt = dOMEGA_dt - GPS_dOMEGA_dt_EARTH; // rate of right ascension in ECEF coordinate system [rad/s]
+        double do_dt = dOMEGA_dt - WGS84_dOMEGA_dt_EARTH; // rate of right ascension in ECEF coordinate system [rad/s]
         double gamma = 1.0 - e * std::cos(E);
 
         double delta_r = // radius correction [m] (second harmonic)
@@ -165,7 +216,7 @@ namespace gr {
         double r = a * gamma + delta_r; // corrected radius [m]
         double u = phi + delta_u; // corrected argument of latitude [rad]
         double i = i_0 + dI_dt * tk + delta_i; // corrected inclination [rad]
-        double o = OMEGA_0 + do_dt * tk - GPS_dOMEGA_dt_EARTH * t_oe; // corrected longitude of ascending node [rad]
+        double o = OMEGA_0 + do_dt * tk - WGS84_dOMEGA_dt_EARTH * t_oe; // corrected longitude of ascending node [rad]
 
         double x_prime = r * std::cos(u); // position in orbital plane
         double y_prime = r * std::sin(u); // position in orbital plane
@@ -177,7 +228,7 @@ namespace gr {
           double y = x_prime * std::sin(o) + r_prime * std::cos(o);
           double z = y_prime * std::sin(i);
 
-          *position = vector{x, y, z};
+          *position = vector3d{{x, y, z}};
         }
 
         if (velocity) {
@@ -204,32 +255,44 @@ namespace gr {
           double dy_dt = dx_dt_prime * std::sin(o) + x_prime * do_dt * std::cos(o) + dr_dt_prime * cos(o) - r_prime * do_dt * std::sin(o);
           double dz_dt = dy_dt_prime * std::sin(i) + y_prime * di_dt * std::cos(i);
 
-          *velocity = vector{dx_dt, dy_dt, dz_dt};
+          *velocity = vector3d{{dx_dt, dy_dt, dz_dt}};
         }
 
         if (position && velocity && acceleration) {
           // satellite acceleration in Earth Fixed Earth Centered (EFEC) coordinates
           double r2 = r * r;
-          double F = -(3.0 / 2.0) * GPS_J2 * (GPS_MI / r2) * (GPS_RE / r) * (GPS_RE / r); // Oblate Earth acceleration Factor
+          double F = -(3.0 / 2.0) * WGS84_J2 * (WGS84_GM_FOR_GPS / r2) * (WGS84_A / r) * (WGS84_A / r); // Oblate Earth acceleration Factor
 
-          double x = position->get<0>();
-          double y = position->get<1>();
-          double z = position->get<2>();
+          double x = position->get({0},{});
+          double y = position->get({1},{});
+          double z = position->get({2},{});
 
-          double vx = velocity->get<0>();
-          double vy = velocity->get<1>();
+          double vx = velocity->get({0},{});
+          double vy = velocity->get({1},{});
 
           double x_r = x / r;
           double y_r = y / r;
           double z_r = z / r;
 
           double theta = 5.0 * z_r * z_r;
-          double d2x_dt2 = -GPS_MI * x_r / r2 + F * (1.0 - theta) * x_r + 2.0 * vy * GPS_dOMEGA_dt_EARTH + x * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH;
-          double d2y_dt2 = -GPS_MI * y_r / r2 + F * (1.0 - theta) * y_r - 2.0 * vx * GPS_dOMEGA_dt_EARTH + y * GPS_dOMEGA_dt_EARTH * GPS_dOMEGA_dt_EARTH;
-          double d2z_dt2 = -GPS_MI * z_r / r2 + F * (3.0 - theta) * z_r;
+          double d2x_dt2 = -WGS84_GM_FOR_GPS * x_r / r2 + F * (1.0 - theta) * x_r + 2.0 * vy * WGS84_dOMEGA_dt_EARTH + x * WGS84_dOMEGA_dt_EARTH * WGS84_dOMEGA_dt_EARTH;
+          double d2y_dt2 = -WGS84_GM_FOR_GPS * y_r / r2 + F * (1.0 - theta) * y_r - 2.0 * vx * WGS84_dOMEGA_dt_EARTH + y * WGS84_dOMEGA_dt_EARTH * WGS84_dOMEGA_dt_EARTH;
+          double d2z_dt2 = -WGS84_GM_FOR_GPS * z_r / r2 + F * (3.0 - theta) * z_r;
 
-          *acceleration = vector{d2x_dt2, d2y_dt2, d2z_dt2};
+          *acceleration = vector3d{{d2x_dt2, d2y_dt2, d2z_dt2}};
         }
+      }
+
+      double relativistic_correction_term(double t) const
+      {
+        double a = sqrt_a * sqrt_a; // semi-major axis [m]
+        double n0 = std::sqrt(WGS84_GM_FOR_GPS / (a * a * a)); // computed mean motion [((m^3/s^2)/m^3)^1/2] = [rad/s]
+        double n = n0 + delta_n; // corrected mean motion [rad/s]
+        double tk = get_tk(t); // time difference relative to ephemeris reference epoch [s]
+        double M = M_0 + n * tk; // mean anomaly [rad] (that one changes linearly with time)
+        double E = get_E(M); // eccentric anomaly [rad]
+
+        return GPS_F * e * sqrt_a * std::sin(E); // relativistic correction term [s]
       }
 
       std::string to_string() const
@@ -237,7 +300,10 @@ namespace gr {
         char strbuf[1024];
 
         snprintf(strbuf, sizeof(strbuf),
-          "IODE: %d/%d, t_oe: %d [s]\n"
+          "ephemeris:\n"
+          "\tsvid:       %d\n"
+          "\tIODE:       %d/%d\n"
+          "\tt_oe:       %d\n"
           "\te:          %+e [dimensionless]\n"
           "\tsqrt_a:     %+e [m^1/2]\n"
           "\tM_0:        %+e [rad]\n"
@@ -248,7 +314,7 @@ namespace gr {
           "\tdOMEGA_dt:  %+e [rad/s]\n"
           "\tdI_dt:      %+e [rad/s]\n"
           "%s\n",
-            IODE[0], IODE[1], t_oe, e, sqrt_a, M_0, delta_n, OMEGA_0, i_0, omega, dOMEGA_dt, dI_dt,
+            svid, IODE[0], IODE[1], t_oe, e, sqrt_a, M_0, delta_n, OMEGA_0, i_0, omega, dOMEGA_dt, dI_dt,
             correction_terms.to_string().c_str());
 
         return std::string(strbuf);

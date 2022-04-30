@@ -85,7 +85,7 @@ namespace gr {
       {
         int n = 0;
 
-        for (int i = 0; i < GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT; ++i)
+        for (int i = 0; i < GPS_CA_CODES_PER_NAV_MESSAGE_BIT; ++i)
           symbols[i].imag() > 0 ? n++ : n--;
 
         if (std::abs(n) < d_thershold)
@@ -98,7 +98,7 @@ namespace gr {
       int d_polarity;
       int d_thershold;
       int d_subframe_bit;
-      std::bitset<GPS_CA_TLM_PREAMBLE_BITS.size() * GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT> d_preamble_sybmols;
+      std::bitset<GPS_CA_TLM_PREAMBLE_BITS.size() * GPS_CA_CODES_PER_NAV_MESSAGE_BIT> d_preamble_sybmols;
     };
 
   } // namespace gnss

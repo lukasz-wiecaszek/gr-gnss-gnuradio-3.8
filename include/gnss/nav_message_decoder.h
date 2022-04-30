@@ -22,7 +22,8 @@
 #define INCLUDED_GNSS_NAV_MESSAGE_DECODER_H
 
 #include <gnss/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnss/navigation_system.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace gnss {
@@ -32,7 +33,7 @@ namespace gr {
      * \ingroup gnss
      *
      */
-    class GNSS_API nav_message_decoder : virtual public gr::sync_block
+    class GNSS_API nav_message_decoder : virtual public gr::block
     {
      public:
       typedef boost::shared_ptr<nav_message_decoder> sptr;
@@ -45,7 +46,11 @@ namespace gr {
        * class. gnss::nav_message_decoder::make is the public interface for
        * creating new instances.
        */
-      static sptr make(const char* filename);
+      static sptr make();
+
+      virtual void set_acq_params(navigation_system_e system, int id) = 0;
+      virtual void get_acq_params(navigation_system_e& system, int& id) const = 0;
+
     };
 
   } // namespace gnss

@@ -21,12 +21,45 @@
 #ifndef INCLUDED_GNSS_VECTOR3D_H
 #define INCLUDED_GNSS_VECTOR3D_H
 
-#include <vector.hpp>
+#include <cstdio>
+#include <cmath>
+#include <string>
+#include <tensor.hpp>
 
 namespace gr {
   namespace gnss {
 
-    using vector = lts::vector<double, 3>;
+    using vector3d = lts::tensor<double, lts::dimensions<3>, lts::dimensions<>>;
+
+    inline double norm(const vector3d& v)
+    {
+      const lts::tensor<double, lts::dimensions<3>, lts::dimensions<3>> g{{
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0
+      }};
+      return lts::transpose(v) * g * v;
+    }
+
+    inline double abs(const vector3d& v)
+    {
+      return std::sqrt(norm(v));
+    }
+
+    inline std::string to_string(const vector3d& v)
+    {
+        char strbuf[1024];
+
+        snprintf(strbuf, sizeof(strbuf),
+          "(%+.15e, %+.15e, %+.15e) [%.15e]",
+          v.get({0}, {}),
+          v.get({1}, {}),
+          v.get({2}, {}),
+          abs(v)
+        );
+
+        return std::string(strbuf);
+    }
 
   } // namespace gnss
 } // namespace gr

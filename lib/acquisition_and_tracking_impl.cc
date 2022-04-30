@@ -30,6 +30,7 @@
 
 #include "acquisition_and_tracking_impl.h"
 #include "gnss_parameters.h"
+#include "tags.h"
 #include "ca_code.h"
 #include "dll_discriminators.h"
 #include "pll_discriminators.h"
@@ -297,12 +298,12 @@ namespace gr {
       d_code_chip_rate = GPS_CA_CODE_CHIP_RATE - dll_discriminator_filtered;
       d_code_chip_rate -= d_freq * GPS_CA_CODE_CHIP_RATE / GPS_L1_FREQ_HZ;
 
-      d_code_offset += GPS_CA_CODE_LENGTH * d_code_chip_rate / GPS_CA_CODE_CHIP_RATE - GPS_CA_CODE_LENGTH;
-
-      double rx_time = (nitems_read(0) + d_code_offset * d_sampling_freq / d_code_chip_rate) / d_sampling_freq;
-      add_item_tag(0, nitems_written(0), pmt::mp("rx_time"), pmt::mp(rx_time), alias_pmt());
+      double rx_time = (nitems_read(0) - d_code_offset * d_sampling_freq / d_code_chip_rate) / d_sampling_freq;
+      add_item_tag(0, nitems_written(0), pmt::mp(TAG_RX_TIME), pmt::mp(rx_time), alias_pmt());
 
       *optr0 = P;
+
+      d_code_offset += GPS_CA_CODE_LENGTH * d_code_chip_rate / GPS_CA_CODE_CHIP_RATE - GPS_CA_CODE_LENGTH;
 
       // Tell runtime system how many input items we consumed on
       // each input stream.

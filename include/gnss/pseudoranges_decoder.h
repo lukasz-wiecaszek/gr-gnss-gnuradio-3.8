@@ -22,6 +22,7 @@
 #define INCLUDED_GNSS_PSEUDORANGES_DECODER_H
 
 #include <gnss/api.h>
+#include <gnss/navigation_system.h>
 #include <gnuradio/block.h>
 
 namespace gr {
@@ -46,6 +47,10 @@ namespace gr {
        * creating new instances.
        */
       static sptr make();
+
+      virtual void set_acq_params(int port, navigation_system_e system, int id) = 0;
+      virtual void get_acq_params(int port, navigation_system_e& system, int& id) const = 0;
+
     };
 
   } // namespace gnss

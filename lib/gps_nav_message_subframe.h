@@ -45,6 +45,12 @@ namespace gr {
         for (std::size_t i = 0; i < words.size(); D30 = *(*vptr - 1), ++i)
           words[i].init(vptr, D30);
 
+        unsigned id = subframe_id();
+        if (id >= 1 && id <= 5)
+          is_initialized = true; // of course proper error checking need to be implemened
+        else
+          is_initialized = false;
+
         //for (std::size_t i = 0; i < words.size(); ++i)
         //  printf("[%zu]: '%s'\n", i, words[i].to_string().c_str());
       }

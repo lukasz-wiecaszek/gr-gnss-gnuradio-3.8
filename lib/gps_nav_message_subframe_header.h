@@ -31,6 +31,11 @@ namespace gr {
     class gps_nav_message_subframe_header
     {
     public:
+      gps_nav_message_subframe_header() :
+        is_initialized{false}
+      {
+      }
+
       unsigned tlm_message()       const { return field1unsigned<9, 14>();  }
       bool integrity_status_flag() const { return flag<23>();               }
 
@@ -38,6 +43,11 @@ namespace gr {
       bool alert_flag()            const { return flag<48>();               }
       bool anti_spoof_flag()       const { return flag<49>();               }
       unsigned subframe_id()       const { return field1unsigned<50, 3>();  }
+
+      operator bool () const
+      {
+        return is_initialized;
+      }
 
       std::string to_string() const
       {
@@ -116,6 +126,7 @@ namespace gr {
       }
 
       std::array<gps_nav_message_word, GPS_NAV_MESSAGE_WORDS_PER_SUBFRAME> words;
+      bool is_initialized;
     };
 
   } // namespace gnss

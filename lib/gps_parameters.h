@@ -41,7 +41,7 @@ namespace gr {
     constexpr int GPS_CA_CODE_RATE = 1000; // codes per second
     constexpr int GPS_CA_CODE_CHIP_RATE = GPS_CA_CODE_LENGTH * GPS_CA_CODE_RATE; // chips per second
 
-    constexpr int GPS_CA_SYMBOLS_PER_NAV_MESSAGE_BIT = 20;
+    constexpr int GPS_CA_CODES_PER_NAV_MESSAGE_BIT = 20;
 
     // IS-GPS-200L - Chapter 20.3.2 Message Structure.
     // IS-GPS-200L - Chapter 20.3.3 Message Content.
@@ -52,10 +52,16 @@ namespace gr {
 
     constexpr std::bitset<8> GPS_CA_TLM_PREAMBLE_BITS = 0b11010001;
 
+    constexpr double GPS_SCALE_FACTOR_T_GD = (1.0 / (1LL << 31));
+    constexpr double GPS_SCALE_FACTOR_A_F0 = (1.0 / (1LL << 31));
+    constexpr double GPS_SCALE_FACTOR_A_F1 = (1.0 / (1LL << 43));
+    constexpr double GPS_SCALE_FACTOR_A_F2 = (1.0 / (1LL << 55));
+
     constexpr double GPS_SCALE_FACTOR_C_U = (1.0 / (1LL << 29));
     constexpr double GPS_SCALE_FACTOR_C_I = (1.0 / (1LL << 29));
     constexpr double GPS_SCALE_FACTOR_C_R = (1.0 / (1LL << 5));
 
+    constexpr int GPS_SCALE_FACTOR_T_OC = (1 << 4);
     constexpr int GPS_SCALE_FACTOR_T_OE = (1 << 4);
 
     constexpr double GPS_SCALE_FACTOR_E          = (1.0 / (1LL << 33));
@@ -68,20 +74,12 @@ namespace gr {
     constexpr double GPS_SCALE_FACTOR_D_OMEGA_DT = (1.0 / (1LL << 43));
     constexpr double GPS_SCALE_FACTOR_IDOT       = (1.0 / (1LL << 43));
 
-    // WGS 84 value of the Earth's gravitational constant times the mass of the Earth for GPS user [m^3/s^2]
-    constexpr double GPS_MI = 3.986005e14;
-
-    // WGS 84 value of the Earth's rotation rate for GPS user [rad/s]
-    constexpr double GPS_dOMEGA_dt_EARTH = 7.2921151467e-5;
-
-    // WGS 84 Earth Equatorial Radius
-    constexpr double GPS_RE = 6378137.0;
-
-    // Oblate Earth Gravity Coefficient
-    constexpr double GPS_J2 = 0.0010826262;
-
     // Number of seconds in GPS week
     constexpr int GPS_SECONDS_PER_WEEK = 60 * 60 * 24 * 7;
+
+    // Relativistic correction term constant, [s/(m)^(1/2)],
+    // IS-GPS-200L, chapter 20.3.3.3.3.1 "User Algorithm fo SV Clock Correction"
+    constexpr double GPS_F = -4.442807633e-10;
 
   } // namespace gnss
 } // namespace gr
