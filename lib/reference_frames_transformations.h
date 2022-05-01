@@ -40,7 +40,7 @@ namespace gr {
       constexpr double INV6     = 1.66666666666666666667e-01; /* 1/6 */
 
       /**
-       * @brief Geographic/Geospatial Coordinate System (GCS) to Earth Fixed Earth Centered (EFEC)
+       * @brief Geographic/Geospatial Coordinate System (GCS) to Earth Centered Earth Fixed (ECEF)
        *
        * @param[in] gcs  Geographical coordinates (latitude, longitude, altitude)
        * @param[out] ecef Earth-Centered Earth-Fixed coordinates (x, y, z)
@@ -71,7 +71,7 @@ namespace gr {
       }
 
       /**
-       * @brief Earth Fixed Earth Centered (EFEC) to Geographic/Geospatial Coordinate System (GCS)
+       * @brief Earth Centered Earth Fixed (ECEF) to Geographic/Geospatial Coordinate System (GCS)
        *
        * @param[in] ecef Earth-Centered Earth-Fixed coordinates (x, y, z)
        * @param[out] gcs Geographical coordinates (latitude, longitude, altitude)

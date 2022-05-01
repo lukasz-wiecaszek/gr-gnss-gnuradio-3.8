@@ -5,9 +5,33 @@ receiver with a little help of gnuradio.
 The best way (at least to me) to learn a new technology is to try to build a project
 making use of that technology.
 This is the main reason and motivation why this project was created.
-At this stage of development only acquisition and tracking block is prepared.
-If interested, please see especially gps_cross_correlation_v5.grc
+At this stage of development following blocks are prepared:
+- acquisition_and_tracking
+  - Acquisition and tracking combined in one block. Acquisition is responsible for fast detection
+    and coarse estimation of the code phase and Doppler shift of the incoming signal.
+    Tracking takes output from the acquisition (code phase and Doppler shift)
+    and keeps track of those two parameters as times flow.
+- ca_code_generator
+  - Coarse/Acquisition codes generator (source block).
+- ca_symbols_to_nav_bits
+  - Converts Coarse/Acquisition symbols/codes to "navigation bits".
+- nav_message_decoder
+  - Takes "navigation bits" and produces pseudoranges measurements (rx_time, tx_time).
+    To do so it collects and parses so called navigation subframes. Subframe1 (clock related data),
+    subframe2 and subframe3 (ephemeris).
+- pseudoranges_decoder
+  - Takes pseudoranges measurements (rx_time, tx_time) from 4 satelites and produces ECEF coordinates.
+    It requires ephemeris and clock data from navigation messages
+    (of course from the same satelites as the pseudoranges measurements).
+- rft
+  - Reference frames transformations. At this moment this block can transform
+    Earth Centered Earth Fixed coordinates into Geographical Coordinate System (latitude, longitude and altitude)
+    and vice versa Geographical Coordinate System coordinates into Earth Centered Earth Fixed ones.
+
+If interested, please see especially gps_acquisition_and_tracking_v4.grc
 where you will be able to spot navigation message bits on the GUI Time Sink.
+All the current examples are not using live signal yet but the prerecorded IQ samples (file source).
+And this file is taken from GNSS-SDR project (https://gnss-sdr.org/my-first-fix).
 
 ## How to build this module
 
@@ -36,4 +60,6 @@ Then, as with every gnuradio module we use cmake.
 
 Currently not so much. As already mentioned, this is my way of learning new technology.
 What you can do is to look into examples and see how this spreading code correlation works.
-Finally gps_cross_correlation_v5.grc shows decoded navigation message bits in the GUI Time Sink.
+gps_acquisition_and_tracking_v4.grc shows decoded navigation message bits in the GUI Time Sink.
+gps_rft_v1.grc produces position vectors and suprisingly enough this positions correspond to place
+where the IQ data were captured.

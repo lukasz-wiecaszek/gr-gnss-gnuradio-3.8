@@ -27,10 +27,10 @@ namespace gr {
     typedef enum {
         RFT_UNDEFINED,
 
-        // Geographic/Geospatial Coordinate System (GCS) to Earth Fixed Earth Centered (EFEC)
+        // Geographic/Geospatial Coordinate System (GCS) to Earth Centered Earth Fixed (ECEF)
         RFT_GCS_TO_ECEF,
 
-        // Earth Fixed Earth Centered (EFEC) to Geographic/Geospatial Coordinate System (GCS)
+        // Earth Centered Earth Fixed (ECEF) to Geographic/Geospatial Coordinate System (GCS)
         RFT_ECEF_TO_GCS
     } rft_type_e;
 
