@@ -30,5 +30,6 @@ install(FILES
     resampler.h
     ca_sybmols_to_nav_bits.h
     nav_message_decoder.h
-    pseudoranges_decoder.h DESTINATION include/gnss
+    pseudoranges_decoder.h
+    rft.h DESTINATION include/gnss
 )

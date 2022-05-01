@@ -29,8 +29,6 @@
 #include "ports.h"
 #include "vector3d.h"
 #include "gnss_parameters.h"
-#include "pvt.h"
-#include "reference_frames_transformations.h"
 #include "sv_clock_parameters.h"
 #include "ephemeris.h"
 
@@ -57,7 +55,8 @@ namespace gr {
         d_satelite_ids(),
         d_flatbuffers(),
         d_sv_clock_parameters{},
-        d_ephemerides{}
+        d_ephemerides{},
+        d_hint{}
     {
       set_relative_rate(1, DECIMATION_FACTOR);
 
@@ -196,14 +195,10 @@ namespace gr {
           break;
 
         vector3d efec_user_position;
-        pvt::user hint;
 
-        hint.position = vector3d{{0.0, 0.0, 0.0}};
-        hint.dt = 0.0;
+        pvt::get(satelites, N, d_hint, &efec_user_position, NULL, NULL);
 
-        pvt::get(satelites, N, hint, &efec_user_position, NULL, NULL);
-
-        optr0[nproduced] = vector3d{{0.0, 0.0, 0.0}};
+        optr0[nproduced] = efec_user_position;
 
         nproduced++;
       }

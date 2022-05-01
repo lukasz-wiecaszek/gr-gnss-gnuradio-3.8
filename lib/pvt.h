@@ -36,6 +36,10 @@ namespace gr {
         vector3d position; // satelite position
         double pseudorange; // associated pseudorange measurement
 
+        satelite()
+        {
+        }
+
         std::string to_string() const
         {
           char strbuf[1024];
@@ -56,6 +60,12 @@ namespace gr {
       {
         vector3d position; // user/receiver position
         double dt; // advance of the user/reveiver clock with respect to system time
+
+        user() :
+          position{{0.0, 0.0, 0.0}},
+          dt{0.0}
+        {
+        }
 
         std::string to_string() const
         {

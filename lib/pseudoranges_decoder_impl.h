@@ -30,6 +30,7 @@
 #include "vector3d.h"
 #include "ephemeris.h"
 #include "sv_clock_parameters.h"
+#include "pvt.h"
 
 #include <gnss/pseudoranges_decoder.h>
 
@@ -65,6 +66,7 @@ namespace gr {
       std::array<lts::flatbuffer<vector3d>, MAX_STREAMS> d_flatbuffers;
       std::map<int, std::shared_ptr<sv_clock_parameters>> d_sv_clock_parameters;
       std::map<int, std::shared_ptr<ephemeris>> d_ephemerides;
+      pvt::user d_hint;
     };
 
   } // namespace gnss

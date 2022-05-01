@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace gnss {
-    namespace rft {
+    namespace rftns {
 
       constexpr double Hmin = /* e^12 / 4 */
           (WGS84_E * WGS84_E * WGS84_E * WGS84_E *
@@ -48,7 +48,7 @@ namespace gr {
        * @return 0 on success, other value on failure
        * @note Implementation taken from https://hal.archives-ouvertes.fr/hal-01704943v2/document
        */
-      int gcs_to_ecef(const vector3d& gcs, vector3d& ecef)
+      inline int gcs_to_ecef(const vector3d& gcs, vector3d& ecef)
       {
         double lat = gcs.get({0}, {}) * M_PI / 180.0; // convert degrees to radians
         double lon = gcs.get({1}, {}) * M_PI / 180.0; // convert degrees to radians
@@ -79,7 +79,7 @@ namespace gr {
        * @return 0 on success, other value on failure
        * @note Implementation taken from https://hal.archives-ouvertes.fr/hal-01704943v2/document
        */
-      int ecef_to_gcs(const vector3d& ecef, vector3d& gcs)
+      inline int ecef_to_gcs(const vector3d& ecef, vector3d& gcs)
       {
         double x, y, z;
         double lat, lon, alt;
