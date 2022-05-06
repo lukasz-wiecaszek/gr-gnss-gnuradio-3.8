@@ -296,6 +296,7 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
         self.gnss_nav_message_decoder_0_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 11)
         self.gnss_nav_message_decoder_0 = gnss.nav_message_decoder()
         self.gnss_nav_message_decoder_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 1)
+        self.gnss_geojson_file_sink_1 = gnss.geojson_file_sink("default")
         self.gnss_ca_sybmols_to_nav_bits_0_0_0_0 = gnss.ca_sybmols_to_nav_bits()
         self.gnss_ca_sybmols_to_nav_bits_0_0_0 = gnss.ca_sybmols_to_nav_bits()
         self.gnss_ca_sybmols_to_nav_bits_0_0 = gnss.ca_sybmols_to_nav_bits()
@@ -309,7 +310,6 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
         self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate)
         self.gnss_acquisition_and_tracking_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 1)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
-        self.blocks_null_sink_0_0_0_0 = blocks.null_sink(gr.sizeof_float*6)
         self.blocks_interleaved_short_to_complex_0 = blocks.interleaved_short_to_complex(False, False)
         self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnuradio/gr-gps/examples/signal.dat', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
@@ -323,10 +323,10 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
         self.msg_connect((self.gnss_nav_message_decoder_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
-        self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
-        self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.connect((self.blocks_file_source_0, 0), (self.blocks_interleaved_short_to_complex_0, 0))
         self.connect((self.blocks_interleaved_short_to_complex_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0, 0))
@@ -350,7 +350,7 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
         self.connect((self.gnss_nav_message_decoder_0_0_0, 0), (self.gnss_pseudoranges_decoder_0, 2))
         self.connect((self.gnss_nav_message_decoder_0_0_0_0, 0), (self.gnss_pseudoranges_decoder_0, 3))
         self.connect((self.gnss_pseudoranges_decoder_0, 0), (self.gnss_rft_0, 0))
-        self.connect((self.gnss_rft_0, 0), (self.blocks_null_sink_0_0_0_0, 0))
+        self.connect((self.gnss_rft_0, 0), (self.gnss_geojson_file_sink_1, 0))
 
 
     def closeEvent(self, event):

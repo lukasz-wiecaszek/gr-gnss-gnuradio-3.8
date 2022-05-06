@@ -31,5 +31,6 @@ install(FILES
     ca_sybmols_to_nav_bits.h
     nav_message_decoder.h
     pseudoranges_decoder.h
-    rft.h DESTINATION include/gnss
+    rft.h
+    geojson_file_sink.h DESTINATION include/gnss
 )
