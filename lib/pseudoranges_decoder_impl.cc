@@ -140,8 +140,8 @@ namespace gr {
       OTYPE* optr0 = (OTYPE*) output_items[0];
       int nproduced = 0;
 
-      if (N != 4)
-        throw std::out_of_range("invalid number of input pads (4 required)");//?
+      if (N < 4)
+        throw std::out_of_range("invalid number of input pads (at least 4 required)");
 
       // Tell runtime system how many input items we consumed on
       // each input stream.
@@ -184,10 +184,10 @@ namespace gr {
             double tx_time = tx_times[n];
             double dt1 = c->code_phase_offset(tx_time);
             double dt2 = e->relativistic_correction_term(tx_time);
-            tx_time -= dt1;
-            tx_time += dt2;
-            satelites[n].pseudorange = (rx_time - tx_time) * C;
-            e->get_vectors(tx_time, &satelites[n].position, NULL, NULL);
+            double dt = dt1 + dt2;
+
+            satelites[n].pseudorange = (rx_time - tx_time + dt) * C;
+            e->get_vectors(tx_time - dt, &satelites[n].position, NULL, NULL);
           }
         }
 
@@ -196,7 +196,18 @@ namespace gr {
 
         vector3d efec_user_position;
 
-        pvt::get(satelites, N, d_hint, &efec_user_position, NULL, NULL);
+#define CASE(x) case x: pvt::get<x>(satelites, d_hint, &efec_user_position, NULL, NULL)
+
+        switch (N) {
+          CASE(4); break;
+          CASE(5); break;
+          CASE(6); break;
+          CASE(7); break;
+          CASE(8); break;
+          default: break;
+        }
+
+#undef CASE
 
         optr0[nproduced] = efec_user_position;
 

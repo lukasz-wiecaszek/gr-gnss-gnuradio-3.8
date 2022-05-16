@@ -83,37 +83,95 @@ namespace gr {
         }
       };
 
-      int get(const satelite* s, std::size_t N, user& hint, vector3d* position, vector3d* velocity, double* t)
+      template<std::size_t N>
+      int get(const satelite* s, user& hint, vector3d* position, vector3d* velocity, double* t)
       {
-        lts::tensor<double, lts::dimensions<4>, lts::dimensions<4>> H;
-        lts::tensor<double, lts::dimensions<4>, lts::dimensions<>> dq;
-        lts::tensor<double, lts::dimensions<4>, lts::dimensions<>> dp{{0.0, 0.0, 0.0, 0.0}};
+        constexpr std::size_t M = 4;
+        lts::tensor<double, lts::dimensions<N>, lts::dimensions<M>> H1;
+        lts::tensor<double, lts::dimensions<M>, lts::dimensions<N>> H2; // this is a transpose of H1
+        lts::tensor<double, lts::dimensions<M>, lts::dimensions<M>> H; // this is a H2 * H1
+
+        lts::tensor<double, lts::dimensions<N>, lts::dimensions<>> dq;
+        lts::tensor<double, lts::dimensions<M>, lts::dimensions<>> ds;
 
         do {
-          for (int n = 0; n < 4; ++n) {
+          for (int n = 0; n < N; ++n) {
             vector3d r = s[n].position - hint.position;
             double r_magnitude = abs(r);
             double u_pseudorange = r_magnitude + C * hint.dt; // user/approximated pseudorange
-            dq.set({n}, {}, u_pseudorange - s[n].pseudorange);
-            for (int i = 0; i < 3; ++i)
-              H.set({n}, {i}, (s[n].position.get({i}, {}) - hint.position.get({i}, {})) / r_magnitude);
-            H.set({n}, {3}, 1);
+            dq.set({n}, {}, s[n].pseudorange - u_pseudorange);
+            int m = 0;
+            for (; m < (M - 1); ++m)
+              H1.set({n}, {m}, (hint.position.get({m}, {}) - s[n].position.get({m}, {})) / r_magnitude);
+            H1.set({n}, {m}, 1.0);
+          }
+
+          H2 = lts::transpose(H1);
+          H = H2 * H1;
+
+          double det = H.det();
+          if (det != 0) {
+            ds = inverse(H, det) * (H2 * dq);
+          }
+          else
+            break;
+
+          hint.position.set({0}, {}, hint.position.get({0}, {}) + ds.get({0}, {}));
+          hint.position.set({1}, {}, hint.position.get({1}, {}) + ds.get({1}, {}));
+          hint.position.set({2}, {}, hint.position.get({2}, {}) + ds.get({2}, {}));
+          hint.dt = hint.dt + ds.get({3}, {}) / C;
+        } while (std::abs(ds.get({0}, {})) > 1.0 ||
+                 std::abs(ds.get({1}, {})) > 1.0 ||
+                 std::abs(ds.get({2}, {})) > 1.0 ||
+                 std::abs(ds.get({3}, {})) > 1.0);
+
+        if (position)
+          *position = hint.position;
+
+        if (velocity)
+          ;// not supported yet
+
+        if (t)
+          *t = hint.dt;
+
+        return 0;
+      }
+
+      template<> // this is specialization when N == 4
+      int get<4>(const satelite* s, user& hint, vector3d* position, vector3d* velocity, double* t)
+      {
+        constexpr std::size_t N = 4;
+        constexpr std::size_t M = 4;
+        lts::tensor<double, lts::dimensions<N>, lts::dimensions<M>> H;
+        lts::tensor<double, lts::dimensions<N>, lts::dimensions<>> dq;
+        lts::tensor<double, lts::dimensions<N>, lts::dimensions<>> ds;
+
+        do {
+          for (int n = 0; n < N; ++n) {
+            vector3d r = s[n].position - hint.position;
+            double r_magnitude = abs(r);
+            double u_pseudorange = r_magnitude + C * hint.dt; // user/approximated pseudorange
+            dq.set({n}, {}, s[n].pseudorange - u_pseudorange);
+            int m = 0;
+            for (; m < (M - 1); ++m)
+              H.set({n}, {m}, (hint.position.get({m}, {}) - s[n].position.get({m}, {})) / r_magnitude);
+            H.set({n}, {m}, 1.0);
           }
 
           double det = H.det();
           if (det != 0)
-            dp = inverse(H, det) * dq;
+            ds = inverse(H, det) * dq;
           else
             break;
 
-          hint.position.set({0}, {}, hint.position.get({0}, {}) + dp.get({0}, {}));
-          hint.position.set({1}, {}, hint.position.get({1}, {}) + dp.get({1}, {}));
-          hint.position.set({2}, {}, hint.position.get({2}, {}) + dp.get({2}, {}));
-          hint.dt = hint.dt - dp.get({3}, {}) / C;
-        } while (std::abs(dp.get({0}, {})) > 1.0 ||
-                 std::abs(dp.get({1}, {})) > 1.0 ||
-                 std::abs(dp.get({2}, {})) > 1.0 ||
-                 std::abs(dp.get({3}, {})) > 1.0);
+          hint.position.set({0}, {}, hint.position.get({0}, {}) + ds.get({0}, {}));
+          hint.position.set({1}, {}, hint.position.get({1}, {}) + ds.get({1}, {}));
+          hint.position.set({2}, {}, hint.position.get({2}, {}) + ds.get({2}, {}));
+          hint.dt = hint.dt + ds.get({3}, {}) / C;
+        } while (std::abs(ds.get({0}, {})) > 1.0 ||
+                 std::abs(ds.get({1}, {})) > 1.0 ||
+                 std::abs(ds.get({2}, {})) > 1.0 ||
+                 std::abs(ds.get({3}, {})) > 1.0);
 
         if (position)
           *position = hint.position;
@@ -130,13 +188,13 @@ namespace gr {
       template<std::size_t N>
       int get(const satelite (&s)[N], user& hint, vector3d* position, vector3d* velocity, double* t)
       {
-        return get(s, N, hint, position, velocity, t);
+        return get<N>(s, hint, position, velocity, t);
       }
 
       template<std::size_t N>
       int get(const std::array<satelite, N>& s, user& hint, vector3d* position, vector3d* velocity, double* t)
       {
-        return get(s, N, hint, position, velocity, t);
+        return get<N>(s, hint, position, velocity, t);
       }
 
     } // namespace pvt

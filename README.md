@@ -27,6 +27,10 @@ At this stage of development following blocks are prepared:
   - Reference frames transformations. At this moment this block can transform
     Earth Centered Earth Fixed coordinates into Geographical Coordinate System (latitude, longitude and altitude)
     and vice versa Geographical Coordinate System coordinates into Earth Centered Earth Fixed ones.
+- geojson_file_sink
+  - As name suggests, this is a sink block which saves GCS (latitude, longitude and altitude) positions
+    in a file in geojson format. Then you may use that file for example on http://geojson.io
+    to see your positions on a map.
 
 If interested, please see especially gps_acquisition_and_tracking_v4.grc
 where you will be able to spot navigation message bits on the GUI Time Sink.
@@ -62,4 +66,5 @@ Currently not so much. As already mentioned, this is my way of learning new tech
 What you can do is to look into examples and see how this spreading code correlation works.
 gps_acquisition_and_tracking_v4.grc shows decoded navigation message bits in the GUI Time Sink.
 gps_rft_v1.grc produces position vectors and suprisingly enough this positions correspond to place
-where the IQ data were captured.
+where the IQ data were captured. As visible on examples/geojson.io.png there is still lots of room
+for improvements.
