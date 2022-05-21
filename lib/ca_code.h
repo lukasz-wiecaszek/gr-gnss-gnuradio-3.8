@@ -23,6 +23,8 @@
 
 #include <array>
 #include <memory>
+#include <map>
+
 #include "gnss_parameters.h"
 #include "ca_code_phase_assigments.h"
 #include "prbs.h"
@@ -38,6 +40,7 @@ namespace gr {
     private:
       static inline const prbs<T, 10, 3> G1{N}; // C++17 allows for that
       static inline const prbs<T, 10, 9, 8, 6, 3, 2> G2{N};
+      static inline std::map<int, std::shared_ptr<ca_code>> map;
 
       std::array<T, N> d_code;
 
@@ -58,7 +61,14 @@ namespace gr {
         }; // please, have mercy
 
         if (svid < std::size(ca_code_phase_assigments)) {
-          return std::make_shared<from_this>(svid);
+          auto it = map.find(svid);
+          if (it != map.end())
+            return it->second;
+          else {
+            std::shared_ptr<ca_code> code = std::make_shared<from_this>(svid);
+            //return map.insert(std::make_pair(svid, code)).first->second;
+            return map.insert(std::make_pair(svid, code)), code; // I believe this is more descriptive than the line above.
+          }
         }
         else
           return nullptr;
