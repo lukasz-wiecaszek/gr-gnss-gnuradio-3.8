@@ -5,7 +5,7 @@ category: '[gnss]'
 templates:
   imports: import gnss
   make: |-
-    gnss.acquisition_and_tracking(${sampling_freq})
+    gnss.acquisition_and_tracking(${sampling_freq}, ${dll_bw_coarse}, ${pll_bw_coarse}, ${dll_bw_fine}, ${pll_bw_fine})
     self.${id}.set_acq_params(${navigation_system}, ${identifier})
 
 callbacks:
@@ -19,6 +19,22 @@ callbacks:
 parameters:
 - id: sampling_freq
   label: Sample Rate
+  dtype: real
+
+- id: dll_bw_coarse
+  label: DLL coarse filter bandwidth [Hz]
+  dtype: real
+
+- id: pll_bw_coarse
+  label: PLL coarse filter bandwidth [Hz]
+  dtype: real
+
+- id: dll_bw_fine
+  label: DLL fine filter bandwidth [Hz]
+  dtype: real
+
+- id: pll_bw_fine
+  label: PLL fine filter bandwidth [Hz]
   dtype: real
 
 - id: navigation_system

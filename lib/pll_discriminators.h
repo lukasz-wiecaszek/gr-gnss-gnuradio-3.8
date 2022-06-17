@@ -44,7 +44,7 @@ namespace gr {
 
     constexpr double pll_discriminator_two_quadrant_arctangent(gr_complex c)
     {
-      return c.imag() != 0 ? std::atan(c.real() / c.imag()) : 0;
+      return c.real() != 0 ? std::atan(c.imag() / c.real()) : 0;
     }
 
   } // namespace gnss

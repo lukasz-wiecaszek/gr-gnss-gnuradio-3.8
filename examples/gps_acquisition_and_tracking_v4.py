@@ -97,13 +97,13 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
             1 #number of inputs
         )
         self.qtgui_time_sink_x_0_0_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_0_0_0.set_y_axis(0, 4000)
+        self.qtgui_time_sink_x_0_0_0.set_y_axis(-200000, 200000)
 
         self.qtgui_time_sink_x_0_0_0.set_y_label('Amplitude', "")
 
         self.qtgui_time_sink_x_0_0_0.enable_tags(False)
         self.qtgui_time_sink_x_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0_0_0.enable_autoscale(True)
+        self.qtgui_time_sink_x_0_0_0.enable_autoscale(False)
         self.qtgui_time_sink_x_0_0_0.enable_grid(False)
         self.qtgui_time_sink_x_0_0_0.enable_axis_labels(True)
         self.qtgui_time_sink_x_0_0_0.enable_control_panel(False)
@@ -220,7 +220,7 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_number_sink_0_win)
         self.gnss_ca_code_generator_1 = gnss.ca_code_generator_c(1, samp_rate, 20, gnss.CA_CODE_DOMAIN_TIME)
-        self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate)
+        self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
         self.gnss_acquisition_and_tracking_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 20)
         self.fft_vxx_0_0_0 = fft.fft_vcc(vector_length, False, window.rectangular(vector_length), False, 1)
         self.fft_vxx_0_0 = fft.fft_vcc(vector_length, True, window.rectangular(vector_length), False, 1)

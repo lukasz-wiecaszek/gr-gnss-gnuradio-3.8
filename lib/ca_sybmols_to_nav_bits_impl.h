@@ -71,9 +71,9 @@ namespace gr {
 
         for (std::size_t i = 0; i < d_preamble_sybmols.size(); ++i)
           if (d_preamble_sybmols[i])
-            symbols[i].imag() > 0 ? n++ : n--;
+            symbols[i].real() > 0 ? n++ : n--;
           else
-            symbols[i].imag() < 0 ? n++ : n--;
+            symbols[i].real() < 0 ? n++ : n--;
 
         if (std::abs(n) == d_preamble_sybmols.size())
           d_polarity = n > 0 ? +1 : -1;
@@ -86,7 +86,7 @@ namespace gr {
         int n = 0;
 
         for (int i = 0; i < GPS_CA_CODES_PER_NAV_MESSAGE_BIT; ++i)
-          symbols[i].imag() > 0 ? n++ : n--;
+          symbols[i].real() > 0 ? n++ : n--;
 
         if (std::abs(n) < d_thershold)
           return -1;

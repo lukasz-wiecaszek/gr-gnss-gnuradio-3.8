@@ -37,23 +37,50 @@ namespace gr {
       static_assert(ORDER == 1 || ORDER == 2,
         "Only 1st and 2nd ORDER loop filters are implemented");
     public:
-      pll_loop_filter(double sampling_interval, double pll_bandwidth) :
+      pll_loop_filter(double sampling_interval) :
         d_sampling_interval{sampling_interval},
-        d_pll_bandwidth{pll_bandwidth}
+        d_accumulators{},
+        d_g{}
       {
-        update_coefficients();
-        reset(0.0);
       }
 
-      void reset(double freq)
+      void reset(double initial_output, double pll_bandwidth)
       {
         if constexpr (ORDER == 1) {
-          d_accumulators[0] = freq; // velocity accumulator
+          d_accumulators[0] = initial_output; // velocity accumulator
         }
         else
         if constexpr (ORDER == 2) {
-          d_accumulators[0] = 2.0 * freq; // velocity accumulator
+          d_accumulators[0] = 2.0 * initial_output; // velocity accumulator
           d_accumulators[1] = 0.0; // acceleration accumulator
+        }
+        else {
+          /* do nothing */
+        }
+
+        update_coefficients(pll_bandwidth);
+      }
+
+      void update_coefficients(double pll_bandwidth)
+      {
+        if constexpr (ORDER == 1) {
+          const double alpha = std::sqrt(2.0);
+          const double lambda = (4.0 * alpha) / (1.0 + alpha * alpha);
+          const double w0 = pll_bandwidth * lambda;
+
+          d_g[0] = alpha * w0;
+          d_g[1] = w0 * w0;
+        }
+        else
+        if constexpr (ORDER == 2) {
+          const double alpha = 2.4;
+          const double beta = 1.1;
+          const double lambda = (4.0 * (alpha * beta - 1)) / (alpha * alpha * beta + beta * beta - alpha);
+          const double w0 = pll_bandwidth * lambda;
+
+          d_g[0] = alpha * w0;
+          d_g[1] = beta * w0 * w0;
+          d_g[2] = w0 * w0 * w0;
         }
         else {
           /* do nothing */
@@ -83,35 +110,7 @@ namespace gr {
       }
 
     private:
-      void update_coefficients()
-      {
-        if constexpr (ORDER == 1) {
-          const double alpha = std::sqrt(2.0);
-          const double lambda = (4.0 * alpha) / (1.0 + alpha * alpha);
-          const double w0 = d_pll_bandwidth * lambda;
-
-          d_g[0] = alpha * w0;
-          d_g[1] = w0 * w0;
-        }
-        else
-        if constexpr (ORDER == 2) {
-          const double alpha = 2.4;
-          const double beta = 1.1;
-          const double lambda = (4.0 * (alpha * beta - 1)) / (alpha * alpha * beta + beta * beta - alpha);
-          const double w0 = d_pll_bandwidth * lambda;
-
-          d_g[0] = alpha * w0;
-          d_g[1] = beta * w0 * w0;
-          d_g[2] = w0 * w0 * w0;
-        }
-        else {
-          /* do nothing */
-        }
-      }
-
       double d_sampling_interval;
-      double d_pll_bandwidth;
-
       double d_accumulators[ORDER];
       double d_g[ORDER + 1];
     };

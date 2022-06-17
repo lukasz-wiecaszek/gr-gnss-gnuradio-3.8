@@ -38,7 +38,7 @@ namespace gr {
       double abs_l = std::abs(l);
       double abs_e_plus_l = abs_e + abs_l;
 
-      return abs_e_plus_l != 0 ? (abs_e - abs_l) / (2 * abs_e_plus_l) : 0;
+      return abs_e_plus_l != 0 ? (abs_e - abs_l) / abs_e_plus_l : 0;
     }
 
     inline double dll_discriminator_noncoherent_e_minus_l_power(gr_complex e, gr_complex l)
@@ -47,7 +47,7 @@ namespace gr {
       double norm_l = std::norm(l);
       double norm_e_plus_l = norm_e + norm_l;
 
-      return norm_e_plus_l != 0 ? (norm_e - norm_l) / (2 * norm_e_plus_l) : 0;
+      return norm_e_plus_l != 0 ? (norm_e - norm_l) / norm_e_plus_l : 0;
     }
 
   } // namespace gnss

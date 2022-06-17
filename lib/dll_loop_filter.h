@@ -39,22 +39,26 @@ namespace gr {
         "Only 1st and 2nd ORDER loop filters are implemented");
 
     public:
-      dll_loop_filter(double sampling_interval, double dll_bandwidth) :
+      dll_loop_filter(double sampling_interval) :
         iir_filter<double, ORDER, ORDER + 1>{},
-        d_sampling_interval{sampling_interval},
-        d_dll_bandwidth{dll_bandwidth}
+        d_sampling_interval{sampling_interval}
       {
-        update_coefficients();
       }
 
-      void update_coefficients()
+      void reset(double initial_output, double dll_bandwidth)
+      {
+        iir_filter<double, ORDER, ORDER + 1>::reset(initial_output);
+        update_coefficients(dll_bandwidth);
+      }
+
+      void update_coefficients(double dll_bandwidth)
       {
         const double T = d_sampling_interval;
 
         if constexpr (ORDER == 1) {
           const double alpha = std::sqrt(2.0);
           const double lambda = (4.0 * alpha) / (1.0 + alpha * alpha);
-          const double w0 = d_dll_bandwidth * lambda;
+          const double w0 = dll_bandwidth * lambda;
           const double g[] = {alpha * w0, w0 * w0};
 
           iir_filter<double, ORDER, ORDER + 1>::d_b[0] = +g[0] + g[1] * T / 2.0;
@@ -67,7 +71,7 @@ namespace gr {
           const double alpha = 2.4;
           const double beta = 1.1;
           const double lambda = (4.0 * (alpha * beta - 1)) / (alpha * alpha * beta + beta * beta - alpha);
-          const double w0 = d_dll_bandwidth * lambda;
+          const double w0 = dll_bandwidth * lambda;
           const double g[] = {alpha * w0, beta * w0 * w0, w0 * w0 * w0};
 
           iir_filter<double, ORDER, ORDER + 1>::d_b[0] = +1.0 * g[0] + T / 2.0 * (g[1] + g[2] * T / 2.0);
@@ -83,7 +87,6 @@ namespace gr {
       }
 
       double d_sampling_interval;
-      double d_dll_bandwidth;
     };
 
   } // namespace gnss

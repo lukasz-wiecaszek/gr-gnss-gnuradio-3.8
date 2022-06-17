@@ -25,7 +25,9 @@
 #include <gnuradio/fft/fft.h>
 #include <memory>
 #include <array>
+#include <numeric>
 
+#include "gps_parameters.h"
 #include "magnitude_stats.h"
 #include "doppler_shifts.h"
 #include "dll_loop_filter.h"
@@ -41,14 +43,20 @@ namespace gr {
     constexpr double doppler_df = 200.0;
     constexpr int doppler_bins = 100 + 1;
     constexpr int correlation_taps = 3;
-    constexpr double correlation_shift = 0.25;
-    constexpr double correlation_shifts[correlation_taps] = {-correlation_shift, 0, +correlation_shift};
+    constexpr double correlation_shift_coarse = 0.25;
+    constexpr double correlation_shift_fine = 0.25;//0.15;
+    constexpr double correlation_shifts_coarse[correlation_taps] = {-correlation_shift_coarse, 0, +correlation_shift_coarse};
+    constexpr double correlation_shifts_fine[correlation_taps] = {-correlation_shift_fine, 0, +correlation_shift_fine};
 
     template<typename ITYPE, typename OTYPE>
     class acquisition_and_tracking_impl : public acquisition_and_tracking
     {
     public:
-      acquisition_and_tracking_impl(double sampling_freq);
+      acquisition_and_tracking_impl(double sampling_freq,
+                                    double dll_bw_coarse,
+                                    double pll_bw_coarse,
+                                    double dll_bw_fine,
+                                    double pll_bw_fine);
       ~acquisition_and_tracking_impl();
 
       void set_acq_params(navigation_system_e system, int id) override;
@@ -64,9 +72,26 @@ namespace gr {
     private:
       enum class state_e
       {
+        UNLOCKED,
         ACQUISITION,
-        TRACKING,
-        UNLOCKED
+        TRACKING_COARSE,
+        TRACKING_FINE
+      };
+
+      template<typename T, std::size_t N>
+      struct ringbuffer
+      {
+        ringbuffer() { reset(); };
+        void reset() { n = 0; samples.fill(0); }
+        void add(const T& sample) { samples[n++ % N] = sample; }
+        T avg() const { std::size_t k = n < N ? n : N;
+          return k > 0
+            ? std::accumulate(std::begin(samples), std::begin(samples) + k, 0.0) / static_cast<T>(k)
+            : 0;
+        }
+
+        std::size_t n;
+        std::array<T, N> samples;
       };
 
       void init_spreading_code();
@@ -78,14 +103,20 @@ namespace gr {
               gr_vector_void_star &output_items
       );
 
+      template<std::size_t CTAPS>
       int work_tracking(
               int noutput_items,
               gr_vector_int &ninput_items,
               gr_vector_const_void_star &input_items,
-              gr_vector_void_star &output_items
+              gr_vector_void_star &output_items,
+              const double (&correlation_shifts)[CTAPS]
       );
 
       const double d_sampling_freq;
+      const double d_dll_bw_coarse;
+      const double d_pll_bw_coarse;
+      const double d_dll_bw_fine;
+      const double d_pll_bw_fine;
       const int d_spreading_code_samples;
       state_e d_state;
       navigation_system_e d_navigation_system;
@@ -97,11 +128,13 @@ namespace gr {
       std::vector<float> d_magnitude;
       magnitude_stats<float> d_max_magnitude_stats;
       double d_code_chip_rate;
-      double d_code_offset;
+      double d_code_offset_chips;
+      double d_code_offset_samples;
       double d_freq;
       double d_freq_offset;
       dll_loop_filter<1> d_dll_loop_filter;
       pll_loop_filter<2> d_pll_loop_filter;
+      ringbuffer<double, GPS_CA_CODES_PER_NAV_MESSAGE_BIT> d_tracking_history;
     };
 
   } // namespace gnss

@@ -66,7 +66,7 @@ namespace gr {
       {
         gr::fxpt_nco nco;
 
-        nco.set_freq(2 * GR_M_PI * f / d_sampling_freq);
+        nco.set_freq(-GR_M_TWOPI * f / d_sampling_freq);
         nco.sincos(v.data(), v.size(), 1);
       }
 

@@ -46,7 +46,8 @@ namespace gr {
        * class. gnss::acquisition_and_tracking::make is the public interface for
        * creating new instances.
        */
-      static sptr make(double sampling_freq);
+      static sptr make(double sampling_freq,
+        double dll_bw_coarse, double pll_bw_coarse, double dll_bw_fine, double pll_bw_fine);
 
       virtual void set_acq_params(navigation_system_e system, int id) = 0;
       virtual void get_acq_params(navigation_system_e& system, int& id) const = 0;
