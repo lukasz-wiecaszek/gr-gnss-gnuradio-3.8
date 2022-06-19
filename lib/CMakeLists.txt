@@ -30,7 +30,8 @@ list(APPEND gnss_sources
     nav_message_decoder_impl.cc
     pseudoranges_decoder_impl.cc
     rft_impl.cc
-    geojson_file_sink_impl.cc )
+    geojson_file_sink_impl.cc
+    gnss_channel_impl.cc )
 
 set(gnss_sources "${gnss_sources}" PARENT_SCOPE)
 if(NOT gnss_sources)

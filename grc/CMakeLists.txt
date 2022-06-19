@@ -25,5 +25,6 @@ install(FILES
     gnss_nav_message_decoder.block.yml
     gnss_pseudoranges_decoder.block.yml
     gnss_rft.block.yml
-    gnss_geojson_file_sink.block.yml DESTINATION share/gnuradio/grc/blocks
+    gnss_geojson_file_sink.block.yml
+    gnss_gnss_channel.block.yml DESTINATION share/gnuradio/grc/blocks
 )

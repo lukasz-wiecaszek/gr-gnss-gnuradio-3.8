@@ -32,5 +32,6 @@ install(FILES
     nav_message_decoder.h
     pseudoranges_decoder.h
     rft.h
-    geojson_file_sink.h DESTINATION include/gnss
+    geojson_file_sink.h
+    gnss_channel.h DESTINATION include/gnss
 )

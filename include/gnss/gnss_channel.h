@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2021 Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>.
+ * Copyright 2022 Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_ACQUISITION_AND_TRACKING_H
-#define INCLUDED_GNSS_ACQUISITION_AND_TRACKING_H
+#ifndef INCLUDED_GNSS_GNSS_CHANNEL_H
+#define INCLUDED_GNSS_GNSS_CHANNEL_H
 
 #include <gnss/api.h>
 #include <gnss/navigation_system.h>
-#include <gnuradio/block.h>
+#include <gnuradio/hier_block2.h>
 
 namespace gr {
   namespace gnss {
@@ -33,17 +33,17 @@ namespace gr {
      * \ingroup gnss
      *
      */
-    class GNSS_API acquisition_and_tracking : virtual public gr::block
+    class GNSS_API gnss_channel : virtual public gr::hier_block2
     {
      public:
-      typedef boost::shared_ptr<acquisition_and_tracking> sptr;
+      typedef boost::shared_ptr<gnss_channel> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of gnss::acquisition_and_tracking.
+       * \brief Return a shared_ptr to a new instance of gnss::gnss_channel.
        *
-       * To avoid accidental use of raw pointers, gnss::acquisition_and_tracking's
+       * To avoid accidental use of raw pointers, gnss::gnss_channel's
        * constructor is in a private implementation
-       * class. gnss::acquisition_and_tracking::make is the public interface for
+       * class. gnss::gnss_channel::make is the public interface for
        * creating new instances.
        */
       static sptr make(double sampling_freq,
@@ -56,5 +56,5 @@ namespace gr {
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_ACQUISITION_AND_TRACKING_H */
+#endif /* INCLUDED_GNSS_GNSS_CHANNEL_H */
 

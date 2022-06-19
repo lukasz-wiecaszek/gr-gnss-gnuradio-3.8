@@ -44,7 +44,7 @@ namespace gr {
     constexpr int doppler_bins = 100 + 1;
     constexpr int correlation_taps = 3;
     constexpr double correlation_shift_coarse = 0.25;
-    constexpr double correlation_shift_fine = 0.25;//0.15;
+    constexpr double correlation_shift_fine = 0.15;
     constexpr double correlation_shifts_coarse[correlation_taps] = {-correlation_shift_coarse, 0, +correlation_shift_coarse};
     constexpr double correlation_shifts_fine[correlation_taps] = {-correlation_shift_fine, 0, +correlation_shift_fine};
 

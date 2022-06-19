@@ -19,6 +19,7 @@
 #include "gnss/rft_type.h"
 #include "gnss/rft.h"
 #include "gnss/geojson_file_sink.h"
+#include "gnss/gnss_channel.h"
 %}
 
 %include "gnss/navigation_system.h"
@@ -52,3 +53,5 @@ GR_SWIG_BLOCK_MAGIC2(gnss, pseudoranges_decoder);
 GR_SWIG_BLOCK_MAGIC2(gnss, rft);
 %include "gnss/geojson_file_sink.h"
 GR_SWIG_BLOCK_MAGIC2(gnss, geojson_file_sink);
+%include "gnss/gnss_channel.h"
+GR_SWIG_BLOCK_MAGIC2(gnss, gnss_channel);
