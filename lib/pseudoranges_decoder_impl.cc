@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2021 Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>.
+ * Copyright 2022 Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 #include "gnss_parameters.h"
 #include "sv_clock_parameters.h"
 #include "ephemeris.h"
+#include "pvt_utils.h"
 
 #define DECIMATION_FACTOR 5
 
@@ -51,12 +52,11 @@ namespace gr {
     pseudoranges_decoder_impl<ITYPE, OTYPE>::pseudoranges_decoder_impl()
       : gr::block("pseudoranges_decoder",
                   gr::io_signature::make(1, MAX_STREAMS, sizeof(ITYPE) * IVLEN),
-                  gr::io_signature::make(1, 1, sizeof(OTYPE) * OVLEN)),
+                  gr::io_signature::make(1, MAX_STREAMS, sizeof(OTYPE) * OVLEN)),
         d_satelite_ids(),
         d_flatbuffers(),
         d_sv_clock_parameters{},
-        d_ephemerides{},
-        d_hint{}
+        d_ephemerides{}
     {
       set_relative_rate(1, DECIMATION_FACTOR);
 
@@ -137,11 +137,13 @@ namespace gr {
     {
       int n;
       const int N = ninput_items.size();
-      OTYPE* optr0 = (OTYPE*) output_items[0];
       int nproduced = 0;
 
       if (N < 4)
         throw std::out_of_range("invalid number of input pads (at least 4 required)");
+
+      if (input_items.size() != output_items.size())
+        throw std::length_error("block shall have the same number of input and output pads");
 
       // Tell runtime system how many input items we consumed on
       // each input stream.
@@ -169,47 +171,34 @@ namespace gr {
         for (n = 0; n < N; ++n)
           d_flatbuffers[n].consume(std::min(d_flatbuffers[n].read_available(), static_cast<std::size_t>(DECIMATION_FACTOR)));
 
-        pvt::satelite satelites[N];
+        pvt_utils::satelite satelites[N];
         for (n = 0; n < N; ++n) {
           int svid = std::get<1>(d_satelite_ids[n]);
           if (svid >= 0) {
             const std::shared_ptr<sv_clock_parameters> c = d_sv_clock_parameters[svid];
             if (c == nullptr) // we do not have clock parameters (subframe1) for this satelite
-              break;
+              continue;
 
             const std::shared_ptr<ephemeris> e = d_ephemerides[svid];
             if (e == nullptr) // we do not have ephemeris data (subframe2 and subframe3) for this satelite
-              break;
+              continue;
 
             double tx_time = tx_times[n];
             double dt1 = c->code_phase_offset(tx_time);
             double dt2 = e->relativistic_correction_term(tx_time);
             double dt = dt1 + dt2;
+            tx_time -= dt;
 
-            satelites[n].pseudorange = (rx_time - tx_time + dt) * C;
-            e->get_vectors(tx_time - dt, &satelites[n].position, NULL, NULL);
+            satelites[n].pseudorange = (rx_time - tx_time) * C;
+            e->get_vectors(tx_time, &satelites[n].position, NULL, NULL);
           }
         }
 
-        if (n < N)
-          break;
-
-        vector3d efec_user_position;
-
-#define CASE(x) case x: pvt::get<x>(satelites, d_hint, &efec_user_position, NULL, NULL)
-
-        switch (N) {
-          CASE(4); break;
-          CASE(5); break;
-          CASE(6); break;
-          CASE(7); break;
-          CASE(8); break;
-          default: break;
+        for (n = 0; n < N; ++n) {
+          OTYPE* optr = static_cast<OTYPE*>(output_items[n]);
+          add_item_tag(n, nitems_written(n), pmt::mp(TAG_PSEUDORANGE), pmt::mp(satelites[n].pseudorange), alias_pmt());
+          optr[nproduced] = satelites[n].position;
         }
-
-#undef CASE
-
-        optr0[nproduced] = efec_user_position;
 
         nproduced++;
       }
@@ -300,3 +289,4 @@ namespace gr {
 
   } /* namespace gnss */
 } /* namespace gr */
+

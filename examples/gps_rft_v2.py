@@ -283,6 +283,7 @@ class gps_rft_v2(gr.top_block, Qt.QWidget):
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_win)
         self.gnss_rft_0 = gnss.rft()
         self.gnss_rft_0.set_transformation(gnss.RFT_ECEF_TO_GCS)
+        self.gnss_pvt_0 = gnss.pvt()
         self.gnss_pseudoranges_decoder_0 = gnss.pseudoranges_decoder()
         self.gnss_pseudoranges_decoder_0.set_acq_params(0, gnss.NAVIGATION_SYSTEM_GPS, 1)
         self.gnss_pseudoranges_decoder_0.set_acq_params(1, gnss.NAVIGATION_SYSTEM_GPS, 11)
@@ -311,12 +312,12 @@ class gps_rft_v2(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.gnss_gnss_channel_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_gnss_channel_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
+        self.msg_connect((self.gnss_gnss_channel_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_gnss_channel_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
         self.msg_connect((self.gnss_gnss_channel_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
-        self.msg_connect((self.gnss_gnss_channel_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
         self.msg_connect((self.gnss_gnss_channel_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
+        self.msg_connect((self.gnss_gnss_channel_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
         self.msg_connect((self.gnss_gnss_channel_0_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_gnss_channel_0_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
         self.connect((self.blocks_file_source_0, 0), (self.blocks_interleaved_short_to_complex_0, 0))
@@ -333,7 +334,11 @@ class gps_rft_v2(gr.top_block, Qt.QWidget):
         self.connect((self.gnss_gnss_channel_0_0_0, 1), (self.qtgui_time_sink_x_0_0_0_0, 0))
         self.connect((self.gnss_gnss_channel_0_0_0_0, 0), (self.gnss_pseudoranges_decoder_0, 0))
         self.connect((self.gnss_gnss_channel_0_0_0_0, 1), (self.qtgui_time_sink_x_0_0_0, 0))
-        self.connect((self.gnss_pseudoranges_decoder_0, 0), (self.gnss_rft_0, 0))
+        self.connect((self.gnss_pseudoranges_decoder_0, 0), (self.gnss_pvt_0, 0))
+        self.connect((self.gnss_pseudoranges_decoder_0, 2), (self.gnss_pvt_0, 2))
+        self.connect((self.gnss_pseudoranges_decoder_0, 3), (self.gnss_pvt_0, 3))
+        self.connect((self.gnss_pseudoranges_decoder_0, 1), (self.gnss_pvt_0, 1))
+        self.connect((self.gnss_pvt_0, 0), (self.gnss_rft_0, 0))
         self.connect((self.gnss_rft_0, 0), (self.gnss_geojson_file_sink_1, 0))
 
 

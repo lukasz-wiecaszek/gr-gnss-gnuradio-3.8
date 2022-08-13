@@ -30,8 +30,9 @@ install(FILES
     resampler.h
     ca_sybmols_to_nav_bits.h
     nav_message_decoder.h
-    pseudoranges_decoder.h
     rft.h
     geojson_file_sink.h
-    gnss_channel.h DESTINATION include/gnss
+    gnss_channel.h
+    pseudoranges_decoder.h
+    pvt.h DESTINATION include/gnss
 )

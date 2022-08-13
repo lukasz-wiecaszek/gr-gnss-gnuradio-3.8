@@ -15,11 +15,12 @@
 #include "gnss/resampler.h"
 #include "gnss/ca_sybmols_to_nav_bits.h"
 #include "gnss/nav_message_decoder.h"
-#include "gnss/pseudoranges_decoder.h"
 #include "gnss/rft_type.h"
 #include "gnss/rft.h"
 #include "gnss/geojson_file_sink.h"
 #include "gnss/gnss_channel.h"
+#include "gnss/pseudoranges_decoder.h"
+#include "gnss/pvt.h"
 %}
 
 %include "gnss/navigation_system.h"
@@ -46,8 +47,6 @@ GR_SWIG_BLOCK_MAGIC2(gnss, ca_sybmols_to_nav_bits);
 %include "gnss/nav_message_decoder.h"
 GR_SWIG_BLOCK_MAGIC2(gnss, nav_message_decoder);
 
-%include "gnss/pseudoranges_decoder.h"
-GR_SWIG_BLOCK_MAGIC2(gnss, pseudoranges_decoder);
 
 %include "gnss/rft.h"
 GR_SWIG_BLOCK_MAGIC2(gnss, rft);
@@ -55,3 +54,7 @@ GR_SWIG_BLOCK_MAGIC2(gnss, rft);
 GR_SWIG_BLOCK_MAGIC2(gnss, geojson_file_sink);
 %include "gnss/gnss_channel.h"
 GR_SWIG_BLOCK_MAGIC2(gnss, gnss_channel);
+%include "gnss/pseudoranges_decoder.h"
+GR_SWIG_BLOCK_MAGIC2(gnss, pseudoranges_decoder);
+%include "gnss/pvt.h"
+GR_SWIG_BLOCK_MAGIC2(gnss, pvt);

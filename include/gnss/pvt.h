@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2021 Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>.
+ * Copyright 2022 Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,20 +18,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_TAGS_H
-#define INCLUDED_GNSS_TAGS_H
+#ifndef INCLUDED_GNSS_PVT_H
+#define INCLUDED_GNSS_PVT_H
 
-#include <pmt/pmt.h>
-
-#define TAG_RX_TIME      "rx_time"
-#define TAG_SUBFRAME_BIT "subframe_bit"
-#define TAG_PSEUDORANGE  "pseudorange"
+#include <gnss/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace gnss {
 
+    /*!
+     * \brief <+description of block+>
+     * \ingroup gnss
+     *
+     */
+    class GNSS_API pvt : virtual public gr::block
+    {
+     public:
+      typedef boost::shared_ptr<pvt> sptr;
+
+      /*!
+       * \brief Return a shared_ptr to a new instance of gnss::pvt.
+       *
+       * To avoid accidental use of raw pointers, gnss::pvt's
+       * constructor is in a private implementation
+       * class. gnss::pvt::make is the public interface for
+       * creating new instances.
+       */
+      static sptr make();
+    };
+
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_TAGS_H */
+#endif /* INCLUDED_GNSS_PVT_H */
 

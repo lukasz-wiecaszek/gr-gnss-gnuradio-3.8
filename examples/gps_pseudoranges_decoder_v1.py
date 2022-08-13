@@ -277,6 +277,7 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_win)
+        self.gnss_pvt_0 = gnss.pvt()
         self.gnss_pseudoranges_decoder_0 = gnss.pseudoranges_decoder()
         self.gnss_pseudoranges_decoder_0.set_acq_params(0, gnss.NAVIGATION_SYSTEM_GPS, 1)
         self.gnss_pseudoranges_decoder_0.set_acq_params(1, gnss.NAVIGATION_SYSTEM_GPS, 11)
@@ -317,8 +318,8 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.gnss_nav_message_decoder_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
         self.msg_connect((self.gnss_nav_message_decoder_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
+        self.msg_connect((self.gnss_nav_message_decoder_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
@@ -347,7 +348,11 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
         self.connect((self.gnss_nav_message_decoder_0_0, 0), (self.gnss_pseudoranges_decoder_0, 1))
         self.connect((self.gnss_nav_message_decoder_0_0_0, 0), (self.gnss_pseudoranges_decoder_0, 2))
         self.connect((self.gnss_nav_message_decoder_0_0_0_0, 0), (self.gnss_pseudoranges_decoder_0, 3))
-        self.connect((self.gnss_pseudoranges_decoder_0, 0), (self.blocks_null_sink_0_0_0_0, 0))
+        self.connect((self.gnss_pseudoranges_decoder_0, 2), (self.gnss_pvt_0, 2))
+        self.connect((self.gnss_pseudoranges_decoder_0, 0), (self.gnss_pvt_0, 0))
+        self.connect((self.gnss_pseudoranges_decoder_0, 1), (self.gnss_pvt_0, 1))
+        self.connect((self.gnss_pseudoranges_decoder_0, 3), (self.gnss_pvt_0, 3))
+        self.connect((self.gnss_pvt_0, 0), (self.blocks_null_sink_0_0_0_0, 0))
 
 
     def closeEvent(self, event):

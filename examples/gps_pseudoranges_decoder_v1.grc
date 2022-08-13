@@ -97,7 +97,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1412, 232]
+    coordinate: [1294, 64]
     rotation: 0
     state: true
 - name: blocks_throttle_0
@@ -365,6 +365,22 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1140, 156]
+    rotation: 0
+    state: true
+- name: gnss_pvt_0
+  id: gnss_pvt
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '4'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1387, 188]
     rotation: 0
     state: true
 - name: gps_acquisition_0
@@ -804,7 +820,11 @@ connections:
 - [gnss_nav_message_decoder_0_0_0_0, '0', gnss_pseudoranges_decoder_0, '3']
 - [gnss_nav_message_decoder_0_0_0_0, clock, gnss_pseudoranges_decoder_0, clock]
 - [gnss_nav_message_decoder_0_0_0_0, ephemeris, gnss_pseudoranges_decoder_0, ephemeris]
-- [gnss_pseudoranges_decoder_0, '0', blocks_null_sink_0_0_0_0, '0']
+- [gnss_pseudoranges_decoder_0, '0', gnss_pvt_0, '0']
+- [gnss_pseudoranges_decoder_0, '1', gnss_pvt_0, '1']
+- [gnss_pseudoranges_decoder_0, '2', gnss_pvt_0, '2']
+- [gnss_pseudoranges_decoder_0, '3', gnss_pvt_0, '3']
+- [gnss_pvt_0, '0', blocks_null_sink_0_0_0_0, '0']
 
 metadata:
   file_format: 1

@@ -23,8 +23,9 @@ install(FILES
     gnss_resampler.block.yml
     gnss_ca_sybmols_to_nav_bits.block.yml
     gnss_nav_message_decoder.block.yml
-    gnss_pseudoranges_decoder.block.yml
     gnss_rft.block.yml
     gnss_geojson_file_sink.block.yml
-    gnss_gnss_channel.block.yml DESTINATION share/gnuradio/grc/blocks
+    gnss_gnss_channel.block.yml
+    gnss_pseudoranges_decoder.block.yml
+    gnss_pvt.block.yml DESTINATION share/gnuradio/grc/blocks
 )

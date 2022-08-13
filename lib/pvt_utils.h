@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GNSS_PVT_H
-#define INCLUDED_GNSS_PVT_H
+#ifndef INCLUDED_GNSS_PVT_UTILS_H
+#define INCLUDED_GNSS_PVT_UTILS_H
 
 #include <cstdio>
 #include <string>
@@ -29,14 +29,16 @@
 
 namespace gr {
   namespace gnss {
-    namespace pvt {
+    namespace pvt_utils {
 
       struct satelite
       {
         vector3d position; // satelite position
         double pseudorange; // associated pseudorange measurement
 
-        satelite()
+        satelite() :
+          position{{0.0, 0.0, 0.0}},
+          pseudorange{0.0}
         {
         }
 
@@ -84,6 +86,7 @@ namespace gr {
       };
 
       template<std::size_t N>
+      inline
       int get(const satelite* s, user& hint, vector3d* position, vector3d* velocity, double* t)
       {
         constexpr std::size_t M = 4;
@@ -138,6 +141,7 @@ namespace gr {
       }
 
       template<> // this is specialization when N == 4
+      inline
       int get<4>(const satelite* s, user& hint, vector3d* position, vector3d* velocity, double* t)
       {
         constexpr std::size_t N = 4;
@@ -186,20 +190,22 @@ namespace gr {
       }
 
       template<std::size_t N>
+      inline
       int get(const satelite (&s)[N], user& hint, vector3d* position, vector3d* velocity, double* t)
       {
         return get<N>(s, hint, position, velocity, t);
       }
 
       template<std::size_t N>
+      inline
       int get(const std::array<satelite, N>& s, user& hint, vector3d* position, vector3d* velocity, double* t)
       {
         return get<N>(s, hint, position, velocity, t);
       }
 
-    } // namespace pvt
+    } // namespace pvt_utils
   } // namespace gnss
 } // namespace gr
 
-#endif /* INCLUDED_GNSS_PVT_H */
+#endif /* INCLUDED_GNSS_PVT_UTILS_H */
 
