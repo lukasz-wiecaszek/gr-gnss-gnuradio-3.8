@@ -61,7 +61,7 @@ namespace gr {
       double dll_bw_coarse, double pll_bw_coarse, double dll_bw_fine, double pll_bw_fine)
       : gr::block("acquisition_and_tracking",
                   gr::io_signature::make(1, 1, sizeof(ITYPE) * IVLEN),
-                  gr::io_signature::make(1, 1, sizeof(OTYPE) * OVLEN)),
+                  gr::io_signature::make(1, 2, sizeof(OTYPE) * OVLEN)),
         d_sampling_freq{sampling_freq},
         d_dll_bw_coarse{dll_bw_coarse},
         d_pll_bw_coarse{pll_bw_coarse},
@@ -265,6 +265,10 @@ namespace gr {
     {
       const ITYPE* iptr0 = (const ITYPE*) input_items[0];
       OTYPE* optr0 = (OTYPE*) output_items[0];
+      OTYPE* optr1 = nullptr;
+
+      if (output_items.size() > 1)
+        optr1 = (OTYPE*) output_items[1];
 
       const std::shared_ptr<gps_ca_code> code = gps_ca_code::get(d_id);
       if (code == nullptr)
@@ -322,6 +326,9 @@ namespace gr {
 
       d_code_chip_rate = GPS_CA_CODE_CHIP_RATE - dll_discriminator_filtered;
       d_code_chip_rate += d_freq * GPS_CA_CODE_CHIP_RATE / GPS_L1_FREQ_HZ;
+
+      if (optr1)
+        *optr1 = gr_complex{static_cast<float>(d_freq), static_cast<float>(d_code_chip_rate)};
 
       d_code_offset_chips += GPS_CA_CODE_LENGTH * d_code_chip_rate / GPS_CA_CODE_CHIP_RATE - GPS_CA_CODE_LENGTH;
       d_code_offset_samples += GPS_CA_CODE_LENGTH * d_sampling_freq * (1.0 / GPS_CA_CODE_CHIP_RATE - 1.0 / d_code_chip_rate);
