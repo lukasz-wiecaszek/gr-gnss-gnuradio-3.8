@@ -20,9 +20,14 @@ At this stage of development following blocks are prepared:
     To do so it collects and parses so called navigation subframes. Subframe1 (clock related data),
     subframe2 and subframe3 (ephemeris).
 - pseudoranges_decoder
-  - Takes pseudoranges measurements (rx_time, tx_time) from 4 satelites and produces ECEF coordinates.
+  - Takes pseudoranges measurements (rx_time, tx_time) from N satellites and produces
+    for each of those satellites both, position in ECEF coordinates and associated pseudorange.
+    All these data are produced at one common time base.
     It requires ephemeris and clock data from navigation messages
     (of course from the same satelites as the pseudoranges measurements).
+- pvt
+  - Takes ECEF position and associated pseudorange from N satellies (at least 4 required)
+    and produces user/receiver ECEF position. Velocity and time to be added in the future.
 - rft
   - Reference frames transformations. At this moment this block can transform
     Earth Centered Earth Fixed coordinates into Geographical Coordinate System (latitude, longitude and altitude)
@@ -31,6 +36,10 @@ At this stage of development following blocks are prepared:
   - As name suggests, this is a sink block which saves GCS (latitude, longitude and altitude) positions
     in a file in geojson format. Then you may use that file for example on http://geojson.io
     to see your positions on a map.
+- number_file_sink
+  - Helper block, used to store output data/numbers in a file.
+    I am using this block currently for storing doppler shift frequencies
+    from debug port of 'acquisition_and_tracking' block. Please see 'examples/doppler_shift_sv20_20.png'.
 
 If interested, please see especially gps_acquisition_and_tracking_v4.grc
 where you will be able to spot navigation message bits on the GUI Time Sink.
