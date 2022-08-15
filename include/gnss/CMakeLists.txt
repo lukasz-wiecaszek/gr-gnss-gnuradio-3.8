@@ -34,5 +34,6 @@ install(FILES
     geojson_file_sink.h
     gnss_channel.h
     pseudoranges_decoder.h
-    pvt.h DESTINATION include/gnss
+    pvt.h
+    number_file_sink.h DESTINATION include/gnss
 )
