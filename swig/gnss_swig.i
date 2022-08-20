@@ -22,6 +22,8 @@
 #include "gnss/pseudoranges_decoder.h"
 #include "gnss/pvt.h"
 #include "gnss/number_file_sink.h"
+#include "gnss/doppler_shift.h"
+#include "gnss/skip_zeros.h"
 %}
 
 %include "gnss/navigation_system.h"
@@ -69,5 +71,7 @@ GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_s16, number_file_sink<std::int1
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_u16, number_file_sink<std::uint16_t>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_s32, number_file_sink<std::int32_t>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_u32, number_file_sink<std::uint32_t>);
-GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_f, number_file_sink<float>);
-GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_c, number_file_sink<gr_complex>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_f32, number_file_sink<float>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_f64, number_file_sink<double>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_fc32, number_file_sink<std::complex<float>>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_fc64, number_file_sink<std::complex<double>>);

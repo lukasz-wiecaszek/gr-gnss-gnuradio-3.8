@@ -15,10 +15,10 @@ parameters:
 - id: type
   label: Type
   dtype: enum
-  options: [s8, u8, s16, u16, s32, u32, f, c]
-  option_labels: [int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t, float, complex]
+  options: [s8, u8, s16, u16, s32, u32, s64, u64, f32, f64, fc32, fc64]
+  option_labels: [int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t, int64_t, uint64_t, float, double, gr_complex, gr_complexd]
   option_attributes:
-    io: [byte, byte, short, short, int, int, float, complex]
+    io: [s8, s8, s16, s16, s32, s32, s64, s64, f32, f64, fc32, fc64]
 
 - id: filename
   label: File

@@ -56,8 +56,12 @@ namespace gr {
     using number_file_sink_u16 = number_file_sink<std::uint16_t>;
     using number_file_sink_s32 = number_file_sink<std::int32_t>;
     using number_file_sink_u32 = number_file_sink<std::uint32_t>;
-    using number_file_sink_f = number_file_sink<float>;
-    using number_file_sink_c = number_file_sink<gr_complex>;
+    using number_file_sink_s64 = number_file_sink<std::int64_t>;
+    using number_file_sink_u64 = number_file_sink<std::uint64_t>;
+    using number_file_sink_f32 = number_file_sink<float>;
+    using number_file_sink_f64 = number_file_sink<double>;
+    using number_file_sink_fc32 = number_file_sink<std::complex<float>>;
+    using number_file_sink_fc64 = number_file_sink<std::complex<double>>;
 
   } // namespace gnss
 } // namespace gr

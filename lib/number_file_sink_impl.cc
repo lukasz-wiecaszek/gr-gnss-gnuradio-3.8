@@ -56,8 +56,6 @@ namespace gr {
     {
       if (filename)
         d_fp = fopen(filename, "w");
-
-printf("filename: '%s', delimiter: '%s'\n", filename, delimiter);
     }
 
     template<typename ITYPE>
@@ -85,7 +83,21 @@ printf("filename: '%s', delimiter: '%s'\n", filename, delimiter);
 
     template<>
     void
-    number_file_sink_impl<gr_complex>::print(gr_complex value)
+    number_file_sink_impl<double>::print(double value)
+    {
+      fprintf(d_fp, "%.15f%s", value, d_delimiter.c_str());
+    }
+
+    template<>
+    void
+    number_file_sink_impl<std::complex<float>>::print(std::complex<float> value)
+    {
+      fprintf(d_fp, "%.15f %.15f%s", value.real(), value.imag(), d_delimiter.c_str());
+    }
+
+    template<>
+    void
+    number_file_sink_impl<std::complex<double>>::print(std::complex<double> value)
     {
       fprintf(d_fp, "%.15f %.15f%s", value.real(), value.imag(), d_delimiter.c_str());
     }
@@ -114,8 +126,12 @@ printf("filename: '%s', delimiter: '%s'\n", filename, delimiter);
     template class number_file_sink<std::uint16_t>;
     template class number_file_sink<std::int32_t>;
     template class number_file_sink<std::uint32_t>;
+    template class number_file_sink<std::int64_t>;
+    template class number_file_sink<std::uint64_t>;
     template class number_file_sink<float>;
-    template class number_file_sink<gr_complex>;
+    template class number_file_sink<double>;
+    template class number_file_sink<std::complex<float>>;
+    template class number_file_sink<std::complex<double>>;
 
   } /* namespace gnss */
 } /* namespace gr */

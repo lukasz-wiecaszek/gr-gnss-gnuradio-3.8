@@ -1,6 +1,6 @@
 # gr-gnss
 
-This is my attempt to build GPS (or more generally Global Navigation Satelite Systems)
+This is my attempt to build GPS (or more generally Global Navigation Satellite Systems)
 receiver with a little help of gnuradio.
 The best way (at least to me) to learn a new technology is to try to build a project
 making use of that technology.
@@ -24,7 +24,7 @@ At this stage of development following blocks are prepared:
     for each of those satellites both, position in ECEF coordinates and associated pseudorange.
     All these data are produced at one common time base.
     It requires ephemeris and clock data from navigation messages
-    (of course from the same satelites as the pseudoranges measurements).
+    (of course from the same satellites as the pseudoranges measurements).
 - pvt
   - Takes ECEF position and associated pseudorange from N satellies (at least 4 required)
     and produces user/receiver ECEF position. Velocity and time to be added in the future.
