@@ -43,7 +43,7 @@ namespace gr {
                gr_vector_void_star &output_items);
 
     private:
-      void print(ITYPE value);
+      void print(const ITYPE *values, std::size_t N);
 
       FILE *d_fp;
       std::string d_delimiter;

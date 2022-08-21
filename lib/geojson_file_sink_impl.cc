@@ -104,12 +104,16 @@ namespace gr {
         gr_vector_void_star &output_items)
     {
       const ITYPE* iptr0 = (const ITYPE*) input_items[0];
+      double lat, lon, alt;
 
       for (int n = 0; n < noutput_items; ++n) {
+        lat = iptr0[n].get({0}, {});
+        lon = iptr0[n].get({1}, {});
+        alt = iptr0[n].get({2}, {});
+
         if (d_line_cnt++)
           fprintf(d_fp, ",\n");
-        fprintf(d_fp, "      [%.15f, %.15f, %.15f]",
-          iptr0[n].get({1}, {}), iptr0[n].get({0}, {}), iptr0[n].get({2}, {}));
+        fprintf(d_fp, "      [%.15f, %.15f, %.15f]", lon, lat, alt);
       }
 
       // Tell runtime system how many output items we produced.

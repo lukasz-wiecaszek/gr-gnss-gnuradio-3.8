@@ -12,6 +12,12 @@ templates:
 #     * label (label shown in the GUI)
 #     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
 parameters:
+- id: num_inputs
+  label: Num Inputs
+  dtype: int
+  default: '1'
+  hide: part
+
 - id: type
   label: Type
   dtype: enum
@@ -40,6 +46,7 @@ parameters:
 inputs:
 - label: in
   dtype: ${type.io}
+  multiplicity: ${num_inputs}
 
 #  'file_format' specifies the version of the GRC yml format used in the file
 #  and should usually not be changed.

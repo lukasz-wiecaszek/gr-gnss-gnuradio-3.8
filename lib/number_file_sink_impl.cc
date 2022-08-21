@@ -49,7 +49,7 @@ namespace gr {
     template<typename ITYPE>
     number_file_sink_impl<ITYPE>::number_file_sink_impl(const char *filename, const char *delimiter)
       : gr::sync_block("number_file_sink",
-              gr::io_signature::make(1, 1, sizeof(ITYPE) * IVLEN),
+              gr::io_signature::make(1, -1, sizeof(ITYPE) * IVLEN),
               gr::io_signature::make(0, 0, 0)),
       d_fp{NULL},
       d_delimiter{delimiter}
@@ -69,37 +69,47 @@ namespace gr {
 
     template<typename ITYPE>
     void
-    number_file_sink_impl<ITYPE>::print(ITYPE value)
+    number_file_sink_impl<ITYPE>::print(const ITYPE *values, std::size_t N)
     {
-      fprintf(d_fp, "%s%s", std::to_string(value).c_str(), d_delimiter.c_str());
+      for (std::size_t n = 0; n < N; ++n)
+        fprintf(d_fp, "%s\t", std::to_string(values[n]).c_str());
+      fprintf(d_fp, "%s", d_delimiter.c_str());
     }
 
     template<>
     void
-    number_file_sink_impl<float>::print(float value)
+    number_file_sink_impl<float>::print(const float *values, std::size_t N)
     {
-      fprintf(d_fp, "%.15f%s", value, d_delimiter.c_str());
+      for (std::size_t n = 0; n < N; ++n)
+        fprintf(d_fp, "%.15e\t", values[n]);
+      fprintf(d_fp, "%s", d_delimiter.c_str());
     }
 
     template<>
     void
-    number_file_sink_impl<double>::print(double value)
+    number_file_sink_impl<double>::print(const double *values, std::size_t N)
     {
-      fprintf(d_fp, "%.15f%s", value, d_delimiter.c_str());
+      for (std::size_t n = 0; n < N; ++n)
+        fprintf(d_fp, "%.15e\t", values[n]);
+      fprintf(d_fp, "%s", d_delimiter.c_str());
     }
 
     template<>
     void
-    number_file_sink_impl<std::complex<float>>::print(std::complex<float> value)
+    number_file_sink_impl<std::complex<float>>::print(const std::complex<float> *values, std::size_t N)
     {
-      fprintf(d_fp, "%.15f %.15f%s", value.real(), value.imag(), d_delimiter.c_str());
+      for (std::size_t n = 0; n < N; ++n)
+        fprintf(d_fp, "%.15e %.15e\t", values[n].real(), values[n].imag());
+      fprintf(d_fp, "%s", d_delimiter.c_str());
     }
 
     template<>
     void
-    number_file_sink_impl<std::complex<double>>::print(std::complex<double> value)
+    number_file_sink_impl<std::complex<double>>::print(const std::complex<double> *values, std::size_t N)
     {
-      fprintf(d_fp, "%.15f %.15f%s", value.real(), value.imag(), d_delimiter.c_str());
+      for (std::size_t n = 0; n < N; ++n)
+        fprintf(d_fp, "%.15e %.15e\t", values[n].real(), values[n].imag());
+      fprintf(d_fp, "%s", d_delimiter.c_str());
     }
 
     template<typename ITYPE>
@@ -108,13 +118,19 @@ namespace gr {
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items)
     {
-      const ITYPE* iptr0 = (const ITYPE*) input_items[0];
-
       if (d_fp == NULL)
         return 0;
 
-      for (int n = 0; n < noutput_items; ++n)
-        print(iptr0[n]);
+      const std::size_t N = input_items.size();
+      ITYPE values[N];
+
+      for (int i = 0; i < noutput_items; ++i) {
+        for (std::size_t n = 0; n < N; ++n) {
+          const ITYPE* iptrn = (const ITYPE*) input_items[n];
+          values[n] = iptrn[i];
+        }
+        print(values, N);
+      }
 
       // Tell runtime system how many output items we produced.
       return noutput_items;

@@ -39,7 +39,7 @@ At this stage of development following blocks are prepared:
 - number_file_sink
   - Helper block, used to store output data/numbers in a file.
     I am using this block currently for storing doppler shift frequencies
-    from debug port of 'acquisition_and_tracking' block. Please see 'examples/doppler_shift_sv20_20.png'.
+    from debug port of 'acquisition_and_tracking' block. Please see 'examples/doppler_shift_svid_20.png'.
 
 If interested, please see especially gps_acquisition_and_tracking_v4.grc
 where you will be able to spot navigation message bits on the GUI Time Sink.
