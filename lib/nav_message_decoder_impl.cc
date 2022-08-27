@@ -162,13 +162,17 @@ namespace gr {
         if (d_subframe_data_cnt == GPS_NAV_MESSAGE_BITS_PER_SUBFRAME) {
           const ITYPE *p = &d_subframe_data[0];
           d_subframe.init(&p);
-          if (d_subframe)
+          if (d_subframe) {
             d_tx_time = d_subframe.tow_count_message() * 6;
+            process_subframe(d_subframe);
+            if (d_fp)
+              fprintf(d_fp, "%s\n", d_subframe.to_string().c_str());
+            printf("svid %d: new (subframe %u) received\n", d_id, d_subframe.subframe_id());
+          }
+          else {
+            printf("svid %d: new (corrupted) subframe received\n", d_id);
+          }
 
-          if (d_fp)
-            fprintf(d_fp, "%s\n", d_subframe.to_string().c_str());
-
-          process_subframe(d_subframe);
           d_subframe_data_cnt = 0;
         }
       }
