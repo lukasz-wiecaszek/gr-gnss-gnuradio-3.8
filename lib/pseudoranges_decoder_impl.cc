@@ -59,10 +59,11 @@ namespace gr {
         d_ephemerides{}
     {
       set_relative_rate(1, DECIMATION_FACTOR);
+      set_tag_propagation_policy(TPP_DONT);
 
       for (int i = 0; i < MAX_STREAMS; ++i) {
         d_satelite_ids[i] = {NAVIGATION_SYSTEM_UNDEFINED, -1};
-        d_flatbuffers[i] = std::move(lts::flatbuffer<vector3d>{1000});
+        d_flatbuffers[i] = std::move(lts::flatbuffer<vector3d>{2000});
       }
 
       message_port_register_in(pmt::mp(PORT_CLOCK));
@@ -197,6 +198,7 @@ namespace gr {
         for (n = 0; n < N; ++n) {
           OTYPE* optr = static_cast<OTYPE*>(output_items[n]);
           add_item_tag(n, nitems_written(n), pmt::mp(TAG_PSEUDORANGE), pmt::mp(satelites[n].pseudorange), alias_pmt());
+          add_item_tag(n, nitems_written(n), pmt::mp(TAG_RX_TIME), pmt::mp(rx_time), alias_pmt());
           optr[nproduced] = satelites[n].position;
         }
 
