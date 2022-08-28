@@ -33,7 +33,8 @@ list(APPEND gnss_sources
     gnss_channel_impl.cc
     pseudoranges_decoder_impl.cc
     pvt_impl.cc
-    number_file_sink_impl.cc )
+    number_file_sink_impl.cc
+    skip_zeros_impl.cc )
 
 set(gnss_sources "${gnss_sources}" PARENT_SCOPE)
 if(NOT gnss_sources)

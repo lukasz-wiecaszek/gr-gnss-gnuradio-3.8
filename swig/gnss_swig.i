@@ -75,3 +75,6 @@ GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_f32, number_file_sink<float>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_f64, number_file_sink<double>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_fc32, number_file_sink<std::complex<float>>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_fc64, number_file_sink<std::complex<double>>);
+
+%include "gnss/skip_zeros.h"
+GR_SWIG_BLOCK_MAGIC2(gnss, skip_zeros);

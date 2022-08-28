@@ -28,5 +28,7 @@ install(FILES
     gnss_gnss_channel.block.yml
     gnss_pseudoranges_decoder.block.yml
     gnss_pvt.block.yml
-    gnss_number_file_sink.block.yml DESTINATION share/gnuradio/grc/blocks
+    gnss_number_file_sink.block.yml
+    gnss_skip_zeros.block.yml
+        DESTINATION share/gnuradio/grc/blocks
 )

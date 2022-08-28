@@ -35,5 +35,7 @@ install(FILES
     gnss_channel.h
     pseudoranges_decoder.h
     pvt.h
-    number_file_sink.h DESTINATION include/gnss
+    number_file_sink.h
+    skip_zeros.h
+        DESTINATION include/gnss
 )
