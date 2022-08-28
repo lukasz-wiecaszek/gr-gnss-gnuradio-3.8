@@ -78,3 +78,6 @@ GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, number_file_sink_fc64, number_file_sink<std::com
 
 %include "gnss/skip_zeros.h"
 GR_SWIG_BLOCK_MAGIC2(gnss, skip_zeros);
+
+%include "gnss/doppler_shift.h"
+GR_SWIG_BLOCK_MAGIC2(gnss, doppler_shift);

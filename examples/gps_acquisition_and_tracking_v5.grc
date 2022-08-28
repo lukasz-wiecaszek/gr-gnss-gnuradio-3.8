@@ -430,7 +430,7 @@ blocks:
     alias: ''
     comment: ''
     delimiter: '"\n"'
-    filename: '"doppler_shift_sv20.dat"'
+    filename: '"doppler_shift_svid_20.dat"'
     type: f
   states:
     bus_sink: false
@@ -645,7 +645,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [807, 312]
+    coordinate: [807, 303]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0

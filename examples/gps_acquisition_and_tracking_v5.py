@@ -234,39 +234,7 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.qtgui_number_sink_0 = qtgui.number_sink(
-            gr.sizeof_float,
-            0,
-            qtgui.NUM_GRAPH_HORIZ,
-            1
-        )
-        self.qtgui_number_sink_0.set_update_time(0.10)
-        self.qtgui_number_sink_0.set_title("")
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        units = ['', '', '', '', '',
-            '', '', '', '', '']
-        colors = [("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
-            ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
-        factor = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-
-        for i in range(1):
-            self.qtgui_number_sink_0.set_min(i, 0)
-            self.qtgui_number_sink_0.set_max(i, vector_length)
-            self.qtgui_number_sink_0.set_color(i, colors[i][0], colors[i][1])
-            if len(labels[i]) == 0:
-                self.qtgui_number_sink_0.set_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_number_sink_0.set_label(i, labels[i])
-            self.qtgui_number_sink_0.set_unit(i, units[i])
-            self.qtgui_number_sink_0.set_factor(i, factor[i])
-
-        self.qtgui_number_sink_0.enable_autoscale(False)
-        self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._qtgui_number_sink_0_win)
-        self.gnss_number_file_sink_0 = gnss.number_file_sink_f("doppler_shift.dat", "\n")
+        self.gnss_number_file_sink_0 = gnss.number_file_sink_f("doppler_shift_svid_20.dat", "\n")
         self.gnss_ca_code_generator_1 = gnss.ca_code_generator_c(1, samp_rate, 20, gnss.CA_CODE_DOMAIN_TIME)
         self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
         self.gnss_acquisition_and_tracking_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 20)
@@ -277,8 +245,6 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_stream_to_vector_0_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, vector_length)
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, vector_length)
-        self.blocks_short_to_float_0 = blocks.short_to_float(1, 1)
-        self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_short*1)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.blocks_multiply_conjugate_cc_0 = blocks.multiply_conjugate_cc(vector_length)
         self.blocks_interleaved_short_to_complex_0 = blocks.interleaved_short_to_complex(False, False)
@@ -287,7 +253,6 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
         self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, delay)
         self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(vector_length)
-        self.blocks_argmax_xx_0 = blocks.argmax_fs(vector_length)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, delta_f, 1, 0, 0)
 
 
@@ -296,9 +261,6 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 1))
-        self.connect((self.blocks_argmax_xx_0, 1), (self.blocks_null_sink_0, 0))
-        self.connect((self.blocks_argmax_xx_0, 0), (self.blocks_short_to_float_0, 0))
-        self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_argmax_xx_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_vector_to_stream_0_0, 0))
         self.connect((self.blocks_complex_to_real_0, 0), (self.gnss_number_file_sink_0, 0))
         self.connect((self.blocks_complex_to_real_0, 0), (self.qtgui_time_sink_x_0_0_0_0, 0))
@@ -307,7 +269,6 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_interleaved_short_to_complex_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.blocks_multiply_conjugate_cc_0, 0), (self.fft_vxx_0_0_0, 0))
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_delay_0, 0))
-        self.connect((self.blocks_short_to_float_0, 0), (self.qtgui_number_sink_0, 0))
         self.connect((self.blocks_stream_to_vector_0, 0), (self.fft_vxx_0, 0))
         self.connect((self.blocks_stream_to_vector_0_0, 0), (self.fft_vxx_0_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.blocks_multiply_xx_0, 0))

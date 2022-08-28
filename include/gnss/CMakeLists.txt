@@ -37,5 +37,6 @@ install(FILES
     pvt.h
     number_file_sink.h
     skip_zeros.h
+    doppler_shift.h
         DESTINATION include/gnss
 )
