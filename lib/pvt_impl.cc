@@ -33,19 +33,21 @@ namespace gr {
     * public function definitions
     \*===========================================================================*/
     pvt::sptr
-    pvt::make()
+    pvt::make(bool skip_zeros)
     {
       return gnuradio::get_initial_sptr
-        (new pvt_impl<vector3d, vector3d>());
+        (new pvt_impl<vector3d, vector3d>(skip_zeros));
     }
 
     template<typename ITYPE, typename OTYPE>
-    pvt_impl<ITYPE, OTYPE>::pvt_impl()
+    pvt_impl<ITYPE, OTYPE>::pvt_impl(bool skip_zeros)
       : gr::block("pvt",
                   gr::io_signature::make(1, MAX_STREAMS, sizeof(ITYPE) * IVLEN),
                   gr::io_signature::make(1, 1, sizeof(OTYPE) * OVLEN)),
-      d_hint{}
+      d_hint{},
+      d_skip_zeros{skip_zeros}
     {
+      set_tag_propagation_policy(TPP_DONT);
     }
 
     template<typename ITYPE, typename OTYPE>
@@ -99,13 +101,16 @@ namespace gr {
 
         consume_each(1);
 
-        if (n < N)
-          break;
-
-        vector3d efec_user_position;
+        if (n < N) {
+          if (d_skip_zeros) {
+            break;
+          } else {
+            optr0[nproduced] = {{0.0, 0.0, 0.0}};
+          }
+        } else {
+          vector3d efec_user_position;
 
 #define CASE(x) case x: pvt_utils::get<x>(satelites, d_hint, &efec_user_position, NULL, NULL)
-
         switch (N) {
           CASE(4); break;
           CASE(5); break;
@@ -114,10 +119,11 @@ namespace gr {
           CASE(8); break;
           default: break;
         }
-
 #undef CASE
 
-        optr0[nproduced] = efec_user_position;
+          optr0[nproduced] = efec_user_position;
+        }
+
         nproduced++;
       }
 

@@ -36,7 +36,7 @@ namespace gr {
     class pvt_impl : public pvt
     {
     public:
-      pvt_impl();
+      pvt_impl(bool skip_zeros);
       ~pvt_impl();
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
@@ -48,6 +48,7 @@ namespace gr {
 
     private:
       pvt_utils::user d_hint;
+      bool d_skip_zeros;
     };
 
   } // namespace gnss

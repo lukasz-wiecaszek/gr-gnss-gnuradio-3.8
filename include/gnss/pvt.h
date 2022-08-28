@@ -45,7 +45,7 @@ namespace gr {
        * class. gnss::pvt::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(bool skip_zeros = true);
     };
 
   } // namespace gnss

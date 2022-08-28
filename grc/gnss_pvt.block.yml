@@ -4,7 +4,7 @@ category: '[gnss]'
 
 templates:
   imports: import gnss
-  make: gnss.pvt()
+  make: gnss.pvt(${skip_zeros})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
@@ -17,6 +17,13 @@ parameters:
   dtype: int
   default: '1'
   hide: part
+
+- id: skip_zeros
+  label: Skip zeros
+  dtype: bool
+  options: [False, True]
+  option_labels: [OFF, ON]
+  default: 'True'
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:
