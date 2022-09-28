@@ -77,3 +77,5 @@ gps_acquisition_and_tracking_v4.grc shows decoded navigation message bits in the
 gps_rft_v1.grc produces position vectors and suprisingly enough this positions correspond to place
 where the IQ data were captured. As visible on examples/geojson.io.png there is still lots of room
 for improvements.
+
+![](acquisition.png)

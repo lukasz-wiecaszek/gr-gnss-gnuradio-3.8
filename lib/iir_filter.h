@@ -64,7 +64,7 @@ namespace gr {
         // for example:
         // i(n-1) = d_i[(d_current_index + 1) % H]
         // i(n-2) = d_i[(d_current_index + 2) % H]
-        d_current_index = (d_current_index > 0) ? d_current_index-- : H - 1;
+        d_current_index = (d_current_index > 0) ? d_current_index - 1 : H - 1;
 
         d_i[d_current_index] = x;
 

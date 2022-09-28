@@ -27,32 +27,11 @@ options:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [7, 379]
+    coordinate: [11, 334]
     rotation: 0
     state: enabled
 
 blocks:
-- name: delay
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: delay
-    min_len: '200'
-    orient: Qt.Horizontal
-    rangeType: int
-    start: '0'
-    step: '1'
-    stop: vector_length
-    value: '0'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [9, 247]
-    rotation: 0
-    state: true
 - name: delta_f
   id: variable_qtgui_range
   parameters:
@@ -71,7 +50,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [7, 121]
+    coordinate: [9, 208]
     rotation: 0
     state: true
 - name: samp_rate
@@ -83,7 +62,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [7, 521]
+    coordinate: [14, 474]
     rotation: 0
     state: enabled
 - name: vector_length
@@ -95,7 +74,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [6, 457]
+    coordinate: [13, 412]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -117,7 +96,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [233, 89]
+    coordinate: [282, 194]
     rotation: 0
     state: true
 - name: blocks_argmax_xx_0
@@ -135,7 +114,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1008, 461]
+    coordinate: [971, 498]
     rotation: 0
     state: true
 - name: blocks_complex_to_mag_squared_0
@@ -151,26 +130,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [776, 437]
-    rotation: 0
-    state: true
-- name: blocks_delay_0
-  id: blocks_delay
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    delay: delay
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_ports: '1'
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [772, 182]
+    coordinate: [739, 474]
     rotation: 0
     state: true
 - name: blocks_file_source_0
@@ -192,7 +152,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [6, 6]
+    coordinate: [8, 93]
     rotation: 0
     state: true
 - name: blocks_interleaved_short_to_complex_0
@@ -209,23 +169,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [256, 38]
-    rotation: 0
-    state: true
-- name: blocks_multiply_conjugate_cc_0
-  id: blocks_multiply_conjugate_cc
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    vlen: vector_length
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1297, 165]
+    coordinate: [258, 125]
     rotation: 0
     state: true
 - name: blocks_multiply_xx_0
@@ -243,7 +187,25 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [691, 72]
+    coordinate: [708, 208]
+    rotation: 0
+    state: true
+- name: blocks_multiply_xx_1
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: vector_length
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1364, 291]
     rotation: 0
     state: true
 - name: blocks_null_sink_0
@@ -260,7 +222,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1229, 528]
+    coordinate: [1192, 565]
     rotation: 0
     state: true
 - name: blocks_short_to_float_0
@@ -277,7 +239,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1228, 475]
+    coordinate: [1191, 512]
     rotation: 0
     state: true
 - name: blocks_stream_to_vector_0
@@ -295,25 +257,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [854, 88]
-    rotation: 0
-    state: true
-- name: blocks_stream_to_vector_0_0
-  id: blocks_stream_to_vector
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_items: vector_length
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [870, 271]
+    coordinate: [871, 224]
     rotation: 0
     state: true
 - name: blocks_throttle_0
@@ -332,7 +276,26 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [489, 38]
+    coordinate: [491, 125]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0_0_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate / vector_length
+    type: complex
+    vlen: vector_length
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1025, 319]
     rotation: 0
     state: true
 - name: blocks_vector_to_stream_0_0
@@ -350,7 +313,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1010, 414]
+    coordinate: [973, 451]
     rotation: 0
     state: true
 - name: fft_vxx_0
@@ -371,28 +334,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1074, 52]
-    rotation: 0
-    state: true
-- name: fft_vxx_0_0
-  id: fft_vxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    fft_size: vector_length
-    forward: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    nthreads: '1'
-    shift: 'False'
-    type: complex
-    window: window.rectangular(vector_length)
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1081, 235]
+    coordinate: [1091, 188]
     rotation: 0
     state: true
 - name: fft_vxx_0_0_0
@@ -413,7 +355,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [272, 441]
+    coordinate: [474, 442]
     rotation: 0
     state: true
 - name: gnss_acquisition_and_tracking_0
@@ -422,6 +364,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
+    debug_port: 'False'
     dll_bw_coarse: '4.0'
     dll_bw_fine: '1.0'
     identifier: '20'
@@ -435,27 +378,27 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [489, 306]
+    coordinate: [702, 11]
     rotation: 0
     state: true
-- name: gnss_ca_code_generator_1
+- name: gnss_ca_code_generator_0
   id: gnss_ca_code_generator
   parameters:
     affinity: ''
     alias: ''
     comment: ''
-    domain: gnss.CA_CODE_DOMAIN_TIME
+    domain: gnss.CA_CODE_DOMAIN_FREQUENCY_CONJUGATE
     maxoutbuf: '0'
     minoutbuf: '0'
     sampling_freq: samp_rate
     svid: '20'
     type: complex
-    vlen: '1'
+    vlen: vector_length
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [252, 240]
+    coordinate: [750, 303]
     rotation: 0
     state: true
 - name: gps_acquisition_0
@@ -533,7 +476,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1421, 460]
+    coordinate: [1384, 497]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0
@@ -630,7 +573,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1220, 394]
+    coordinate: [1183, 431]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0
@@ -727,7 +670,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [815, 337]
+    coordinate: [1034, 51]
     rotation: 0
     state: true
 
@@ -737,23 +680,21 @@ connections:
 - [blocks_argmax_xx_0, '1', blocks_null_sink_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', blocks_argmax_xx_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', blocks_vector_to_stream_0_0, '0']
-- [blocks_delay_0, '0', blocks_stream_to_vector_0, '0']
 - [blocks_file_source_0, '0', blocks_interleaved_short_to_complex_0, '0']
 - [blocks_interleaved_short_to_complex_0, '0', blocks_throttle_0, '0']
-- [blocks_multiply_conjugate_cc_0, '0', fft_vxx_0_0_0, '0']
-- [blocks_multiply_xx_0, '0', blocks_delay_0, '0']
+- [blocks_multiply_xx_0, '0', blocks_stream_to_vector_0, '0']
+- [blocks_multiply_xx_1, '0', fft_vxx_0_0_0, '0']
 - [blocks_short_to_float_0, '0', qtgui_number_sink_0, '0']
 - [blocks_stream_to_vector_0, '0', fft_vxx_0, '0']
-- [blocks_stream_to_vector_0_0, '0', fft_vxx_0_0, '0']
 - [blocks_throttle_0, '0', blocks_multiply_xx_0, '0']
 - [blocks_throttle_0, '0', gnss_acquisition_and_tracking_0, '0']
 - [blocks_throttle_0, '0', gps_acquisition_0, '0']
+- [blocks_throttle_0_0_0, '0', blocks_multiply_xx_1, '1']
 - [blocks_vector_to_stream_0_0, '0', qtgui_time_sink_x_0, '0']
-- [fft_vxx_0, '0', blocks_multiply_conjugate_cc_0, '0']
-- [fft_vxx_0_0, '0', blocks_multiply_conjugate_cc_0, '1']
+- [fft_vxx_0, '0', blocks_multiply_xx_1, '0']
 - [fft_vxx_0_0_0, '0', blocks_complex_to_mag_squared_0, '0']
 - [gnss_acquisition_and_tracking_0, '0', qtgui_time_sink_x_0_0_0, '0']
-- [gnss_ca_code_generator_1, '0', blocks_stream_to_vector_0_0, '0']
+- [gnss_ca_code_generator_0, '0', blocks_throttle_0_0_0, '0']
 
 metadata:
   file_format: 1
