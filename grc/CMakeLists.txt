@@ -31,5 +31,5 @@ install(FILES
     gnss_number_file_sink.block.yml
     gnss_skip_zeros.block.yml
     gnss_doppler_shift.block.yml
-        DESTINATION share/gnuradio/grc/blocks
+    gnss_type_converter.block.yml DESTINATION share/gnuradio/grc/blocks
 )

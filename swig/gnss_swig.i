@@ -24,6 +24,7 @@
 #include "gnss/number_file_sink.h"
 #include "gnss/doppler_shift.h"
 #include "gnss/skip_zeros.h"
+#include "gnss/type_converter.h"
 %}
 
 %include "gnss/navigation_system.h"
@@ -81,3 +82,7 @@ GR_SWIG_BLOCK_MAGIC2(gnss, skip_zeros);
 
 %include "gnss/doppler_shift.h"
 GR_SWIG_BLOCK_MAGIC2(gnss, doppler_shift);
+
+%include "gnss/type_converter.h"
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, fc32_to_fc64, type_converter<std::complex<float>, std::complex<double>>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, fc64_to_fc32, type_converter<std::complex<double>, std::complex<float>>);
