@@ -32,17 +32,17 @@ namespace gr {
     // Elliott D. Kaplan and Christopher J. Hegarty.
     // Table 5.2 PLL discriminators and table 5.3 Common Costas Loop Discriminators.
 
-    constexpr double pll_discriminator_classic_costas_analog(gr_complex c)
+    constexpr double pll_discriminator_classic_costas_analog(gr_complexd c)
     {
       return c.imag() * c.real();
     }
 
-    constexpr double pll_discriminator_four_quadrant_arctangent(gr_complex c)
+    constexpr double pll_discriminator_four_quadrant_arctangent(gr_complexd c)
     {
       return std::atan2(c.imag(), c.real());
     }
 
-    constexpr double pll_discriminator_two_quadrant_arctangent(gr_complex c)
+    constexpr double pll_discriminator_two_quadrant_arctangent(gr_complexd c)
     {
       return c.real() != 0 ? std::atan(c.imag() / c.real()) : 0;
     }

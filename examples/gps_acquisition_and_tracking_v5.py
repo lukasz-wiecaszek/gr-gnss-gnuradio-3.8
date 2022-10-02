@@ -175,8 +175,10 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_win)
+        self.gnss_type_converter_0_0 = gnss.fc64_to_fc32(1)
+        self.gnss_type_converter_0 = gnss.fc64_to_fc32(1)
         self.gnss_number_file_sink_0 = gnss.number_file_sink_f32("code_rate_svid_32.dat", "\n")
-        self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
+        self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 2.0, 35.0)
         self.gnss_acquisition_and_tracking_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 32)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_interleaved_short_to_complex_0 = blocks.interleaved_short_to_complex(False, False)
@@ -194,8 +196,10 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_file_source_0, 0), (self.blocks_interleaved_short_to_complex_0, 0))
         self.connect((self.blocks_interleaved_short_to_complex_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0, 0))
-        self.connect((self.gnss_acquisition_and_tracking_0, 1), (self.blocks_complex_to_imag_0, 0))
-        self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
+        self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.gnss_type_converter_0, 0))
+        self.connect((self.gnss_acquisition_and_tracking_0, 1), (self.gnss_type_converter_0_0, 0))
+        self.connect((self.gnss_type_converter_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
+        self.connect((self.gnss_type_converter_0_0, 0), (self.blocks_complex_to_imag_0, 0))
 
 
     def closeEvent(self, event):

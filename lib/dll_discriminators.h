@@ -32,7 +32,7 @@ namespace gr {
     // Elliott D. Kaplan and Christopher J. Hegarty.
     // Table 5.5 Common Delay Lock Loop Discriminators.
 
-    inline double dll_discriminator_noncoherent_e_minus_l_envelope(gr_complex e, gr_complex l)
+    inline double dll_discriminator_noncoherent_e_minus_l_envelope(gr_complexd e, gr_complexd l)
     {
       double abs_e = std::abs(e);
       double abs_l = std::abs(l);
@@ -41,7 +41,7 @@ namespace gr {
       return abs_e_plus_l != 0 ? (abs_e - abs_l) / abs_e_plus_l : 0;
     }
 
-    inline double dll_discriminator_noncoherent_e_minus_l_power(gr_complex e, gr_complex l)
+    inline double dll_discriminator_noncoherent_e_minus_l_power(gr_complexd e, gr_complexd l)
     {
       double norm_e = std::norm(e);
       double norm_l = std::norm(l);

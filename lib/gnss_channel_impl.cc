@@ -39,7 +39,7 @@ namespace gr {
       double dll_bw_coarse, double pll_bw_coarse, double dll_bw_fine, double pll_bw_fine)
     {
       return gnuradio::get_initial_sptr
-        (new gnss_channel_impl<gr_complex, vector3d, gr_complex>(sampling_freq, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine));
+        (new gnss_channel_impl<gr_complex, vector3d, gr_complexd>(sampling_freq, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine));
     }
 
     template<typename ITYPE0, typename OTYPE0, typename OTYPE1>

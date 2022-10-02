@@ -32,6 +32,54 @@ options:
     state: enabled
 
 blocks:
+- name: dll_bw_coarse
+  id: variable
+  parameters:
+    comment: ''
+    value: '4.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [11, 325]
+    rotation: 0
+    state: enabled
+- name: dll_bw_fine
+  id: variable
+  parameters:
+    comment: ''
+    value: '2.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [10, 390]
+    rotation: 0
+    state: enabled
+- name: pll_bw_coarse
+  id: variable
+  parameters:
+    comment: ''
+    value: '40.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [115, 326]
+    rotation: 0
+    state: enabled
+- name: pll_bw_fine
+  id: variable
+  parameters:
+    comment: ''
+    value: '35.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [116, 389]
+    rotation: 0
+    state: enabled
 - name: samp_rate
   id: variable
   parameters:
@@ -97,7 +145,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1294, 64]
+    coordinate: [1365, 64]
     rotation: 0
     state: true
 - name: blocks_throttle_0
@@ -125,14 +173,15 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    dll_bw_coarse: '4.0'
-    dll_bw_fine: '1.0'
+    debug_port: 'False'
+    dll_bw_coarse: dll_bw_coarse
+    dll_bw_fine: dll_bw_fine
     identifier: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
     navigation_system: gnss.NAVIGATION_SYSTEM_GPS
-    pll_bw_coarse: '40.0'
-    pll_bw_fine: '30.0'
+    pll_bw_coarse: pll_bw_coarse
+    pll_bw_fine: pll_bw_fine
     sampling_freq: samp_rate
   states:
     bus_sink: false
@@ -147,20 +196,21 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    dll_bw_coarse: '4.0'
-    dll_bw_fine: '1.0'
+    debug_port: 'False'
+    dll_bw_coarse: dll_bw_coarse
+    dll_bw_fine: dll_bw_fine
     identifier: '11'
     maxoutbuf: '0'
     minoutbuf: '0'
     navigation_system: gnss.NAVIGATION_SYSTEM_GPS
-    pll_bw_coarse: '40.0'
-    pll_bw_fine: '30.0'
+    pll_bw_coarse: pll_bw_coarse
+    pll_bw_fine: pll_bw_fine
     sampling_freq: samp_rate
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [300, 151]
+    coordinate: [298, 165]
     rotation: 0
     state: true
 - name: gnss_acquisition_and_tracking_0_0_0
@@ -169,20 +219,21 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    dll_bw_coarse: '4.0'
-    dll_bw_fine: '1.0'
+    debug_port: 'False'
+    dll_bw_coarse: dll_bw_coarse
+    dll_bw_fine: dll_bw_fine
     identifier: '20'
     maxoutbuf: '0'
     minoutbuf: '0'
     navigation_system: gnss.NAVIGATION_SYSTEM_GPS
-    pll_bw_coarse: '40.0'
-    pll_bw_fine: '30.0'
+    pll_bw_coarse: pll_bw_coarse
+    pll_bw_fine: pll_bw_fine
     sampling_freq: samp_rate
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 318]
+    coordinate: [296, 322]
     rotation: 0
     state: true
 - name: gnss_acquisition_and_tracking_0_0_0_0
@@ -191,20 +242,21 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    dll_bw_coarse: '4.0'
-    dll_bw_fine: '1.0'
+    debug_port: 'False'
+    dll_bw_coarse: dll_bw_coarse
+    dll_bw_fine: dll_bw_fine
     identifier: '32'
     maxoutbuf: '0'
     minoutbuf: '0'
     navigation_system: gnss.NAVIGATION_SYSTEM_GPS
-    pll_bw_coarse: '40.0'
-    pll_bw_fine: '30.0'
+    pll_bw_coarse: pll_bw_coarse
+    pll_bw_fine: pll_bw_fine
     sampling_freq: samp_rate
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [290, 432]
+    coordinate: [293, 490]
     rotation: 0
     state: true
 - name: gnss_ca_sybmols_to_nav_bits_0
@@ -234,7 +286,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [548, 134]
+    coordinate: [568, 136]
     rotation: 0
     state: true
 - name: gnss_ca_sybmols_to_nav_bits_0_0_0
@@ -249,7 +301,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [538, 325]
+    coordinate: [577, 325]
     rotation: 0
     state: true
 - name: gnss_ca_sybmols_to_nav_bits_0_0_0_0
@@ -281,7 +333,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [778, 4]
+    coordinate: [851, -24]
     rotation: 0
     state: true
 - name: gnss_nav_message_decoder_0_0
@@ -298,7 +350,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [772, 130]
+    coordinate: [845, 102]
     rotation: 0
     state: true
 - name: gnss_nav_message_decoder_0_0_0
@@ -315,7 +367,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [761, 321]
+    coordinate: [834, 293]
     rotation: 0
     state: true
 - name: gnss_nav_message_decoder_0_0_0_0
@@ -332,7 +384,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [762, 448]
+    coordinate: [835, 420]
     rotation: 0
     state: true
 - name: gnss_pseudoranges_decoder_0
@@ -364,7 +416,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1140, 156]
+    coordinate: [1211, 156]
     rotation: 0
     state: true
 - name: gnss_pvt_0
@@ -376,11 +428,84 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     num_inputs: '4'
+    skip_zeros: 'True'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1387, 188]
+    coordinate: [1458, 188]
+    rotation: 0
+    state: true
+- name: gnss_type_converter_0_0_0
+  id: gnss_type_converter
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    itype: fc64
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [575, 59]
+    rotation: 0
+    state: true
+- name: gnss_type_converter_0_0_0_0
+  id: gnss_type_converter
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    itype: fc64
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [599, 217]
+    rotation: 0
+    state: true
+- name: gnss_type_converter_0_0_0_0_0
+  id: gnss_type_converter
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    itype: fc64
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [594, 377]
+    rotation: 0
+    state: true
+- name: gnss_type_converter_0_0_0_0_0_0
+  id: gnss_type_converter
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    itype: fc64
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [571, 570]
     rotation: 0
     state: true
 - name: gps_acquisition_0
@@ -492,7 +617,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [559, 50]
+    coordinate: [771, 50]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0
@@ -589,7 +714,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [556, 174]
+    coordinate: [795, 208]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0_0
@@ -686,7 +811,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [539, 367]
+    coordinate: [806, 369]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0_0_0
@@ -783,7 +908,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [539, 492]
+    coordinate: [801, 562]
     rotation: 0
     state: true
 
@@ -796,14 +921,14 @@ connections:
 - [blocks_throttle_0, '0', gnss_acquisition_and_tracking_0_0_0_0, '0']
 - [blocks_throttle_0, '0', gps_acquisition_0, '0']
 - [gnss_acquisition_and_tracking_0, '0', gnss_ca_sybmols_to_nav_bits_0, '0']
-- [gnss_acquisition_and_tracking_0, '0', qtgui_time_sink_x_0_0_0, '0']
+- [gnss_acquisition_and_tracking_0, '0', gnss_type_converter_0_0_0, '0']
 - [gnss_acquisition_and_tracking_0_0, '0', gnss_ca_sybmols_to_nav_bits_0_0, '0']
-- [gnss_acquisition_and_tracking_0_0, '0', qtgui_time_sink_x_0_0_0_0, '0']
+- [gnss_acquisition_and_tracking_0_0, '0', gnss_type_converter_0_0_0_0, '0']
 - [gnss_acquisition_and_tracking_0_0_0, '0', gnss_ca_sybmols_to_nav_bits_0_0_0, '0']
-- [gnss_acquisition_and_tracking_0_0_0, '0', qtgui_time_sink_x_0_0_0_0_0, '0']
+- [gnss_acquisition_and_tracking_0_0_0, '0', gnss_type_converter_0_0_0_0_0, '0']
 - [gnss_acquisition_and_tracking_0_0_0_0, '0', gnss_ca_sybmols_to_nav_bits_0_0_0_0,
   '0']
-- [gnss_acquisition_and_tracking_0_0_0_0, '0', qtgui_time_sink_x_0_0_0_0_0_0, '0']
+- [gnss_acquisition_and_tracking_0_0_0_0, '0', gnss_type_converter_0_0_0_0_0_0, '0']
 - [gnss_ca_sybmols_to_nav_bits_0, '0', gnss_nav_message_decoder_0, '0']
 - [gnss_ca_sybmols_to_nav_bits_0_0, '0', gnss_nav_message_decoder_0_0, '0']
 - [gnss_ca_sybmols_to_nav_bits_0_0_0, '0', gnss_nav_message_decoder_0_0_0, '0']
@@ -825,6 +950,10 @@ connections:
 - [gnss_pseudoranges_decoder_0, '2', gnss_pvt_0, '2']
 - [gnss_pseudoranges_decoder_0, '3', gnss_pvt_0, '3']
 - [gnss_pvt_0, '0', blocks_null_sink_0_0_0_0, '0']
+- [gnss_type_converter_0_0_0, '0', qtgui_time_sink_x_0_0_0, '0']
+- [gnss_type_converter_0_0_0_0, '0', qtgui_time_sink_x_0_0_0_0, '0']
+- [gnss_type_converter_0_0_0_0_0, '0', qtgui_time_sink_x_0_0_0_0_0, '0']
+- [gnss_type_converter_0_0_0_0_0_0, '0', qtgui_time_sink_x_0_0_0_0_0_0, '0']
 
 metadata:
   file_format: 1

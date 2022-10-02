@@ -65,12 +65,12 @@ parameters:
 #      * optional (optional - set to 1 for optional inputs. Default is 0)
 inputs:
 - label: in
-  dtype: complex
+  dtype: fc32
   vlen: 1
 
 outputs:
 - label: out
-  dtype: complex
+  dtype: fc64
   vlen: 1
   multiplicity: ${1 if (debug_port == False) else 2}
 

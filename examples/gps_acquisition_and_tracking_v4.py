@@ -215,8 +215,9 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self.qtgui_number_sink_0.enable_autoscale(False)
         self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_number_sink_0_win)
+        self.gnss_type_converter_0 = gnss.fc64_to_fc32(1)
         self.gnss_ca_code_generator_0 = gnss.ca_code_generator_c(vector_length, samp_rate, 20, gnss.CA_CODE_DOMAIN_FREQUENCY_CONJUGATE)
-        self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
+        self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 2.0, 35.0)
         self.gnss_acquisition_and_tracking_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 20)
         self.fft_vxx_0_0_0 = fft.fft_vcc(vector_length, False, window.rectangular(vector_length), False, 1)
         self.fft_vxx_0 = fft.fft_vcc(vector_length, True, window.rectangular(vector_length), False, 1)
@@ -257,8 +258,9 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_vector_to_stream_0_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.fft_vxx_0, 0), (self.blocks_multiply_xx_1, 0))
         self.connect((self.fft_vxx_0_0_0, 0), (self.blocks_complex_to_mag_squared_0, 0))
-        self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
+        self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.gnss_type_converter_0, 0))
         self.connect((self.gnss_ca_code_generator_0, 0), (self.blocks_throttle_0_0_0, 0))
+        self.connect((self.gnss_type_converter_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
 
 
     def closeEvent(self, event):
@@ -280,9 +282,9 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self.samp_rate = samp_rate
         self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
         self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.blocks_throttle_0_0_0.set_sample_rate(self.samp_rate / self.vector_length)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_0_0_0.set_samp_rate(self.samp_rate / 4000)
-        self.blocks_throttle_0_0_0.set_sample_rate(self.samp_rate / self.vector_length)
 
     def get_delta_f(self):
         return self.delta_f

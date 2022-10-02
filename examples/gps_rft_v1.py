@@ -73,74 +73,28 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 4000000
+        self.pll_bw_fine = pll_bw_fine = 35.0
+        self.pll_bw_coarse = pll_bw_coarse = 40.0
+        self.dll_bw_fine = dll_bw_fine = 2.0
+        self.dll_bw_coarse = dll_bw_coarse = 4.0
 
         ##################################################
         # Blocks
         ##################################################
-        self.qtgui_time_sink_x_0_0_0_0_0_0 = qtgui.time_sink_c(
-            200, #size
-            samp_rate / 4000, #samp_rate
-            "", #name
-            1 #number of inputs
-        )
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_y_axis(0, 4000)
-
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_y_label('Amplitude', "")
-
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_tags(False)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_autoscale(True)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_grid(False)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_stem_plot(False)
-
-
-        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        markers = [0, 0, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(2):
-            if len(labels[i]) == 0:
-                if (i % 2 == 0):
-                    self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
-                else:
-                    self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
-            else:
-                self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_0_0_0_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0_0_0_0.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_0_0_0_win)
-        self.qtgui_time_sink_x_0_0_0_0_0 = qtgui.time_sink_c(
+        self.qtgui_time_sink_x_0_0_0_0_0 = qtgui.time_sink_f(
             200, #size
             samp_rate / 4000, #samp_rate
             "", #name
             1 #number of inputs
         )
         self.qtgui_time_sink_x_0_0_0_0_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_0_0_0_0_0.set_y_axis(0, 4000)
+        self.qtgui_time_sink_x_0_0_0_0_0.set_y_axis(1023000-20, 1023000+20)
 
         self.qtgui_time_sink_x_0_0_0_0_0.set_y_label('Amplitude', "")
 
         self.qtgui_time_sink_x_0_0_0_0_0.enable_tags(False)
         self.qtgui_time_sink_x_0_0_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0_0_0_0_0.enable_autoscale(True)
+        self.qtgui_time_sink_x_0_0_0_0_0.enable_autoscale(False)
         self.qtgui_time_sink_x_0_0_0_0_0.enable_grid(False)
         self.qtgui_time_sink_x_0_0_0_0_0.enable_axis_labels(True)
         self.qtgui_time_sink_x_0_0_0_0_0.enable_control_panel(False)
@@ -157,16 +111,13 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
             1.0, 1.0, 1.0, 1.0, 1.0]
         styles = [1, 1, 1, 1, 1,
             1, 1, 1, 1, 1]
-        markers = [0, 0, -1, -1, -1,
+        markers = [-1, 0, -1, -1, -1,
             -1, -1, -1, -1, -1]
 
 
-        for i in range(2):
+        for i in range(1):
             if len(labels[i]) == 0:
-                if (i % 2 == 0):
-                    self.qtgui_time_sink_x_0_0_0_0_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
-                else:
-                    self.qtgui_time_sink_x_0_0_0_0_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
+                self.qtgui_time_sink_x_0_0_0_0_0.set_line_label(i, "Data {0}".format(i))
             else:
                 self.qtgui_time_sink_x_0_0_0_0_0.set_line_label(i, labels[i])
             self.qtgui_time_sink_x_0_0_0_0_0.set_line_width(i, widths[i])
@@ -227,59 +178,11 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_0_win)
-        self.qtgui_time_sink_x_0_0_0 = qtgui.time_sink_c(
-            200, #size
-            samp_rate / 4000, #samp_rate
-            "", #name
-            1 #number of inputs
-        )
-        self.qtgui_time_sink_x_0_0_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_0_0_0.set_y_axis(0, 4000)
-
-        self.qtgui_time_sink_x_0_0_0.set_y_label('Amplitude', "")
-
-        self.qtgui_time_sink_x_0_0_0.enable_tags(False)
-        self.qtgui_time_sink_x_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0_0_0.enable_autoscale(True)
-        self.qtgui_time_sink_x_0_0_0.enable_grid(False)
-        self.qtgui_time_sink_x_0_0_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_0_0_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_0_0_0.enable_stem_plot(False)
-
-
-        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        markers = [0, 0, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(2):
-            if len(labels[i]) == 0:
-                if (i % 2 == 0):
-                    self.qtgui_time_sink_x_0_0_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
-                else:
-                    self.qtgui_time_sink_x_0_0_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
-            else:
-                self.qtgui_time_sink_x_0_0_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0_0_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0_0_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0_0_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0_0_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0_0_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_win)
+        self.gnss_type_converter_0_0_0 = gnss.fc64_to_fc32(1)
+        self.gnss_type_converter_0_0 = gnss.fc64_to_fc32(1)
         self.gnss_rft_0 = gnss.rft()
         self.gnss_rft_0.set_transformation(gnss.RFT_ECEF_TO_GCS)
-        self.gnss_pvt_0 = gnss.pvt()
+        self.gnss_pvt_0 = gnss.pvt(True)
         self.gnss_pseudoranges_decoder_0 = gnss.pseudoranges_decoder()
         self.gnss_pseudoranges_decoder_0.set_acq_params(0, gnss.NAVIGATION_SYSTEM_GPS, 1)
         self.gnss_pseudoranges_decoder_0.set_acq_params(1, gnss.NAVIGATION_SYSTEM_GPS, 11)
@@ -302,32 +205,34 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
         self.gnss_ca_sybmols_to_nav_bits_0_0_0 = gnss.ca_sybmols_to_nav_bits()
         self.gnss_ca_sybmols_to_nav_bits_0_0 = gnss.ca_sybmols_to_nav_bits()
         self.gnss_ca_sybmols_to_nav_bits_0 = gnss.ca_sybmols_to_nav_bits()
-        self.gnss_acquisition_and_tracking_0_0_0_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
+        self.gnss_acquisition_and_tracking_0_0_0_0 = gnss.acquisition_and_tracking(samp_rate, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine)
         self.gnss_acquisition_and_tracking_0_0_0_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 32)
-        self.gnss_acquisition_and_tracking_0_0_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
+        self.gnss_acquisition_and_tracking_0_0_0 = gnss.acquisition_and_tracking(samp_rate, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine)
         self.gnss_acquisition_and_tracking_0_0_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 20)
-        self.gnss_acquisition_and_tracking_0_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
+        self.gnss_acquisition_and_tracking_0_0 = gnss.acquisition_and_tracking(samp_rate, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine)
         self.gnss_acquisition_and_tracking_0_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 11)
-        self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
+        self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine)
         self.gnss_acquisition_and_tracking_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 1)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_interleaved_short_to_complex_0 = blocks.interleaved_short_to_complex(False, False)
         self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnuradio/gr-gps/examples/signal.dat', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
+        self.blocks_complex_to_imag_0 = blocks.complex_to_imag(1)
 
 
 
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.gnss_nav_message_decoder_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
-        self.msg_connect((self.gnss_nav_message_decoder_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
+        self.msg_connect((self.gnss_nav_message_decoder_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
-        self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
-        self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
+        self.connect((self.blocks_complex_to_imag_0, 0), (self.qtgui_time_sink_x_0_0_0_0_0, 0))
         self.connect((self.blocks_file_source_0, 0), (self.blocks_interleaved_short_to_complex_0, 0))
         self.connect((self.blocks_interleaved_short_to_complex_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0, 0))
@@ -335,13 +240,11 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0_0_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0_0_0_0, 0))
         self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.gnss_ca_sybmols_to_nav_bits_0, 0))
-        self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
         self.connect((self.gnss_acquisition_and_tracking_0_0, 0), (self.gnss_ca_sybmols_to_nav_bits_0_0, 0))
-        self.connect((self.gnss_acquisition_and_tracking_0_0, 0), (self.qtgui_time_sink_x_0_0_0_0, 0))
         self.connect((self.gnss_acquisition_and_tracking_0_0_0, 0), (self.gnss_ca_sybmols_to_nav_bits_0_0_0, 0))
-        self.connect((self.gnss_acquisition_and_tracking_0_0_0, 0), (self.qtgui_time_sink_x_0_0_0_0_0, 0))
         self.connect((self.gnss_acquisition_and_tracking_0_0_0_0, 0), (self.gnss_ca_sybmols_to_nav_bits_0_0_0_0, 0))
-        self.connect((self.gnss_acquisition_and_tracking_0_0_0_0, 0), (self.qtgui_time_sink_x_0_0_0_0_0_0, 0))
+        self.connect((self.gnss_acquisition_and_tracking_0_0_0_0, 0), (self.gnss_type_converter_0_0, 0))
+        self.connect((self.gnss_acquisition_and_tracking_0_0_0_0, 1), (self.gnss_type_converter_0_0_0, 0))
         self.connect((self.gnss_ca_sybmols_to_nav_bits_0, 0), (self.gnss_nav_message_decoder_0, 0))
         self.connect((self.gnss_ca_sybmols_to_nav_bits_0_0, 0), (self.gnss_nav_message_decoder_0_0, 0))
         self.connect((self.gnss_ca_sybmols_to_nav_bits_0_0_0, 0), (self.gnss_nav_message_decoder_0_0_0, 0))
@@ -351,11 +254,13 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
         self.connect((self.gnss_nav_message_decoder_0_0_0, 0), (self.gnss_pseudoranges_decoder_0, 2))
         self.connect((self.gnss_nav_message_decoder_0_0_0_0, 0), (self.gnss_pseudoranges_decoder_0, 3))
         self.connect((self.gnss_pseudoranges_decoder_0, 3), (self.gnss_pvt_0, 3))
+        self.connect((self.gnss_pseudoranges_decoder_0, 1), (self.gnss_pvt_0, 1))
         self.connect((self.gnss_pseudoranges_decoder_0, 2), (self.gnss_pvt_0, 2))
         self.connect((self.gnss_pseudoranges_decoder_0, 0), (self.gnss_pvt_0, 0))
-        self.connect((self.gnss_pseudoranges_decoder_0, 1), (self.gnss_pvt_0, 1))
         self.connect((self.gnss_pvt_0, 0), (self.gnss_rft_0, 0))
         self.connect((self.gnss_rft_0, 0), (self.gnss_geojson_file_sink_1, 0))
+        self.connect((self.gnss_type_converter_0_0, 0), (self.qtgui_time_sink_x_0_0_0_0, 0))
+        self.connect((self.gnss_type_converter_0_0_0, 0), (self.blocks_complex_to_imag_0, 0))
 
 
     def closeEvent(self, event):
@@ -369,10 +274,32 @@ class gps_rft_v1(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.blocks_throttle_0.set_sample_rate(self.samp_rate)
-        self.qtgui_time_sink_x_0_0_0.set_samp_rate(self.samp_rate / 4000)
         self.qtgui_time_sink_x_0_0_0_0.set_samp_rate(self.samp_rate / 4000)
         self.qtgui_time_sink_x_0_0_0_0_0.set_samp_rate(self.samp_rate / 4000)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_samp_rate(self.samp_rate / 4000)
+
+    def get_pll_bw_fine(self):
+        return self.pll_bw_fine
+
+    def set_pll_bw_fine(self, pll_bw_fine):
+        self.pll_bw_fine = pll_bw_fine
+
+    def get_pll_bw_coarse(self):
+        return self.pll_bw_coarse
+
+    def set_pll_bw_coarse(self, pll_bw_coarse):
+        self.pll_bw_coarse = pll_bw_coarse
+
+    def get_dll_bw_fine(self):
+        return self.dll_bw_fine
+
+    def set_dll_bw_fine(self, dll_bw_fine):
+        self.dll_bw_fine = dll_bw_fine
+
+    def get_dll_bw_coarse(self):
+        return self.dll_bw_coarse
+
+    def set_dll_bw_coarse(self, dll_bw_coarse):
+        self.dll_bw_coarse = dll_bw_coarse
 
 
 

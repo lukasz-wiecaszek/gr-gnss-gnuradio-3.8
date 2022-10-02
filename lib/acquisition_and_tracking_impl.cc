@@ -52,7 +52,7 @@ namespace gr {
       double dll_bw_coarse, double pll_bw_coarse, double dll_bw_fine, double pll_bw_fine)
     {
       return gnuradio::get_initial_sptr
-        (new acquisition_and_tracking_impl<gr_complex, gr_complex>(
+        (new acquisition_and_tracking_impl<gr_complex, gr_complexd>(
           sampling_freq, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine));
     }
 
@@ -286,31 +286,29 @@ namespace gr {
 
       volk_32fc_x2_multiply_32fc(input_stream.data(), iptr0, doppler_shift.data(), d_spreading_code_samples);
 
-      std::array<std::vector<gr_complex>, CTAPS> spreading_codes;
-      std::array<gr_complex, CTAPS> correlations;
-      std::vector<gr_complex> output_stream(d_spreading_code_samples);
+      std::array<std::vector<gr_complexd>, CTAPS> spreading_codes;
+      std::array<gr_complexd, CTAPS> correlations;
+      std::vector<gr_complexd> output_stream(input_stream.begin(), input_stream.end());
 
       double code_phase_increment = d_code_chip_rate / d_sampling_freq; // [samples]
 
       for (int tap = 0; tap < CTAPS; ++tap) {
-        std::vector<gr_complex>& spreading_code = spreading_codes[tap];
+        std::vector<gr_complexd>& spreading_code = spreading_codes[tap];
         spreading_code.resize(d_spreading_code_samples);
         for (int i = 0; i < d_spreading_code_samples; ++i) {
           int idx = static_cast<int>(i * code_phase_increment + d_code_offset_chips + correlation_shifts[tap]);
           idx += GPS_CA_CODE_LENGTH;
           idx %= GPS_CA_CODE_LENGTH;
-          spreading_code[i] = (*code)[idx] ? gr_complex{+1.0f, 0.0f} : gr_complex{-1.0f, 0.0f};
+          spreading_code[i] = (*code)[idx] ? gr_complexd{+1.0, 0.0} : gr_complexd{-1.0, 0.0};
         }
 
-        // Multiply doppler shifted incoming signal with the spreading code
-        volk_32fc_x2_multiply_32fc(output_stream.data(), input_stream.data(), spreading_code.data(), d_spreading_code_samples);
-
-        correlations[tap] = std::accumulate(output_stream.begin(), output_stream.end(), gr_complex{0.0f, 0.0f});
+        // Multiply and then integrate doppler shifted incoming signal with the spreading code
+        correlations[tap] = std::inner_product(output_stream.begin(), output_stream.end(), spreading_code.begin(), gr_complexd{0.0, 0.0});
       }
 
-      gr_complex E = correlations[0];
-      gr_complex P = correlations[1]; *optr0 = P;
-      gr_complex L = correlations[2];
+      gr_complexd E = correlations[0];
+      gr_complexd P = correlations[1]; *optr0 = P;
+      gr_complexd L = correlations[2];
 
       double rx_time = (nitems_read(0) - d_code_offset_samples) / d_sampling_freq;
       add_item_tag(0, nitems_written(0), pmt::mp(TAG_RX_TIME), pmt::mp(rx_time), alias_pmt());
@@ -328,7 +326,7 @@ namespace gr {
       d_code_chip_rate += d_freq * GPS_CA_CODE_CHIP_RATE / GPS_L1_FREQ_HZ;
 
       if (optr1)
-        *optr1 = gr_complex{static_cast<float>(d_freq), static_cast<float>(d_code_chip_rate)};
+        *optr1 = gr_complexd{d_freq, d_code_chip_rate};
 
       d_code_offset_chips += GPS_CA_CODE_LENGTH * d_code_chip_rate / GPS_CA_CODE_CHIP_RATE - GPS_CA_CODE_LENGTH;
       d_code_offset_samples += GPS_CA_CODE_LENGTH * d_sampling_freq * (1.0 / GPS_CA_CODE_CHIP_RATE - 1.0 / d_code_chip_rate);

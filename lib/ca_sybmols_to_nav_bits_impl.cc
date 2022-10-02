@@ -37,7 +37,7 @@ namespace gr {
     ca_sybmols_to_nav_bits::make()
     {
       return gnuradio::get_initial_sptr
-        (new ca_sybmols_to_nav_bits_impl<gr_complex, uint8_t>());
+        (new ca_sybmols_to_nav_bits_impl<gr_complexd, uint8_t>());
     }
 
     template<typename ITYPE, typename OTYPE>

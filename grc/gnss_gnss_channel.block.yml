@@ -70,7 +70,7 @@ outputs:
 
 - domain: stream
   label: symbols
-  dtype: complex
+  dtype: fc64
   vlen: 1
 
 - domain: message

@@ -215,6 +215,7 @@ class gps_nav_message_decoder_v1(gr.top_block, Qt.QWidget):
         self.qtgui_number_sink_0.enable_autoscale(False)
         self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_number_sink_0_win)
+        self.gnss_type_converter_0_0_0 = gnss.fc64_to_fc32(1)
         self.gnss_nav_message_decoder_0 = gnss.nav_message_decoder()
         self.gnss_nav_message_decoder_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 20)
         self.gnss_ca_sybmols_to_nav_bits_0 = gnss.ca_sybmols_to_nav_bits()
@@ -268,11 +269,12 @@ class gps_nav_message_decoder_v1(gr.top_block, Qt.QWidget):
         self.connect((self.fft_vxx_0_0, 0), (self.blocks_multiply_conjugate_cc_0, 1))
         self.connect((self.fft_vxx_0_0_0, 0), (self.blocks_complex_to_mag_squared_0, 0))
         self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.gnss_ca_sybmols_to_nav_bits_0, 0))
-        self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
+        self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.gnss_type_converter_0_0_0, 0))
         self.connect((self.gnss_ca_code_generator_1, 0), (self.blocks_stream_to_vector_0_0, 0))
         self.connect((self.gnss_ca_sybmols_to_nav_bits_0, 0), (self.blocks_unpacked_to_packed_xx_0, 0))
         self.connect((self.gnss_ca_sybmols_to_nav_bits_0, 0), (self.gnss_nav_message_decoder_0, 0))
         self.connect((self.gnss_nav_message_decoder_0, 0), (self.blocks_null_sink_0_0_0, 0))
+        self.connect((self.gnss_type_converter_0_0_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
 
 
     def closeEvent(self, event):

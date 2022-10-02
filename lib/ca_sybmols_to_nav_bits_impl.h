@@ -65,7 +65,7 @@ namespace gr {
         STATES
 #undef STATE
 
-      bool is_preamble_detected(const gr_complex* symbols)
+      bool is_preamble_detected(const ITYPE* symbols)
       {
         int n = 0;
 
@@ -81,7 +81,7 @@ namespace gr {
         return std::abs(n) == d_preamble_sybmols.size();
       }
 
-      int get_bit(const gr_complex* symbols)
+      int get_bit(const ITYPE* symbols)
       {
         int n = 0;
 

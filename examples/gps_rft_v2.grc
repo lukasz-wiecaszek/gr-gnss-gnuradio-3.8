@@ -48,7 +48,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '1.0'
+    value: '2.0'
   states:
     bus_sink: false
     bus_source: false
@@ -72,7 +72,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '30.0'
+    value: '35.0'
   states:
     bus_sink: false
     bus_source: false
@@ -161,7 +161,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1349, 347]
+    coordinate: [1550, 346]
     rotation: 0
     state: true
 - name: gnss_gnss_channel_0
@@ -281,7 +281,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1140, 156]
+    coordinate: [1341, 155]
     rotation: 0
     state: true
 - name: gnss_pvt_0
@@ -298,7 +298,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1388, 188]
+    coordinate: [1589, 187]
     rotation: 0
     state: true
 - name: gnss_rft_0
@@ -314,7 +314,79 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1058, 412]
+    coordinate: [1259, 411]
+    rotation: 0
+    state: true
+- name: gnss_type_converter_0_0
+  id: gnss_type_converter
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    itype: fc64
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [894, 29]
+    rotation: 0
+    state: true
+- name: gnss_type_converter_0_0_0
+  id: gnss_type_converter
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    itype: fc64
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [890, 172]
+    rotation: 0
+    state: true
+- name: gnss_type_converter_0_0_0_0
+  id: gnss_type_converter
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    itype: fc64
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [889, 312]
+    rotation: 0
+    state: true
+- name: gnss_type_converter_0_0_0_0_0
+  id: gnss_type_converter
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    itype: fc64
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [894, 454]
     rotation: 0
     state: true
 - name: gps_acquisition_0
@@ -426,7 +498,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [880, 21]
+    coordinate: [1106, 21]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0
@@ -523,7 +595,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [893, 164]
+    coordinate: [1095, 164]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0_0
@@ -620,7 +692,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [891, 304]
+    coordinate: [1111, 304]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0_0_0
@@ -717,7 +789,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [895, 446]
+    coordinate: [1114, 446]
     rotation: 0
     state: true
 
@@ -730,19 +802,19 @@ connections:
 - [blocks_throttle_0, '0', gnss_gnss_channel_0_0_0_0, '0']
 - [blocks_throttle_0, '0', gps_acquisition_0, '0']
 - [gnss_gnss_channel_0, '0', gnss_pseudoranges_decoder_0, '3']
-- [gnss_gnss_channel_0, '1', qtgui_time_sink_x_0_0_0_0_0_0, '0']
+- [gnss_gnss_channel_0, '1', gnss_type_converter_0_0_0_0_0, '0']
 - [gnss_gnss_channel_0, clock, gnss_pseudoranges_decoder_0, clock]
 - [gnss_gnss_channel_0, ephemeris, gnss_pseudoranges_decoder_0, ephemeris]
 - [gnss_gnss_channel_0_0, '0', gnss_pseudoranges_decoder_0, '2']
-- [gnss_gnss_channel_0_0, '1', qtgui_time_sink_x_0_0_0_0_0, '0']
+- [gnss_gnss_channel_0_0, '1', gnss_type_converter_0_0_0_0, '0']
 - [gnss_gnss_channel_0_0, clock, gnss_pseudoranges_decoder_0, clock]
 - [gnss_gnss_channel_0_0, ephemeris, gnss_pseudoranges_decoder_0, ephemeris]
 - [gnss_gnss_channel_0_0_0, '0', gnss_pseudoranges_decoder_0, '1']
-- [gnss_gnss_channel_0_0_0, '1', qtgui_time_sink_x_0_0_0_0, '0']
+- [gnss_gnss_channel_0_0_0, '1', gnss_type_converter_0_0_0, '0']
 - [gnss_gnss_channel_0_0_0, clock, gnss_pseudoranges_decoder_0, clock]
 - [gnss_gnss_channel_0_0_0, ephemeris, gnss_pseudoranges_decoder_0, ephemeris]
 - [gnss_gnss_channel_0_0_0_0, '0', gnss_pseudoranges_decoder_0, '0']
-- [gnss_gnss_channel_0_0_0_0, '1', qtgui_time_sink_x_0_0_0, '0']
+- [gnss_gnss_channel_0_0_0_0, '1', gnss_type_converter_0_0, '0']
 - [gnss_gnss_channel_0_0_0_0, clock, gnss_pseudoranges_decoder_0, clock]
 - [gnss_gnss_channel_0_0_0_0, ephemeris, gnss_pseudoranges_decoder_0, ephemeris]
 - [gnss_pseudoranges_decoder_0, '0', gnss_pvt_0, '0']
@@ -751,6 +823,10 @@ connections:
 - [gnss_pseudoranges_decoder_0, '3', gnss_pvt_0, '3']
 - [gnss_pvt_0, '0', gnss_rft_0, '0']
 - [gnss_rft_0, '0', gnss_geojson_file_sink_1, '0']
+- [gnss_type_converter_0_0, '0', qtgui_time_sink_x_0_0_0, '0']
+- [gnss_type_converter_0_0_0, '0', qtgui_time_sink_x_0_0_0_0, '0']
+- [gnss_type_converter_0_0_0_0, '0', qtgui_time_sink_x_0_0_0_0_0, '0']
+- [gnss_type_converter_0_0_0_0_0, '0', qtgui_time_sink_x_0_0_0_0_0_0, '0']
 
 metadata:
   file_format: 1
