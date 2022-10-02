@@ -49,6 +49,8 @@ namespace gr {
       static sptr make(size_t vlen);
     };
 
+    using f32_to_f64 = type_converter<float, double>;
+    using f64_to_f32 = type_converter<double, float>;
     using fc32_to_fc64 = type_converter<std::complex<float>, std::complex<double>>;
     using fc64_to_fc32 = type_converter<std::complex<double>, std::complex<float>>;
 

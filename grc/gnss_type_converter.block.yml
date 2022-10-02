@@ -21,18 +21,18 @@ parameters:
 - id: itype
   label: Input Type
   dtype: enum
-  options: [fc32, fc64]
-  option_labels: [gr_complex, gr_complexd]
+  options: [f32, f64, fc32, fc64]
+  option_labels: [float, double, gr_complex, gr_complexd]
   option_attributes:
-    io: [fc32, fc64]
+    io: [f32, f64, fc32, fc64]
 
 - id: otype
   label: Output Type
   dtype: enum
-  options: [fc32, fc64]
-  option_labels: [gr_complex, gr_complexd]
+  options: [f32, f64, fc32, fc64]
+  option_labels: [float, double, gr_complex, gr_complexd]
   option_attributes:
-    io: [fc32, fc64]
+    io: [f32, f64, fc32, fc64]
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:

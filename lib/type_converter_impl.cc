@@ -66,6 +66,8 @@ namespace gr {
       return noutput_items;
     }
 
+    template class type_converter<float, double>;
+    template class type_converter<double, float>;
     template class type_converter<std::complex<float>, std::complex<double>>;
     template class type_converter<std::complex<double>, std::complex<float>>;
 

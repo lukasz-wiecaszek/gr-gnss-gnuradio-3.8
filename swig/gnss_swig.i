@@ -84,5 +84,7 @@ GR_SWIG_BLOCK_MAGIC2(gnss, skip_zeros);
 GR_SWIG_BLOCK_MAGIC2(gnss, doppler_shift);
 
 %include "gnss/type_converter.h"
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, f32_to_f64, type_converter<float, double>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, f64_to_f32, type_converter<double, float>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, fc32_to_fc64, type_converter<std::complex<float>, std::complex<double>>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, fc64_to_fc32, type_converter<std::complex<double>, std::complex<float>>);
