@@ -1,5 +1,5 @@
 id: gnss_doppler_shift
-label: doppler_shift
+label: Doppler Shift
 category: '[gnss]'
 
 templates:

@@ -1,5 +1,5 @@
 id: gnss_ca_sybmols_to_nav_bits
-label: ca_sybmols_to_nav_bits
+label: CA Symbols To Nav Bits
 category: '[gnss]'
 
 templates:

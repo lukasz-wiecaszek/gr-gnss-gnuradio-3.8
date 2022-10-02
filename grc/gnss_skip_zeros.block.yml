@@ -1,5 +1,5 @@
 id: gnss_skip_zeros
-label: skip_zeros
+label: Skip Zeros
 category: '[gnss]'
 
 templates:

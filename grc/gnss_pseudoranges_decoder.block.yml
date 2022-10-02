@@ -1,5 +1,5 @@
 id: gnss_pseudoranges_decoder
-label: pseudoranges_decoder
+label: Pseudoranges Decoder
 category: '[gnss]'
 
 templates:

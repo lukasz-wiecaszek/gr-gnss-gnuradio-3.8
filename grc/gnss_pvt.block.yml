@@ -1,5 +1,5 @@
 id: gnss_pvt
-label: pvt
+label: PVT
 category: '[gnss]'
 
 templates:

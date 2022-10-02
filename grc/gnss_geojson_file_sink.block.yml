@@ -1,5 +1,5 @@
 id: gnss_geojson_file_sink
-label: geojson_file_sink
+label: Geojson File Sink
 category: '[gnss]'
 
 templates:

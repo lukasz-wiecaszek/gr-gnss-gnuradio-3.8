@@ -1,5 +1,5 @@
 id: gnss_type_converter
-label: type_converter
+label: Type Converter
 category: '[gnss]'
 
 templates:

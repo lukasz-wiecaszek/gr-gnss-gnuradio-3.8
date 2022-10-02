@@ -1,5 +1,5 @@
 id: gnss_nav_message_decoder
-label: nav_message_decoder
+label: Nav Message Decoder
 category: '[gnss]'
 
 templates:

@@ -1,5 +1,5 @@
 id: gnss_ca_code_generator
-label: ca_code_generator
+label: CA Code Generator
 category: '[gnss]'
 
 templates:
