@@ -96,7 +96,7 @@ namespace gr {
           break;
 
         default:
-          consume_each(ninput_items[0]);
+          consume(0, ninput_items[0]);
           nproduced = 0;
           break;
       }
@@ -121,19 +121,19 @@ namespace gr {
     {
       const ITYPE* iptr0 = (const ITYPE*) input_items[0];
       OTYPE* optr0 = (OTYPE*) output_items[0];
+      int limit = ninput_items[0] - (int)d_preamble_sybmols.size();
       int i = 0;
 
-      while ((i < noutput_items) && !is_preamble_detected(iptr0 + i))
-        i++;
-
-      if (i < noutput_items) {
-        d_state = state_e::locked;
-        d_subframe_bit = 0;
+      for (i = 0; i <= limit; i++) {
+        if (is_preamble_detected(iptr0 + i)) {
+          d_state = state_e::locked;
+          d_subframe_bit = 0;
+          break;
+        }
       }
 
-      // Tell runtime system how many input items we consumed on
-      // each input stream.
-      consume_each(i);
+      // Tell runtime system how many input items we consumed on input 0
+      consume(0, i);
 
       // Tell runtime system how many output items we produced.
       return 0;
@@ -183,9 +183,8 @@ namespace gr {
         }
       }
 
-      // Tell runtime system how many input items we consumed on
-      // each input stream.
-      consume_each(nconsumed);
+      // Tell runtime system how many input items we consumed on input 0
+      consume(0, nconsumed);
 
       // Tell runtime system how many output items we produced.
       return nproduced;
