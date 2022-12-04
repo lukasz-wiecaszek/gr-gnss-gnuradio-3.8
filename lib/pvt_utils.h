@@ -34,10 +34,12 @@ namespace gr {
       struct satelite
       {
         vector3d position; // satelite position
+        vector3d velocity; // satelite velocity
         double pseudorange; // associated pseudorange measurement
 
         satelite() :
           position{{0.0, 0.0, 0.0}},
+          velocity{{0.0, 0.0, 0.0}},
           pseudorange{0.0}
         {
         }
@@ -47,7 +49,10 @@ namespace gr {
           char strbuf[1024];
 
           snprintf(strbuf, sizeof(strbuf),
-            "%s pseudorange: %+.15e", gr::gnss::to_string(position).c_str(), pseudorange);
+            "r: %s, v: %s, pseudorange: %+.15e",
+            gr::gnss::to_string(position).c_str(),
+            gr::gnss::to_string(velocity).c_str(),
+            pseudorange);
 
           return std::string(strbuf);
         }
