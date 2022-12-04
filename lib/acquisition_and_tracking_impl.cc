@@ -222,7 +222,7 @@ namespace gr {
       }
 
       if (d_max_magnitude_stats.d_max > (d_max_magnitude_stats.d_avg * 2)) { // this needs to be reworked
-        printf("svid %d: (positive acquisition) - doppler shift f: %.1f Hz [%s]\n",
+        printf("svid %02d: (positive acquisition) - doppler shift f: %.1f Hz [%s]\n",
           d_id, d_doppler_shifts.n_to_freq(d_max_magnitude_stats.d_freq_index), d_max_magnitude_stats.to_string().c_str());
 
         d_code_chip_rate = GPS_CA_CODE_CHIP_RATE;
@@ -241,7 +241,7 @@ namespace gr {
         consume_each(d_max_magnitude_stats.d_max_index);
       }
       else {
-        printf("svid %d: (negative acquisition) - switching to unlocked state\n", d_id);
+        printf("svid %02d: (negative acquisition) - switching to unlocked state\n", d_id);
 
         d_state = state_e::UNLOCKED;
 
@@ -335,7 +335,7 @@ namespace gr {
       {
         static int cnt = 0;
         if ((cnt++ % 500) == 0) {
-          printf("svid %d: E: %e P: %e L: %e pll [%e %e] dll [%e %e] %e %e %e\n",
+          printf("svid %02d: E: %e P: %e L: %e pll [%e %e] dll [%e %e] %e %e %e\n",
             d_id,
             std::norm(E), std::norm(P), std::norm(L),
             pll_discriminator, pll_discriminator_filtered,
@@ -349,7 +349,7 @@ namespace gr {
         double pll_discriminator_avg = d_tracking_history.avg();
         if (d_state == state_e::TRACKING_COARSE) {
           if (pll_discriminator_avg < 0.1) {
-            printf("svid %d: switching to 'fine tracking' state\n", d_id);
+            printf("svid %02d: switching to 'fine tracking' state\n", d_id);
             d_tracking_history.reset();
             d_dll_loop_filter.update_coefficients(d_dll_bw_fine);
             d_pll_loop_filter.update_coefficients(d_pll_bw_fine);
@@ -357,7 +357,7 @@ namespace gr {
           }
           else
           if (pll_discriminator_avg > 0.5) {
-            printf("svid %d: switching to 'acquisition' state\n", d_id);
+            printf("svid %02d: switching to 'acquisition' state\n", d_id);
             d_state = state_e::ACQUISITION;
           }
           else {
@@ -367,7 +367,7 @@ namespace gr {
         else
         if (d_state == state_e::TRACKING_FINE) {
           if (pll_discriminator_avg > 0.25) {
-            printf("svid %d: switching to 'coarse tracking' state\n", d_id);
+            printf("svid %02d: switching to 'coarse tracking' state\n", d_id);
             d_tracking_history.reset();
             d_dll_loop_filter.update_coefficients(d_dll_bw_coarse);
             d_pll_loop_filter.update_coefficients(d_pll_bw_coarse);
