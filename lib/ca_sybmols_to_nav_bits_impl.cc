@@ -47,7 +47,7 @@ namespace gr {
                   gr::io_signature::make(1, 1, sizeof(OTYPE) * OVLEN)),
         d_state{state_e::unlocked},
         d_polarity{0},
-        d_thershold{GPS_CA_CODES_PER_NAV_MESSAGE_BIT - 3 /* we accept 3 errors */},
+        d_thershold{GPS_CA_CODES_PER_NAV_MESSAGE_BIT - 5 /* we accept 5 errors */},
         d_subframe_bit{-1},
         d_preamble_sybmols{}
     {
@@ -157,13 +157,6 @@ namespace gr {
       get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0], pmt::mp(TAG_RX_TIME));
 
       while (nproduced < noutput_items) {
-        if (d_subframe_bit == 0) {
-          if (!is_preamble_detected(iptr0 + nconsumed)) {
-            d_state = state_e::unlocked;
-            break;
-          }
-        }
-
         if ((bit_value = get_bit(iptr0 + nconsumed)) == -1) {
           d_state = state_e::unlocked;
           break;
