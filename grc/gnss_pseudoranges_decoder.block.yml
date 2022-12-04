@@ -5,7 +5,7 @@ category: '[gnss]'
 templates:
   imports: import gnss
   make: |-
-    gnss.pseudoranges_decoder()
+    gnss.pseudoranges_decoder(${add_velocity_outputs})
     self.${id}.set_acq_params(0, ${navigation_system0}, ${identifier0})
     self.${id}.set_acq_params(1, ${navigation_system1}, ${identifier1})
     self.${id}.set_acq_params(2, ${navigation_system2}, ${identifier2})
@@ -26,6 +26,13 @@ parameters:
   dtype: int
   default: '1'
   hide: part
+
+- id: add_velocity_outputs
+  label: Add Velocity Outputs
+  dtype: bool
+  options: [False, True]
+  option_labels: [OFF, ON]
+  default: False
 
 - id: navigation_system0
   label: Navigation System
@@ -166,7 +173,7 @@ outputs:
   label: out
   dtype: float
   vlen: 6
-  multiplicity: ${num_inputs}
+  multiplicity: ${1 * num_inputs if (add_velocity_outputs == False) else 2 * num_inputs}
 
 asserts:
 - ${num_inputs >= 1}

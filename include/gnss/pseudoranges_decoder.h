@@ -46,7 +46,7 @@ namespace gr {
        * class. gnss::pseudoranges_decoder::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(bool add_velocity_outputs = false);
 
       virtual void set_acq_params(int port, navigation_system_e system, int id) = 0;
       virtual void get_acq_params(int port, navigation_system_e& system, int& id) const = 0;

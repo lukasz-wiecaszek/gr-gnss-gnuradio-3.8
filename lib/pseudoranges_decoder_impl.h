@@ -44,7 +44,7 @@ namespace gr {
     class pseudoranges_decoder_impl : public pseudoranges_decoder
     {
     public:
-      pseudoranges_decoder_impl();
+      pseudoranges_decoder_impl(bool add_velocity_outputs);
       ~pseudoranges_decoder_impl();
 
       void set_acq_params(int port, navigation_system_e system, int id) override;
@@ -61,6 +61,7 @@ namespace gr {
       double get_rx_time(const int N);
       double get_tx_time(const int n, double rx_time);
 
+      bool d_add_velocity_outputs;
       std::array<std::tuple<navigation_system_e, int>, MAX_STREAMS> d_satelite_ids;
       std::array<lts::flatbuffer<vector3d>, MAX_STREAMS> d_flatbuffers;
       std::map<int, std::shared_ptr<sv_clock_parameters>> d_sv_clock_parameters;

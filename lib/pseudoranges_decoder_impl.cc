@@ -42,17 +42,18 @@ namespace gr {
     * public function definitions
     \*===========================================================================*/
     pseudoranges_decoder::sptr
-    pseudoranges_decoder::make()
+    pseudoranges_decoder::make(bool add_velocity_outputs)
     {
       return gnuradio::get_initial_sptr
-        (new pseudoranges_decoder_impl<vector3d, vector3d>());
+        (new pseudoranges_decoder_impl<vector3d, vector3d>(add_velocity_outputs));
     }
 
     template<typename ITYPE, typename OTYPE>
-    pseudoranges_decoder_impl<ITYPE, OTYPE>::pseudoranges_decoder_impl()
+    pseudoranges_decoder_impl<ITYPE, OTYPE>::pseudoranges_decoder_impl(bool add_velocity_outputs)
       : gr::block("pseudoranges_decoder",
                   gr::io_signature::make(1, MAX_STREAMS, sizeof(ITYPE) * IVLEN),
-                  gr::io_signature::make(1, MAX_STREAMS, sizeof(OTYPE) * OVLEN)),
+                  gr::io_signature::make(1, MAX_STREAMS * (add_velocity_outputs ? 2 : 1), sizeof(OTYPE) * OVLEN)),
+        d_add_velocity_outputs{add_velocity_outputs},
         d_satelite_ids(),
         d_flatbuffers(),
         d_sv_clock_parameters{},
@@ -143,8 +144,14 @@ namespace gr {
       if (N < 4)
         throw std::out_of_range("invalid number of input pads (at least 4 required)");
 
-      if (input_items.size() != output_items.size())
-        throw std::length_error("block shall have the same number of input and output pads");
+      if (d_add_velocity_outputs) {
+        if (2 * input_items.size() != output_items.size())
+          throw std::length_error("block shall have two times more output pads than input pads");
+      }
+      else {
+        if (input_items.size() != output_items.size())
+          throw std::length_error("block shall have the same number of input and output pads");
+      }
 
       // Tell runtime system how many input items we consumed on
       // each input stream.
@@ -191,15 +198,23 @@ namespace gr {
             tx_time -= dt;
 
             satelites[n].pseudorange = (rx_time - tx_time) * C;
-            e->get_vectors(tx_time, &satelites[n].position, NULL, NULL);
+            if (d_add_velocity_outputs)
+              e->get_vectors(tx_time, &satelites[n].position, &satelites[n].velocity, NULL);
+            else
+              e->get_vectors(tx_time, &satelites[n].position, NULL, NULL);
           }
         }
 
+        OTYPE* optr;
         for (n = 0; n < N; ++n) {
-          OTYPE* optr = static_cast<OTYPE*>(output_items[n]);
+          optr = static_cast<OTYPE*>(output_items[n]);
+          optr[nproduced] = satelites[n].position;
+          if (d_add_velocity_outputs) {
+            optr = static_cast<OTYPE*>(output_items[N + n]);
+            optr[nproduced] = satelites[n].velocity;
+          }
           add_item_tag(n, nitems_written(n), pmt::mp(TAG_PSEUDORANGE), pmt::mp(satelites[n].pseudorange), alias_pmt());
           add_item_tag(n, nitems_written(n), pmt::mp(TAG_RX_TIME), pmt::mp(rx_time), alias_pmt());
-          optr[nproduced] = satelites[n].position;
         }
 
         nproduced++;
