@@ -59,8 +59,9 @@ namespace gr {
       const ITYPE* iptr0 = (const ITYPE*) input_items[0];
       OTYPE* optr0 = (OTYPE*) output_items[0];
 
-      for (size_t i = 0; i < d_vlen; ++i)
-        optr0[i] = static_cast<OTYPE>(iptr0[i]);
+      for (int n = 0; n < noutput_items; ++n, iptr0+=d_vlen, optr0+=d_vlen)
+        for (size_t i = 0; i < d_vlen; ++i)
+          optr0[i] = static_cast<OTYPE>(iptr0[i]);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
