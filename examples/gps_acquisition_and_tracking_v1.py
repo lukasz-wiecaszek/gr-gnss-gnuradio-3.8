@@ -76,8 +76,9 @@ class gps_acquisition_and_tracking_v1(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.vector_length = vector_length = 4000
         self.samp_rate = samp_rate = 4000000
+        self.vector_length = vector_length = samp_rate//1000
+        self.svid = svid = 20
         self.delta_f = delta_f = -8500
         self.delay = delay = 0
 
@@ -87,11 +88,11 @@ class gps_acquisition_and_tracking_v1(gr.top_block, Qt.QWidget):
         self._delta_f_range = Range(-20000, +20000, 250, -8500, 200)
         self._delta_f_win = RangeWidget(self._delta_f_range, self.set_delta_f, 'delta_f', "counter_slider", float)
         self.top_grid_layout.addWidget(self._delta_f_win)
-        self._delay_range = Range(0, 2000, 1, 0, 200)
+        self._delay_range = Range(0, vector_length, 1, 0, 200)
         self._delay_win = RangeWidget(self._delay_range, self.set_delay, 'delay', "counter_slider", int)
         self.top_grid_layout.addWidget(self._delay_win)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
-            2000, #size
+            vector_length, #size
             samp_rate, #samp_rate
             "", #name
             1 #number of inputs
@@ -137,7 +138,7 @@ class gps_acquisition_and_tracking_v1(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.gnss_ca_code_generator_1 = gnss.ca_code_generator_c(1, samp_rate, 20, gnss.CA_CODE_DOMAIN_TIME)
+        self.gnss_ca_code_generator_1 = gnss.ca_code_generator_c(1, samp_rate, svid, gnss.CA_CODE_DOMAIN_TIME)
         self.fft_vxx_0_0_0 = fft.fft_vcc(vector_length, False, window.rectangular(vector_length), False, 1)
         self.fft_vxx_0_0 = fft.fft_vcc(vector_length, True, window.rectangular(vector_length), False, 1)
         self.fft_vxx_0 = fft.fft_vcc(vector_length, True, window.rectangular(vector_length), False, 1)
@@ -150,7 +151,7 @@ class gps_acquisition_and_tracking_v1(gr.top_block, Qt.QWidget):
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.blocks_multiply_conjugate_cc_0 = blocks.multiply_conjugate_cc(vector_length)
         self.blocks_interleaved_short_to_complex_0 = blocks.interleaved_short_to_complex(False, False)
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnuradio/gr-gps/examples/signal.dat', True, 0, 0)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnss-sdr-files/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN.dat', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, delay)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(vector_length)
@@ -185,22 +186,29 @@ class gps_acquisition_and_tracking_v1(gr.top_block, Qt.QWidget):
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
+    def get_samp_rate(self):
+        return self.samp_rate
+
+    def set_samp_rate(self, samp_rate):
+        self.samp_rate = samp_rate
+        self.set_vector_length(self.samp_rate//1000)
+        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
+        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.blocks_throttle_0_0.set_sample_rate(self.samp_rate)
+        self.blocks_throttle_0_0_0.set_sample_rate(self.samp_rate)
+        self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
+
     def get_vector_length(self):
         return self.vector_length
 
     def set_vector_length(self, vector_length):
         self.vector_length = vector_length
 
-    def get_samp_rate(self):
-        return self.samp_rate
+    def get_svid(self):
+        return self.svid
 
-    def set_samp_rate(self, samp_rate):
-        self.samp_rate = samp_rate
-        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
-        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
-        self.blocks_throttle_0_0.set_sample_rate(self.samp_rate)
-        self.blocks_throttle_0_0_0.set_sample_rate(self.samp_rate)
-        self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
+    def set_svid(self, svid):
+        self.svid = svid
 
     def get_delta_f(self):
         return self.delta_f

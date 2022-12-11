@@ -27,7 +27,7 @@ options:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [7, 379]
+    coordinate: [7, 363]
     rotation: 0
     state: enabled
 
@@ -43,14 +43,14 @@ blocks:
     rangeType: int
     start: '0'
     step: '1'
-    stop: '2000'
+    stop: vector_length
     value: '0'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [9, 247]
+    coordinate: [7, 239]
     rotation: 0
     state: true
 - name: delta_f
@@ -71,7 +71,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [7, 121]
+    coordinate: [7, 115]
     rotation: 0
     state: true
 - name: samp_rate
@@ -83,19 +83,31 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [7, 521]
+    coordinate: [7, 440]
+    rotation: 0
+    state: enabled
+- name: svid
+  id: variable
+  parameters:
+    comment: ''
+    value: '20'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [7, 500]
     rotation: 0
     state: enabled
 - name: vector_length
   id: variable
   parameters:
     comment: ''
-    value: '4000'
+    value: samp_rate//1000
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [6, 457]
+    coordinate: [91, 440]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -133,7 +145,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [549, 498]
+    coordinate: [549, 495]
     rotation: 0
     state: true
 - name: blocks_delay_0
@@ -162,7 +174,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/memyselfandi/projects/gnuradio/gr-gps/examples/signal.dat
+    file: /home/memyselfandi/projects/gnss-sdr-files/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN.dat
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -336,7 +348,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1024, 502]
+    coordinate: [1024, 499]
     rotation: 0
     state: true
 - name: fft_vxx_0
@@ -412,14 +424,14 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     sampling_freq: samp_rate
-    svid: '20'
+    svid: svid
     type: complex
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [241, 250]
+    coordinate: [239, 242]
     rotation: 0
     state: true
 - name: gps_acquisition_0
@@ -492,7 +504,7 @@ blocks:
     marker9: '-1'
     name: '""'
     nconnections: '1'
-    size: '2000'
+    size: vector_length
     srate: samp_rate
     stemplot: 'False'
     style1: '1'
@@ -531,7 +543,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1261, 481]
+    coordinate: [1261, 479]
     rotation: 0
     state: true
 
