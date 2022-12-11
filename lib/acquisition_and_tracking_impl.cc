@@ -234,6 +234,7 @@ namespace gr {
         d_dll_loop_filter.reset(0.0, d_dll_bw_coarse);
         d_pll_loop_filter.reset(d_freq, d_pll_bw_coarse);
 
+        printf("svid %02d: switching to 'coarse tracking' state\n", d_id);
         d_state = state_e::TRACKING_COARSE;
 
         // Tell runtime system how many input items we consumed on

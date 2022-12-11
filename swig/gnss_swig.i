@@ -25,6 +25,7 @@
 #include "gnss/doppler_shift.h"
 #include "gnss/skip_zeros.h"
 #include "gnss/type_converter.h"
+#include "gnss/signal_normalizer.h"
 %}
 
 %include "gnss/navigation_system.h"
@@ -88,3 +89,9 @@ GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, f32_to_f64, type_converter<float, double>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, f64_to_f32, type_converter<double, float>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, fc32_to_fc64, type_converter<std::complex<float>, std::complex<double>>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, fc64_to_fc32, type_converter<std::complex<double>, std::complex<float>>);
+
+%include "gnss/signal_normalizer.h"
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, signal_normalizer_s8, signal_normalizer<std::int8_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, signal_normalizer_u8, signal_normalizer<std::uint8_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, signal_normalizer_s16, signal_normalizer<std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(gnss, signal_normalizer_u16, signal_normalizer<std::uint16_t>);
