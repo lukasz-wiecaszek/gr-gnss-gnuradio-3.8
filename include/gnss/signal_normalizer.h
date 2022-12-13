@@ -29,12 +29,13 @@ namespace gr {
 
     /*!
      * \brief Converts different input IQ formats to
-     *        std::complex<double> sample/item normalized
+     *        std::complex<float> or std::complex<double>.
+     *        All samples/items are normalized to values
      *        in the range [-1.0 .. +1.0] for I and Q parts.
      * \ingroup gnss
      *
      */
-    template<typename ITYPE>
+    template<typename ITYPE, typename OTYPE>
     class GNSS_API signal_normalizer : virtual public gr::block
     {
      public:
@@ -46,10 +47,15 @@ namespace gr {
       static sptr make(size_t vlen, size_t adc_resolution);
     };
 
-    using signal_normalizer_s8 = signal_normalizer<std::int8_t>;
-    using signal_normalizer_u8 = signal_normalizer<std::uint8_t>;
-    using signal_normalizer_s16 = signal_normalizer<std::int16_t>;
-    using signal_normalizer_u16 = signal_normalizer<std::uint16_t>;
+    using signal_normalizer_s8_fc32 = signal_normalizer<std::int8_t, std::complex<float>>;
+    using signal_normalizer_u8_fc32 = signal_normalizer<std::uint8_t, std::complex<float>>;
+    using signal_normalizer_s16_fc32 = signal_normalizer<std::int16_t, std::complex<float>>;
+    using signal_normalizer_u16_fc32 = signal_normalizer<std::uint16_t, std::complex<float>>;
+
+    using signal_normalizer_s8_fc64 = signal_normalizer<std::int8_t, std::complex<double>>;
+    using signal_normalizer_u8_fc64 = signal_normalizer<std::uint8_t, std::complex<double>>;
+    using signal_normalizer_s16_fc64 = signal_normalizer<std::int16_t, std::complex<double>>;
+    using signal_normalizer_u16_fc64 = signal_normalizer<std::uint16_t, std::complex<double>>;
 
   } // namespace gnss
 } // namespace gr

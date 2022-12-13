@@ -28,12 +28,12 @@
 namespace gr {
   namespace gnss {
 
-    template<typename ITYPE>
-    typename signal_normalizer<ITYPE>::sptr
-             signal_normalizer<ITYPE>::make(size_t vlen, size_t adc_resolution)
+    template<typename ITYPE, typename OTYPE>
+    typename signal_normalizer<ITYPE, OTYPE>::sptr
+             signal_normalizer<ITYPE, OTYPE>::make(size_t vlen, size_t adc_resolution)
     {
       return gnuradio::get_initial_sptr
-        (new signal_normalizer_impl<ITYPE, std::complex<double>>(vlen, adc_resolution));
+        (new signal_normalizer_impl<ITYPE, OTYPE>(vlen, adc_resolution));
     }
 
     template<typename ITYPE, typename OTYPE>
@@ -64,54 +64,6 @@ namespace gr {
         element = nrequired;
     }
 
-    template<>
-    void
-    signal_normalizer_impl<std::int8_t, std::complex<double>>::normalize(
-      int noutput_items, const std::int8_t* iptr, std::complex<double>* optr)
-    {
-      for (int n = 0; n < noutput_items; ++n, iptr+=(2*d_vlen), optr+=d_vlen)
-        for (size_t i = 0; i < d_vlen; ++i)
-          optr[i] = std::complex<double>(
-            static_cast<double>(iptr[2*i+0]) / (1U << (d_adc_resolution - 1)),
-            static_cast<double>(iptr[2*i+1]) / (1U << (d_adc_resolution - 1)));
-    }
-
-    template<>
-    void
-    signal_normalizer_impl<std::uint8_t, std::complex<double>>::normalize(
-      int noutput_items, const std::uint8_t* iptr, std::complex<double>* optr)
-    {
-      for (int n = 0; n < noutput_items; ++n, iptr+=(2*d_vlen), optr+=d_vlen)
-        for (size_t i = 0; i < d_vlen; ++i)
-          optr[i] = std::complex<double>(
-            (static_cast<double>(iptr[2*i+0]) / (1U << (d_adc_resolution - 1))) - 1.0,
-            (static_cast<double>(iptr[2*i+1]) / (1U << (d_adc_resolution - 1))) - 1.0);
-    }
-
-    template<>
-    void
-    signal_normalizer_impl<std::int16_t, std::complex<double>>::normalize(
-      int noutput_items, const std::int16_t* iptr, std::complex<double>* optr)
-    {
-      for (int n = 0; n < noutput_items; ++n, iptr+=(2*d_vlen), optr+=d_vlen)
-        for (size_t i = 0; i < d_vlen; ++i)
-          optr[i] = std::complex<double>(
-            static_cast<double>(iptr[2*i+0]) / (1U << (d_adc_resolution - 1)),
-            static_cast<double>(iptr[2*i+1]) / (1U << (d_adc_resolution - 1)));
-    }
-
-    template<>
-    void
-    signal_normalizer_impl<std::uint16_t, std::complex<double>>::normalize(
-      int noutput_items, const std::uint16_t* iptr, std::complex<double>* optr)
-    {
-      for (int n = 0; n < noutput_items; ++n, iptr+=(2*d_vlen), optr+=d_vlen)
-        for (size_t i = 0; i < d_vlen; ++i)
-          optr[i] = std::complex<double>(
-            (static_cast<double>(iptr[2*i+0]) / (1U << (d_adc_resolution - 1))) - 1.0,
-            (static_cast<double>(iptr[2*i+1]) / (1U << (d_adc_resolution - 1))) - 1.0);
-    }
-
     template<typename ITYPE, typename OTYPE>
     int
     signal_normalizer_impl<ITYPE, OTYPE>::general_work(int noutput_items,
@@ -122,7 +74,16 @@ namespace gr {
       const ITYPE* iptr0 = (const ITYPE*) input_items[0];
       OTYPE* optr0 = (OTYPE*) output_items[0];
 
-      normalize(noutput_items, iptr0, optr0);
+      for (int n = 0; n < noutput_items; ++n, iptr0+=(2*d_vlen), optr0+=d_vlen)
+        for (size_t i = 0; i < d_vlen; ++i)
+          if constexpr (std::is_unsigned<ITYPE>::value)
+            optr0[i] = OTYPE(
+              (static_cast<typename OTYPE::value_type>(iptr0[2*i+0]) / (1U << (d_adc_resolution - 1))) - 1.0,
+              (static_cast<typename OTYPE::value_type>(iptr0[2*i+1]) / (1U << (d_adc_resolution - 1))) - 1.0);
+          else
+            optr0[i] = OTYPE(
+              (static_cast<typename OTYPE::value_type>(iptr0[2*i+0]) / (1U << (d_adc_resolution - 1))),
+              (static_cast<typename OTYPE::value_type>(iptr0[2*i+1]) / (1U << (d_adc_resolution - 1))));
 
       // Tell runtime system how many input items we consumed on
       // each input stream.
@@ -132,10 +93,15 @@ namespace gr {
       return noutput_items;
     }
 
-    template class signal_normalizer<std::int8_t>;
-    template class signal_normalizer<std::uint8_t>;
-    template class signal_normalizer<std::int16_t>;
-    template class signal_normalizer<std::uint16_t>;
+    template class signal_normalizer<std::int8_t, std::complex<float>>;
+    template class signal_normalizer<std::uint8_t, std::complex<float>>;
+    template class signal_normalizer<std::int16_t, std::complex<float>>;
+    template class signal_normalizer<std::uint16_t, std::complex<float>>;
+
+    template class signal_normalizer<std::int8_t, std::complex<double>>;
+    template class signal_normalizer<std::uint8_t, std::complex<double>>;
+    template class signal_normalizer<std::int16_t, std::complex<double>>;
+    template class signal_normalizer<std::uint16_t, std::complex<double>>;
 
   } /* namespace gnss */
 } /* namespace gr */

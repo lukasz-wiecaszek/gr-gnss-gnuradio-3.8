@@ -27,7 +27,7 @@ namespace gr {
   namespace gnss {
 
     template<typename ITYPE, typename OTYPE>
-    class signal_normalizer_impl : public signal_normalizer<ITYPE>
+    class signal_normalizer_impl : public signal_normalizer<ITYPE, OTYPE>
     {
     public:
       signal_normalizer_impl(size_t vlen, size_t adc_resolution);
@@ -41,8 +41,6 @@ namespace gr {
                        gr_vector_void_star &output_items);
 
     private:
-      void normalize(int noutput_items, const ITYPE* iptr, OTYPE* optr);
-
       const size_t d_vlen;
       const size_t d_adc_resolution;
     };
