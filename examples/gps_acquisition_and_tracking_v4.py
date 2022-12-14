@@ -76,19 +76,20 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.vector_length = vector_length = 4000
         self.samp_rate = samp_rate = 4000000
-        self.delta_f = delta_f = -8340
+        self.vector_length = vector_length = samp_rate//1000
+        self.svid = svid = 20
+        self.delta_f = delta_f = -8400
 
         ##################################################
         # Blocks
         ##################################################
-        self._delta_f_range = Range(-20000, +20000, 250, -8340, 200)
+        self._delta_f_range = Range(-20000, +20000, 250, -8400, 200)
         self._delta_f_win = RangeWidget(self._delta_f_range, self.set_delta_f, 'delta_f', "counter_slider", float)
         self.top_grid_layout.addWidget(self._delta_f_win)
         self.qtgui_time_sink_x_0_0_0 = qtgui.time_sink_c(
             200, #size
-            samp_rate / 4000, #samp_rate
+            1000, #samp_rate
             "", #name
             1 #number of inputs
         )
@@ -99,7 +100,7 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
 
         self.qtgui_time_sink_x_0_0_0.enable_tags(False)
         self.qtgui_time_sink_x_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0_0_0.enable_autoscale(False)
+        self.qtgui_time_sink_x_0_0_0.enable_autoscale(True)
         self.qtgui_time_sink_x_0_0_0.enable_grid(False)
         self.qtgui_time_sink_x_0_0_0.enable_axis_labels(True)
         self.qtgui_time_sink_x_0_0_0.enable_control_panel(False)
@@ -137,7 +138,7 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self._qtgui_time_sink_x_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_win)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
-            4000, #size
+            vector_length, #size
             samp_rate, #samp_rate
             "", #name
             1 #number of inputs
@@ -149,7 +150,7 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
 
         self.qtgui_time_sink_x_0.enable_tags(True)
         self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0.enable_autoscale(False)
+        self.qtgui_time_sink_x_0.enable_autoscale(True)
         self.qtgui_time_sink_x_0.enable_grid(False)
         self.qtgui_time_sink_x_0.enable_axis_labels(True)
         self.qtgui_time_sink_x_0.enable_control_panel(False)
@@ -216,9 +217,10 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_number_sink_0_win)
         self.gnss_type_converter_0 = gnss.fc64_to_fc32(1)
-        self.gnss_ca_code_generator_0 = gnss.ca_code_generator_c(vector_length, samp_rate, 20, gnss.CA_CODE_DOMAIN_FREQUENCY_CONJUGATE)
+        self.gnss_signal_normalizer_0 = gnss.signal_normalizer_s16_fc32(1, 12)
+        self.gnss_ca_code_generator_0 = gnss.ca_code_generator_c(vector_length, samp_rate, svid, gnss.CA_CODE_DOMAIN_FREQUENCY_CONJUGATE)
         self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 2.0, 35.0)
-        self.gnss_acquisition_and_tracking_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 20)
+        self.gnss_acquisition_and_tracking_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, svid)
         self.fft_vxx_0_0_0 = fft.fft_vcc(vector_length, False, window.rectangular(vector_length), False, 1)
         self.fft_vxx_0 = fft.fft_vcc(vector_length, True, window.rectangular(vector_length), False, 1)
         self.blocks_vector_to_stream_0_0 = blocks.vector_to_stream(gr.sizeof_float*1, vector_length)
@@ -229,8 +231,7 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_short*1)
         self.blocks_multiply_xx_1 = blocks.multiply_vcc(vector_length)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
-        self.blocks_interleaved_short_to_complex_0 = blocks.interleaved_short_to_complex(False, False)
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnuradio/gr-gps/examples/signal.dat', True, 0, 0)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnss-sdr-files/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN.dat', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(vector_length)
         self.blocks_argmax_xx_0 = blocks.argmax_fs(vector_length)
@@ -246,8 +247,7 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_argmax_xx_0, 0), (self.blocks_short_to_float_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_argmax_xx_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_vector_to_stream_0_0, 0))
-        self.connect((self.blocks_file_source_0, 0), (self.blocks_interleaved_short_to_complex_0, 0))
-        self.connect((self.blocks_interleaved_short_to_complex_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.blocks_file_source_0, 0), (self.gnss_signal_normalizer_0, 0))
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_stream_to_vector_0, 0))
         self.connect((self.blocks_multiply_xx_1, 0), (self.fft_vxx_0_0_0, 0))
         self.connect((self.blocks_short_to_float_0, 0), (self.qtgui_number_sink_0, 0))
@@ -260,6 +260,7 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self.connect((self.fft_vxx_0_0_0, 0), (self.blocks_complex_to_mag_squared_0, 0))
         self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.gnss_type_converter_0, 0))
         self.connect((self.gnss_ca_code_generator_0, 0), (self.blocks_throttle_0_0_0, 0))
+        self.connect((self.gnss_signal_normalizer_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.gnss_type_converter_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
 
 
@@ -268,6 +269,17 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
+    def get_samp_rate(self):
+        return self.samp_rate
+
+    def set_samp_rate(self, samp_rate):
+        self.samp_rate = samp_rate
+        self.set_vector_length(self.samp_rate//1000)
+        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
+        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.blocks_throttle_0_0_0.set_sample_rate(self.samp_rate / self.vector_length)
+        self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
+
     def get_vector_length(self):
         return self.vector_length
 
@@ -275,16 +287,11 @@ class gps_acquisition_and_tracking_v4(gr.top_block, Qt.QWidget):
         self.vector_length = vector_length
         self.blocks_throttle_0_0_0.set_sample_rate(self.samp_rate / self.vector_length)
 
-    def get_samp_rate(self):
-        return self.samp_rate
+    def get_svid(self):
+        return self.svid
 
-    def set_samp_rate(self, samp_rate):
-        self.samp_rate = samp_rate
-        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
-        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
-        self.blocks_throttle_0_0_0.set_sample_rate(self.samp_rate / self.vector_length)
-        self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
-        self.qtgui_time_sink_x_0_0_0.set_samp_rate(self.samp_rate / 4000)
+    def set_svid(self, svid):
+        self.svid = svid
 
     def get_delta_f(self):
         return self.delta_f

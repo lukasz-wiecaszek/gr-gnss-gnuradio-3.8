@@ -72,8 +72,9 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.vector_length = vector_length = 4000
         self.samp_rate = samp_rate = 4000000
+        self.vector_length = vector_length = samp_rate//1000
+        self.svid = svid = 32
 
         ##################################################
         # Blocks
@@ -138,7 +139,7 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
 
         self.qtgui_time_sink_x_0_0_0.enable_tags(False)
         self.qtgui_time_sink_x_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0_0_0.enable_autoscale(False)
+        self.qtgui_time_sink_x_0_0_0.enable_autoscale(True)
         self.qtgui_time_sink_x_0_0_0.enable_grid(False)
         self.qtgui_time_sink_x_0_0_0.enable_axis_labels(True)
         self.qtgui_time_sink_x_0_0_0.enable_control_panel(False)
@@ -177,12 +178,12 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_win)
         self.gnss_type_converter_0_0 = gnss.fc64_to_fc32(1)
         self.gnss_type_converter_0 = gnss.fc64_to_fc32(1)
+        self.gnss_signal_normalizer_0 = gnss.signal_normalizer_s16_fc32(1, 12)
         self.gnss_number_file_sink_0 = gnss.number_file_sink_f32("code_rate_svid_32.dat", "\n")
         self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 2.0, 35.0)
         self.gnss_acquisition_and_tracking_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 32)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
-        self.blocks_interleaved_short_to_complex_0 = blocks.interleaved_short_to_complex(False, False)
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnuradio/gr-gps/examples/signal.dat', True, 0, 0)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnss-sdr-files/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN.dat', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
         self.blocks_complex_to_imag_0 = blocks.complex_to_imag(1)
 
@@ -193,11 +194,11 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
         ##################################################
         self.connect((self.blocks_complex_to_imag_0, 0), (self.gnss_number_file_sink_0, 0))
         self.connect((self.blocks_complex_to_imag_0, 0), (self.qtgui_time_sink_x_0_0_0_0, 0))
-        self.connect((self.blocks_file_source_0, 0), (self.blocks_interleaved_short_to_complex_0, 0))
-        self.connect((self.blocks_interleaved_short_to_complex_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.blocks_file_source_0, 0), (self.gnss_signal_normalizer_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0, 0))
         self.connect((self.gnss_acquisition_and_tracking_0, 0), (self.gnss_type_converter_0, 0))
         self.connect((self.gnss_acquisition_and_tracking_0, 1), (self.gnss_type_converter_0_0, 0))
+        self.connect((self.gnss_signal_normalizer_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.gnss_type_converter_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
         self.connect((self.gnss_type_converter_0_0, 0), (self.blocks_complex_to_imag_0, 0))
 
@@ -207,20 +208,27 @@ class gps_acquisition_and_tracking_v5(gr.top_block, Qt.QWidget):
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
+    def get_samp_rate(self):
+        return self.samp_rate
+
+    def set_samp_rate(self, samp_rate):
+        self.samp_rate = samp_rate
+        self.set_vector_length(self.samp_rate//1000)
+        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.qtgui_time_sink_x_0_0_0.set_samp_rate(self.samp_rate / 4000)
+        self.qtgui_time_sink_x_0_0_0_0.set_samp_rate(self.samp_rate / 4000)
+
     def get_vector_length(self):
         return self.vector_length
 
     def set_vector_length(self, vector_length):
         self.vector_length = vector_length
 
-    def get_samp_rate(self):
-        return self.samp_rate
+    def get_svid(self):
+        return self.svid
 
-    def set_samp_rate(self, samp_rate):
-        self.samp_rate = samp_rate
-        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
-        self.qtgui_time_sink_x_0_0_0.set_samp_rate(self.samp_rate / 4000)
-        self.qtgui_time_sink_x_0_0_0_0.set_samp_rate(self.samp_rate / 4000)
+    def set_svid(self, svid):
+        self.svid = svid
 
 
 

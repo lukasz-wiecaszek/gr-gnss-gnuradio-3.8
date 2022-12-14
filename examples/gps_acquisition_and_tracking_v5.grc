@@ -41,19 +41,31 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [14, 324]
+    coordinate: [15, 260]
+    rotation: 0
+    state: enabled
+- name: svid
+  id: variable
+  parameters:
+    comment: ''
+    value: '32'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [15, 320]
     rotation: 0
     state: enabled
 - name: vector_length
   id: variable
   parameters:
     comment: ''
-    value: '4000'
+    value: samp_rate//1000
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [14, 261]
+    coordinate: [99, 260]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_imag_0
@@ -79,7 +91,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/memyselfandi/projects/gnuradio/gr-gps/examples/signal.dat
+    file: /home/memyselfandi/projects/gnss-sdr-files/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN.dat
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -92,23 +104,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [13, 75]
-    rotation: 0
-    state: true
-- name: blocks_interleaved_short_to_complex_0
-  id: blocks_interleaved_short_to_complex
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    swap: 'False'
-    vector_input: 'False'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [231, 107]
     rotation: 0
     state: true
 - name: blocks_throttle_0
@@ -127,7 +122,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [429, 107]
+    coordinate: [435, 107]
     rotation: 0
     state: true
 - name: gnss_acquisition_and_tracking_0
@@ -168,6 +163,25 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1374, 179]
+    rotation: 0
+    state: true
+- name: gnss_signal_normalizer_0
+  id: gnss_signal_normalizer
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    itype: s16
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: fc32
+    resolution: '12'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [233, 91]
     rotation: 0
     state: true
 - name: gnss_type_converter_0
@@ -236,7 +250,7 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'False'
+    autoscale: 'True'
     axislabels: 'True'
     color1: blue
     color10: dark blue
@@ -419,12 +433,12 @@ blocks:
 connections:
 - [blocks_complex_to_imag_0, '0', gnss_number_file_sink_0, '0']
 - [blocks_complex_to_imag_0, '0', qtgui_time_sink_x_0_0_0_0, '0']
-- [blocks_file_source_0, '0', blocks_interleaved_short_to_complex_0, '0']
-- [blocks_interleaved_short_to_complex_0, '0', blocks_throttle_0, '0']
+- [blocks_file_source_0, '0', gnss_signal_normalizer_0, '0']
 - [blocks_throttle_0, '0', gnss_acquisition_and_tracking_0, '0']
 - [blocks_throttle_0, '0', gps_acquisition_0, '0']
 - [gnss_acquisition_and_tracking_0, '0', gnss_type_converter_0, '0']
 - [gnss_acquisition_and_tracking_0, '1', gnss_type_converter_0_0, '0']
+- [gnss_signal_normalizer_0, '0', blocks_throttle_0, '0']
 - [gnss_type_converter_0, '0', qtgui_time_sink_x_0_0_0, '0']
 - [gnss_type_converter_0_0, '0', blocks_complex_to_imag_0, '0']
 

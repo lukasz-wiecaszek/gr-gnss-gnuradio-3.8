@@ -99,7 +99,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/memyselfandi/projects/gnuradio/gr-gps/examples/signal.dat
+    file: /home/memyselfandi/projects/gnss-sdr-files/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN.dat
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -112,23 +112,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [7, 208]
-    rotation: 0
-    state: true
-- name: blocks_interleaved_short_to_complex_0
-  id: blocks_interleaved_short_to_complex
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    swap: 'False'
-    vector_input: 'False'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [227, 240]
     rotation: 0
     state: true
 - name: blocks_throttle_0
@@ -147,7 +130,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 241]
+    coordinate: [455, 240]
     rotation: 0
     state: true
 - name: gnss_geojson_file_sink_1
@@ -161,7 +144,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1550, 346]
+    coordinate: [1654, 346]
     rotation: 0
     state: true
 - name: gnss_gnss_channel_0
@@ -183,7 +166,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [567, 430]
+    coordinate: [671, 430]
     rotation: 0
     state: true
 - name: gnss_gnss_channel_0_0
@@ -205,7 +188,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [568, 288]
+    coordinate: [672, 288]
     rotation: 0
     state: true
 - name: gnss_gnss_channel_0_0_0
@@ -227,7 +210,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [569, 148]
+    coordinate: [673, 148]
     rotation: 0
     state: true
 - name: gnss_gnss_channel_0_0_0_0
@@ -249,12 +232,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [573, 5]
+    coordinate: [677, 5]
     rotation: 0
     state: true
 - name: gnss_pseudoranges_decoder_0
   id: gnss_pseudoranges_decoder
   parameters:
+    add_velocity_outputs: 'False'
     affinity: ''
     alias: ''
     comment: ''
@@ -281,7 +265,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1341, 155]
+    coordinate: [1445, 155]
     rotation: 0
     state: true
 - name: gnss_pvt_0
@@ -298,7 +282,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1589, 187]
+    coordinate: [1693, 187]
     rotation: 0
     state: true
 - name: gnss_rft_0
@@ -314,7 +298,26 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1259, 411]
+    coordinate: [1363, 411]
+    rotation: 0
+    state: true
+- name: gnss_signal_normalizer_0
+  id: gnss_signal_normalizer
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    itype: s16
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: fc32
+    resolution: '12'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [242, 224]
     rotation: 0
     state: true
 - name: gnss_type_converter_0_0
@@ -332,7 +335,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [894, 29]
+    coordinate: [998, 29]
     rotation: 0
     state: true
 - name: gnss_type_converter_0_0_0
@@ -350,7 +353,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [890, 172]
+    coordinate: [994, 172]
     rotation: 0
     state: true
 - name: gnss_type_converter_0_0_0_0
@@ -368,7 +371,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [889, 312]
+    coordinate: [993, 312]
     rotation: 0
     state: true
 - name: gnss_type_converter_0_0_0_0_0
@@ -386,7 +389,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [894, 454]
+    coordinate: [998, 454]
     rotation: 0
     state: true
 - name: gps_acquisition_0
@@ -460,7 +463,7 @@ blocks:
     name: '""'
     nconnections: '1'
     size: '200'
-    srate: samp_rate / 4000
+    srate: '1000'
     stemplot: 'False'
     style1: '1'
     style10: '1'
@@ -498,7 +501,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1106, 21]
+    coordinate: [1210, 21]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0
@@ -557,7 +560,7 @@ blocks:
     name: '""'
     nconnections: '1'
     size: '200'
-    srate: samp_rate / 4000
+    srate: '1000'
     stemplot: 'False'
     style1: '1'
     style10: '1'
@@ -595,7 +598,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1095, 164]
+    coordinate: [1199, 164]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0_0
@@ -654,7 +657,7 @@ blocks:
     name: '""'
     nconnections: '1'
     size: '200'
-    srate: samp_rate / 4000
+    srate: '1000'
     stemplot: 'False'
     style1: '1'
     style10: '1'
@@ -692,7 +695,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1111, 304]
+    coordinate: [1215, 304]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0_0_0
@@ -751,7 +754,7 @@ blocks:
     name: '""'
     nconnections: '1'
     size: '200'
-    srate: samp_rate / 4000
+    srate: '1000'
     stemplot: 'False'
     style1: '1'
     style10: '1'
@@ -789,13 +792,12 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1114, 446]
+    coordinate: [1218, 446]
     rotation: 0
     state: true
 
 connections:
-- [blocks_file_source_0, '0', blocks_interleaved_short_to_complex_0, '0']
-- [blocks_interleaved_short_to_complex_0, '0', blocks_throttle_0, '0']
+- [blocks_file_source_0, '0', gnss_signal_normalizer_0, '0']
 - [blocks_throttle_0, '0', gnss_gnss_channel_0, '0']
 - [blocks_throttle_0, '0', gnss_gnss_channel_0_0, '0']
 - [blocks_throttle_0, '0', gnss_gnss_channel_0_0_0, '0']
@@ -823,6 +825,7 @@ connections:
 - [gnss_pseudoranges_decoder_0, '3', gnss_pvt_0, '3']
 - [gnss_pvt_0, '0', gnss_rft_0, '0']
 - [gnss_rft_0, '0', gnss_geojson_file_sink_1, '0']
+- [gnss_signal_normalizer_0, '0', blocks_throttle_0, '0']
 - [gnss_type_converter_0_0, '0', qtgui_time_sink_x_0_0_0, '0']
 - [gnss_type_converter_0_0_0, '0', qtgui_time_sink_x_0_0_0_0, '0']
 - [gnss_type_converter_0_0_0_0, '0', qtgui_time_sink_x_0_0_0_0_0, '0']

@@ -73,13 +73,17 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 4000000
+        self.pll_bw_fine = pll_bw_fine = 35.0
+        self.pll_bw_coarse = pll_bw_coarse = 40.0
+        self.dll_bw_fine = dll_bw_fine = 2.0
+        self.dll_bw_coarse = dll_bw_coarse = 4.0
 
         ##################################################
         # Blocks
         ##################################################
         self.qtgui_time_sink_x_0_0_0_0_0_0 = qtgui.time_sink_c(
             200, #size
-            samp_rate / 4000, #samp_rate
+            1000, #samp_rate
             "", #name
             1 #number of inputs
         )
@@ -129,7 +133,7 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_0_0_0_win)
         self.qtgui_time_sink_x_0_0_0_0_0 = qtgui.time_sink_c(
             200, #size
-            samp_rate / 4000, #samp_rate
+            1000, #samp_rate
             "", #name
             1 #number of inputs
         )
@@ -179,7 +183,7 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_0_0_win)
         self.qtgui_time_sink_x_0_0_0_0 = qtgui.time_sink_c(
             200, #size
-            samp_rate / 4000, #samp_rate
+            1000, #samp_rate
             "", #name
             1 #number of inputs
         )
@@ -229,7 +233,7 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_0_win)
         self.qtgui_time_sink_x_0_0_0 = qtgui.time_sink_c(
             200, #size
-            samp_rate / 4000, #samp_rate
+            1000, #samp_rate
             "", #name
             1 #number of inputs
         )
@@ -281,8 +285,9 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
         self.gnss_type_converter_0_0_0_0_0 = gnss.fc64_to_fc32(1)
         self.gnss_type_converter_0_0_0_0 = gnss.fc64_to_fc32(1)
         self.gnss_type_converter_0_0_0 = gnss.fc64_to_fc32(1)
+        self.gnss_signal_normalizer_0 = gnss.signal_normalizer_s16_fc32(1, 12)
         self.gnss_pvt_0 = gnss.pvt(True)
-        self.gnss_pseudoranges_decoder_0 = gnss.pseudoranges_decoder()
+        self.gnss_pseudoranges_decoder_0 = gnss.pseudoranges_decoder(False)
         self.gnss_pseudoranges_decoder_0.set_acq_params(0, gnss.NAVIGATION_SYSTEM_GPS, 1)
         self.gnss_pseudoranges_decoder_0.set_acq_params(1, gnss.NAVIGATION_SYSTEM_GPS, 11)
         self.gnss_pseudoranges_decoder_0.set_acq_params(2, gnss.NAVIGATION_SYSTEM_GPS, 20)
@@ -303,18 +308,17 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
         self.gnss_ca_sybmols_to_nav_bits_0_0_0 = gnss.ca_sybmols_to_nav_bits()
         self.gnss_ca_sybmols_to_nav_bits_0_0 = gnss.ca_sybmols_to_nav_bits()
         self.gnss_ca_sybmols_to_nav_bits_0 = gnss.ca_sybmols_to_nav_bits()
-        self.gnss_acquisition_and_tracking_0_0_0_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
+        self.gnss_acquisition_and_tracking_0_0_0_0 = gnss.acquisition_and_tracking(samp_rate, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine)
         self.gnss_acquisition_and_tracking_0_0_0_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 32)
-        self.gnss_acquisition_and_tracking_0_0_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
+        self.gnss_acquisition_and_tracking_0_0_0 = gnss.acquisition_and_tracking(samp_rate, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine)
         self.gnss_acquisition_and_tracking_0_0_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 20)
-        self.gnss_acquisition_and_tracking_0_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
+        self.gnss_acquisition_and_tracking_0_0 = gnss.acquisition_and_tracking(samp_rate, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine)
         self.gnss_acquisition_and_tracking_0_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 11)
-        self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, 4.0, 40.0, 1.0, 30.0)
+        self.gnss_acquisition_and_tracking_0 = gnss.acquisition_and_tracking(samp_rate, dll_bw_coarse, pll_bw_coarse, dll_bw_fine, pll_bw_fine)
         self.gnss_acquisition_and_tracking_0.set_acq_params(gnss.NAVIGATION_SYSTEM_GPS, 1)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_null_sink_0_0_0_0 = blocks.null_sink(gr.sizeof_float*6)
-        self.blocks_interleaved_short_to_complex_0 = blocks.interleaved_short_to_complex(False, False)
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnuradio/gr-gps/examples/signal.dat', True, 0, 0)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_short*1, '/home/memyselfandi/projects/gnss-sdr-files/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN/2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN.dat', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
 
 
@@ -324,14 +328,13 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
         ##################################################
         self.msg_connect((self.gnss_nav_message_decoder_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
         self.msg_connect((self.gnss_nav_message_decoder_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
-        self.msg_connect((self.gnss_nav_message_decoder_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
-        self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
         self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'ephemeris'), (self.gnss_pseudoranges_decoder_0, 'ephemeris'))
-        self.connect((self.blocks_file_source_0, 0), (self.blocks_interleaved_short_to_complex_0, 0))
-        self.connect((self.blocks_interleaved_short_to_complex_0, 0), (self.blocks_throttle_0, 0))
+        self.msg_connect((self.gnss_nav_message_decoder_0_0_0_0, 'clock'), (self.gnss_pseudoranges_decoder_0, 'clock'))
+        self.connect((self.blocks_file_source_0, 0), (self.gnss_signal_normalizer_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.gnss_acquisition_and_tracking_0_0_0, 0))
@@ -352,11 +355,12 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
         self.connect((self.gnss_nav_message_decoder_0_0, 0), (self.gnss_pseudoranges_decoder_0, 1))
         self.connect((self.gnss_nav_message_decoder_0_0_0, 0), (self.gnss_pseudoranges_decoder_0, 2))
         self.connect((self.gnss_nav_message_decoder_0_0_0_0, 0), (self.gnss_pseudoranges_decoder_0, 3))
-        self.connect((self.gnss_pseudoranges_decoder_0, 3), (self.gnss_pvt_0, 3))
-        self.connect((self.gnss_pseudoranges_decoder_0, 0), (self.gnss_pvt_0, 0))
         self.connect((self.gnss_pseudoranges_decoder_0, 2), (self.gnss_pvt_0, 2))
         self.connect((self.gnss_pseudoranges_decoder_0, 1), (self.gnss_pvt_0, 1))
+        self.connect((self.gnss_pseudoranges_decoder_0, 0), (self.gnss_pvt_0, 0))
+        self.connect((self.gnss_pseudoranges_decoder_0, 3), (self.gnss_pvt_0, 3))
         self.connect((self.gnss_pvt_0, 0), (self.blocks_null_sink_0_0_0_0, 0))
+        self.connect((self.gnss_signal_normalizer_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.gnss_type_converter_0_0_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
         self.connect((self.gnss_type_converter_0_0_0_0, 0), (self.qtgui_time_sink_x_0_0_0_0, 0))
         self.connect((self.gnss_type_converter_0_0_0_0_0, 0), (self.qtgui_time_sink_x_0_0_0_0_0, 0))
@@ -374,10 +378,30 @@ class gps_pseudoranges_decoder_v1(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.blocks_throttle_0.set_sample_rate(self.samp_rate)
-        self.qtgui_time_sink_x_0_0_0.set_samp_rate(self.samp_rate / 4000)
-        self.qtgui_time_sink_x_0_0_0_0.set_samp_rate(self.samp_rate / 4000)
-        self.qtgui_time_sink_x_0_0_0_0_0.set_samp_rate(self.samp_rate / 4000)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_samp_rate(self.samp_rate / 4000)
+
+    def get_pll_bw_fine(self):
+        return self.pll_bw_fine
+
+    def set_pll_bw_fine(self, pll_bw_fine):
+        self.pll_bw_fine = pll_bw_fine
+
+    def get_pll_bw_coarse(self):
+        return self.pll_bw_coarse
+
+    def set_pll_bw_coarse(self, pll_bw_coarse):
+        self.pll_bw_coarse = pll_bw_coarse
+
+    def get_dll_bw_fine(self):
+        return self.dll_bw_fine
+
+    def set_dll_bw_fine(self, dll_bw_fine):
+        self.dll_bw_fine = dll_bw_fine
+
+    def get_dll_bw_coarse(self):
+        return self.dll_bw_coarse
+
+    def set_dll_bw_coarse(self, dll_bw_coarse):
+        self.dll_bw_coarse = dll_bw_coarse
 
 
 
